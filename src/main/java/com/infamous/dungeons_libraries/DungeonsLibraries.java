@@ -6,7 +6,7 @@ import com.infamous.dungeons_libraries.capabilities.cloneable.ICloneable;
 import com.infamous.dungeons_libraries.capabilities.teamable.ITeamable;
 import com.infamous.dungeons_libraries.capabilities.teamable.Teamable;
 import com.infamous.dungeons_libraries.capabilities.teamable.TeamableStorage;
-import com.infamous.dungeons_libraries.config.DungeonsMobsConfig;
+import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,7 +29,7 @@ public class DungeonsLibraries
 
     public DungeonsLibraries() {
         // Register the setup method for modloading
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsMobsConfig.COMMON_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
 
