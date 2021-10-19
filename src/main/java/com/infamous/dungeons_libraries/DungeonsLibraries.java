@@ -1,9 +1,14 @@
 package com.infamous.dungeons_libraries;
 
-import com.infamous.dungeons_libraries.capabilities.summoning.ISummonable;
-import com.infamous.dungeons_libraries.capabilities.summoning.Summonable;
-import com.infamous.dungeons_libraries.capabilities.summoning.SummonableStorage;
+import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
+import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsStorage;
+import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
+import com.infamous.dungeons_libraries.capabilities.enchantable.Enchantable;
+import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableStorage;
+import com.infamous.dungeons_libraries.capabilities.enchantable.IEnchantable;
+import com.infamous.dungeons_libraries.capabilities.summoning.*;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -37,6 +42,10 @@ public class DungeonsLibraries
 
     private void setup(final FMLCommonSetupEvent event){
         CapabilityManager.INSTANCE.register(ISummonable.class, new SummonableStorage(), Summonable::new);
+        CapabilityManager.INSTANCE.register(ISummoner.class, new SummonerStorage(), Summoner::new);
+        CapabilityManager.INSTANCE.register(IEnchantable.class, new EnchantableStorage(), Enchantable::new);
+        CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
+        event.enqueueWork(NetworkHandler::init);
     }
 
 }

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.List;
 
 public class DungeonsLibrariesConfig {
-    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_AREA_OF_EFFECT_ON_PLAYERS;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
 
     public static class Common {
@@ -15,10 +15,10 @@ public class DungeonsLibrariesConfig {
         public Common(ForgeConfigSpec.Builder builder){
 
             builder.comment("Combat Configuration").push("combat_configuration");
-            ENABLE_AREA_OF_EFFECT_ON_PLAYERS = builder
+            ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS = builder
                     .comment("Enable area of effects also being applied to players. \n" +
                             "If you do not want area of effects being applied to other players, disable this feature. [true / false]")
-                    .define("enableAreaOfEffectOnPlayers", false);
+                    .define("enableAreaOfEffectOnOtherPlayers", false);
             ENEMY_BLACKLIST = builder
                     .comment("Add entities that will never be targeted by aggressive Dungeons Gear effects. \n"
                             + "To do so, enter their registry names.")

@@ -28,11 +28,15 @@ public class AbilityHelper {
                 && nearbyEntity != attacker;
     }
 
-    private static boolean isNotAPlayerOrCanApplyToPlayers(LivingEntity nearbyEntity) {
-        if (!(nearbyEntity instanceof PlayerEntity)) {
+    private static boolean isNotAPlayerOrCanApplyToPlayers(LivingEntity attacker, LivingEntity nearbyEntity) {
+        if(attacker instanceof PlayerEntity) {
+            if (!(nearbyEntity instanceof PlayerEntity)) {
+                return true;
+            } else {
+                return DungeonsLibrariesConfig.ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS.get();
+            }
+        }else{
             return true;
-        } else {
-            return DungeonsLibrariesConfig.ENABLE_AREA_OF_EFFECT_ON_PLAYERS.get();
         }
     }
 
@@ -59,7 +63,7 @@ public class AbilityHelper {
         return isNotTheTargetOrAttacker(attacker, target, nearbyEntity)
                 && isAliveAndCanBeSeen(nearbyEntity, attacker)
                 && !isAlly(attacker, nearbyEntity)
-                && isNotAPlayerOrCanApplyToPlayers(nearbyEntity)
+                && isNotAPlayerOrCanApplyToPlayers(attacker, nearbyEntity)
                 && !isEntityBlacklisted(nearbyEntity);
     }
 
@@ -67,7 +71,7 @@ public class AbilityHelper {
         return nearbyEntity != attacker
                 && isAliveAndCanBeSeen(nearbyEntity, attacker)
                 && !isAlly(attacker, nearbyEntity)
-                && isNotAPlayerOrCanApplyToPlayers(nearbyEntity)
+                && isNotAPlayerOrCanApplyToPlayers(attacker, nearbyEntity)
                 && !isEntityBlacklisted(nearbyEntity);
     }
 
