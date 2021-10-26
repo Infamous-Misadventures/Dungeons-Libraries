@@ -48,6 +48,7 @@ public class MobEnchantmentCommand {
                 if (cap != null) {
                     cap.addEnchantment(mobEnchantment);
                     NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new MobEnchantmentMessage(entity.getId(), cap.getEnchantments()));
+                    entity.refreshDimensions();
                     ++i;
                 }
             }
@@ -74,6 +75,7 @@ public class MobEnchantmentCommand {
                 if (cap != null) {
                     cap.clearAllEnchantments();
                     NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new MobEnchantmentMessage(entity.getId(), cap.getEnchantments()));
+                    entity.refreshDimensions();
                     ++i;
                 }
             }
@@ -101,6 +103,7 @@ public class MobEnchantmentCommand {
                 if (cap != null) {
                     cap.removeEnchantment(mobEnchantment);
                     NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new MobEnchantmentMessage(entity.getId(), cap.getEnchantments()));
+                    entity.refreshDimensions();
                     ++i;
                 }
             }

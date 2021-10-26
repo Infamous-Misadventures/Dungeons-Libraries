@@ -33,7 +33,7 @@ public class BuiltInEnchantmentsStorage implements Capability.IStorage<IBuiltInE
                 enchantmentDataNBT.putShort("lvl", (short)enchantmentData.level);
                 enchantmentListnbt.add(enchantmentDataNBT);
             });
-            tag.put(ENCHANTMENT_DATA_KEY, enchantmentListnbt);
+            compoundnbt.put(ENCHANTMENT_DATA_KEY, enchantmentListnbt);
             listnbt.add(compoundnbt);
         });
         tag.put(ENCHANTS_KEY, listnbt);

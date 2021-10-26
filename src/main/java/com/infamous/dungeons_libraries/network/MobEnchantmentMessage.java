@@ -50,6 +50,9 @@ public class MobEnchantmentMessage {
                     getEnchantableCapabilityLazy(entity).ifPresent(iEnchantable -> {
                         iEnchantable.clearAllEnchantments();
                         message.mobEnchantments.forEach(iEnchantable::addEnchantment);
+                        if(!message.mobEnchantments.isEmpty()) {
+                            entity.refreshDimensions();
+                        }
                     });
                 }
             });

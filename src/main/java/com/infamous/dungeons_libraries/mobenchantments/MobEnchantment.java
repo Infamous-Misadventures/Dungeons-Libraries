@@ -1,7 +1,6 @@
 package com.infamous.dungeons_libraries.mobenchantments;
 
 import net.minecraft.util.Util;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;

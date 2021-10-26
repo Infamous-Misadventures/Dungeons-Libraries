@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.utils;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -48,7 +49,8 @@ public class AbilityHelper {
 
     public static boolean isAlly(LivingEntity origin, LivingEntity nearbyEntity) {
         return isPetOfAttacker(origin, nearbyEntity)
-                || origin.isAlliedTo(nearbyEntity);
+                || origin.isAlliedTo(nearbyEntity)
+                || (origin instanceof MonsterEntity && nearbyEntity instanceof MonsterEntity);
     }
 
     private static boolean isEntityBlacklisted(LivingEntity entity) {
