@@ -12,13 +12,12 @@ public class Summonable implements ISummonable {
     }
 
     @Override
-    @Nullable
     public UUID getSummoner() {
         return this.summoner;
     }
+
     @Override
-    public void setSummoner(
-            @Nullable UUID summoner) {
+    public void setSummoner(@Nullable UUID summoner) {
         this.summoner = summoner;
     }
 }

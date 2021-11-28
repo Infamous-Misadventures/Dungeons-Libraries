@@ -26,9 +26,9 @@ public class EnchantableSizeEvents {
 
         getEnchantableCapabilityLazy(entity).ifPresent(cap -> {
             if (cap.hasEnchantment()) {
-                float totalWidth = entity.getDimensions(entity.getPose()).width * 1.1F;
-                float totalHeight = entity.getDimensions(entity.getPose()).height * 1.1F;
-                event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * 1.1F);
+                float totalWidth = event.getNewSize().width * 1.1F;
+                float totalHeight = event.getNewSize().height * 1.1F;
+                event.setNewEyeHeight(event.getNewEyeHeight() * 1.1F);
                 event.setNewSize(EntitySize.fixed(totalWidth, totalHeight));
             }
         });
