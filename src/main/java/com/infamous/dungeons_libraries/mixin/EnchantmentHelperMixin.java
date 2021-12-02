@@ -34,18 +34,17 @@ public abstract class EnchantmentHelperMixin {
             at = @At(value = "RETURN", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir, ResourceLocation enchantmentRL, ListNBT listNbt, int i, CompoundNBT compoundnbt, ResourceLocation found) {
         int currentLvl = MathHelper.clamp(compoundnbt.getInt("lvl"), 0, 255);
-        if(BUILT_IN_ENCHANTMENTS_CAPABILITY != null) {
-            LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
-            if (lazyCap.isPresent()) {
-                IBuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
-                Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
-                        .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
-                        .map(enchantmentData -> enchantmentData.level)
-                        .reduce(0, Integer::sum);
-                cir.setReturnValue(currentLvl + reduce);
-                return;
-            }
+        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
+        if (lazyCap.isPresent()) {
+            IBuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
+            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
+                    .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
+                    .map(enchantmentData -> enchantmentData.level)
+                    .reduce(0, Integer::sum);
+            cir.setReturnValue(currentLvl + reduce);
+            return;
         }
+
         cir.setReturnValue(currentLvl);
     }
 
