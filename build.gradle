@@ -99,6 +99,28 @@ minecraft {
                 }
             }
         }
+
+        test_client {
+            //run-config to run the TestMod on client side
+            parent runs.client
+            taskName 'runTestClient'
+
+            mods {
+                dungeons_libraries { source sourceSets.main }
+                tests { source sourceSets.test } //include the code (TestMod) in the test module
+            }
+        }
+
+        test_server {
+            //run.config to run the TestMod on server side
+            parent runs.server
+            taskName 'runTestServer'
+
+            mods {
+                dungeons_libraries { source sourceSets.main }
+                tests { source sourceSets.test } //include the code (TestMod) in the test module
+            }
+        }
     }
 }
 
