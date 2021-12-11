@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.test.mod;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -10,6 +11,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,8 +48,12 @@ public class TestMod {
 		}
 	};
 
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+
 	public TestMod() {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+		ITEMS.register(modEventBus);
 		modEventBus.addListener(this::setup);
 	}
 

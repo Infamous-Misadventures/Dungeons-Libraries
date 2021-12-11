@@ -1,3 +1,10 @@
 {
-  "itemGroup.test_dungeons_libraries": "[TEST] Dungeons Libraries"
+  "itemGroup.test_dungeons_libraries": "[TEST] Dungeons Libraries",
+
+  "item.test_dungeons_libraries.very_short_sword": "[TEST] very small attack reach",
+  "item.test_dungeons_libraries.short_sword": "[TEST] small attack reach with large block reach",
+  "item.test_dungeons_libraries.long_sword": "[TEST] large attack reach",
+  "item.test_dungeons_libraries.very_long_sword": "[TEST] very large attack reach, with collider ray trace",
+  "item.test_dungeons_libraries.ethereal_sword": "[TEST] vanilla attack reach with zero block reach",
+  "item.test_dungeons_libraries.ethereal_pickaxe": "[TEST] zero attack reach with large block reach"
 }
