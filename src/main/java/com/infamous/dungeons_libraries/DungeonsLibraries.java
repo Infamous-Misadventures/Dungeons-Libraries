@@ -7,7 +7,9 @@ import com.infamous.dungeons_libraries.capabilities.enchantable.Enchantable;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableStorage;
 import com.infamous.dungeons_libraries.capabilities.enchantable.IEnchantable;
 import com.infamous.dungeons_libraries.capabilities.summoning.*;
+import com.infamous.dungeons_libraries.compat.pehkui.PehkuiCompat;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import com.infamous.dungeons_libraries.entities.EntityAttributes;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -38,14 +40,16 @@ public class DungeonsLibraries
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		EntityAttributes.ATTRIBUTES.register(modEventBus);
     }
 
-    private void setup(final FMLCommonSetupEvent event){
-        CapabilityManager.INSTANCE.register(ISummonable.class, new SummonableStorage(), Summonable::new);
-        CapabilityManager.INSTANCE.register(ISummoner.class, new SummonerStorage(), Summoner::new);
-        CapabilityManager.INSTANCE.register(IEnchantable.class, new EnchantableStorage(), Enchantable::new);
-        CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
-        event.enqueueWork(NetworkHandler::init);
-    }
+    private void setup(final FMLCommonSetupEvent event) {
+		CapabilityManager.INSTANCE.register(ISummonable.class, new SummonableStorage(), Summonable::new);
+		CapabilityManager.INSTANCE.register(ISummoner.class, new SummonerStorage(), Summoner::new);
+		CapabilityManager.INSTANCE.register(IEnchantable.class, new EnchantableStorage(), Enchantable::new);
+		CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
+		event.enqueueWork(NetworkHandler::init);
+		event.enqueueWork(PehkuiCompat::init);
+	}
 
 }

@@ -19,6 +19,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge and Mixin to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'java-library'
 
 mixin {
     add sourceSets.main, "dungeons_libraries.refmap.json"
@@ -129,6 +130,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -136,6 +138,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.45')
+
+    api fg.deobf("com.github.Virtuoel:Pehkui:3.0.0-forge")
 
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html

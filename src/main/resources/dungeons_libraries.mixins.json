@@ -5,10 +5,13 @@
   "minVersion": "0.8",
   "refmap": "dungeons_libraries.refmap.json",
   "mixins": [
+    "EnchantmentHelperMixin",
     "GeoEntityRendererMixin",
-    "EnchantmentHelperMixin"
+    "PlayerEntityMixin",
+    "ServerPlayNetHandlerMixin"
   ],
   "client": [
+    "client.ClientPlayerReachMixin"
   ],
   "injectors": {
     "defaultRequire": 1
