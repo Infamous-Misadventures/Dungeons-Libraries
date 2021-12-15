@@ -7,10 +7,10 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.UUID;
 
-public class SummonerStorage implements Capability.IStorage<ISummoner> {
+public class MasterStorage implements Capability.IStorage<IMaster> {
 
     @Override
-    public INBT writeNBT(Capability<ISummoner> capability, ISummoner instance, Direction side) {
+    public INBT writeNBT(Capability<IMaster> capability, IMaster instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
         if(instance.getSummonedGolem() != null){
             tag.putUUID("golem", instance.getSummonedGolem());
@@ -45,7 +45,7 @@ public class SummonerStorage implements Capability.IStorage<ISummoner> {
     }
 
     @Override
-    public void readNBT(Capability<ISummoner> capability, ISummoner instance, Direction side, INBT nbt) {
+    public void readNBT(Capability<IMaster> capability, IMaster instance, Direction side, INBT nbt) {
         CompoundNBT tag = (CompoundNBT) nbt;
         if(tag.hasUUID("golem")){
             instance.setSummonedGolem(tag.getUUID("golem"));

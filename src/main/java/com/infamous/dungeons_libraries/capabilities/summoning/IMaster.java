@@ -5,9 +5,9 @@ import net.minecraft.util.NonNullList;
 import java.util.List;
 import java.util.UUID;
 
-public interface ISummoner {
+public interface IMaster {
 
-    void copyFrom(ISummoner summoner);
+    void copyFrom(IMaster summoner);
 
     void setSummonedGolem(UUID golem);
     void setSummonedWolf(UUID wolf);

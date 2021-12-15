@@ -41,8 +41,8 @@ public class DungeonsLibraries
     }
 
     private void setup(final FMLCommonSetupEvent event){
-        CapabilityManager.INSTANCE.register(ISummonable.class, new SummonableStorage(), Summonable::new);
-        CapabilityManager.INSTANCE.register(ISummoner.class, new SummonerStorage(), Summoner::new);
+        CapabilityManager.INSTANCE.register(IMinion.class, new MinionStorage(), Minion::new);
+        CapabilityManager.INSTANCE.register(IMaster.class, new MasterStorage(), Master::new);
         CapabilityManager.INSTANCE.register(IEnchantable.class, new EnchantableStorage(), Enchantable::new);
         CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
         event.enqueueWork(NetworkHandler::init);

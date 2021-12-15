@@ -3,7 +3,7 @@ package com.infamous.dungeons_libraries.capabilities.summoning;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class Summoner implements ISummoner {
+public class Master implements IMaster {
 
     @Nullable
     private UUID summonedGolem;
@@ -20,7 +20,7 @@ public class Summoner implements ISummoner {
     private UUID[] busyBeeBees = new UUID[3];
     private UUID[] tumblebeeBees = new UUID[3];
 
-    public Summoner(){
+    public Master(){
         //this.summonedGolem = UUID.randomUUID();
         //this.summonedWolf = UUID.randomUUID();
         //this.summonedLlama = UUID.randomUUID();
@@ -28,7 +28,7 @@ public class Summoner implements ISummoner {
     }
 
     @Override
-    public void copyFrom(ISummoner summoner) {
+    public void copyFrom(IMaster summoner) {
         this.setSummonedBat(summoner.getSummonedBat());
         this.setSummonedGolem(summoner.getSummonedGolem());
         this.setSummonedLlama(summoner.getSummonedLlama());
