@@ -34,7 +34,7 @@ public class MinionMasterHelper {
                 || target instanceof SheepEntity;
     }
 
-    public static boolean wasSummonedBy(LivingEntity target, UUID ownerUUID) {
+    public static boolean isMinionOf(LivingEntity target, UUID ownerUUID) {
         if(isMinionEntity(target)){
             IMinion targetSummonableCap = getMinionCapability(target);
             if(targetSummonableCap == null){
@@ -50,13 +50,13 @@ public class MinionMasterHelper {
     }
 
     @Nullable
-    public static LivingEntity getSummoner(LivingEntity summonableMob) {
+    public static LivingEntity getMaster(LivingEntity minionMob) {
         try {
-            IMinion summonable = getMinionCapability(summonableMob);
+            IMinion summonable = getMinionCapability(minionMob);
             if(summonable == null) return null;
             if(summonable.getMaster() != null){
                 UUID ownerUniqueId = summonable.getMaster();
-                return ownerUniqueId == null ? null : summonableMob.level.getPlayerByUUID(ownerUniqueId);
+                return ownerUniqueId == null ? null : minionMob.level.getPlayerByUUID(ownerUniqueId);
             }
             else return null;
         } catch (IllegalArgumentException var2) {

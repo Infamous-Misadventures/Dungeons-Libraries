@@ -44,7 +44,7 @@ public class PetHelper {
             AbstractHorseEntity horse = (AbstractHorseEntity) possiblePet;
             return horse.getOwnerUUID() == possibleOwner.getUUID();
         } else if(MinionMasterHelper.isMinionEntity(possiblePet)){
-                return MinionMasterHelper.wasSummonedBy(possiblePet, possibleOwner.getUUID());
+                return MinionMasterHelper.isMinionOf(possiblePet, possibleOwner.getUUID());
         }
         else{
             return false;
@@ -58,7 +58,7 @@ public class PetHelper {
         else if (potentialPet1 instanceof AbstractHorseEntity)
             owner = MinionMasterHelper.getOwnerForHorse((AbstractHorseEntity) potentialPet1);
         else if (MinionMasterHelper.isMinionEntity(potentialPet1))
-            owner = MinionMasterHelper.getSummoner(potentialPet1);
+            owner = MinionMasterHelper.getMaster(potentialPet1);
 
         LivingEntity otherOwner = null;
         if (potentialPet2 instanceof TameableEntity)
@@ -66,7 +66,7 @@ public class PetHelper {
         else if (potentialPet2 instanceof AbstractHorseEntity)
             otherOwner = MinionMasterHelper.getOwnerForHorse((AbstractHorseEntity) potentialPet2);
         else if (MinionMasterHelper.isMinionEntity(potentialPet2))
-            otherOwner = MinionMasterHelper.getSummoner(potentialPet2);
+            otherOwner = MinionMasterHelper.getMaster(potentialPet2);
 
         if (owner == null)
             return potentialPet1 == otherOwner;
