@@ -39,9 +39,9 @@ public class CapabilityEvents {
 
     @SubscribeEvent
     public static void onAttachItemStackCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        if (canBeEnchanted(event.getObject())) {
-            event.addCapability(new ResourceLocation(MODID, "built_in_enchantments"), new BuiltInEnchantmentsProvider());
-        }
+//        if (canBeEnchanted(event.getObject())) {
+            event.addCapability(new ResourceLocation(MODID, "built_in_enchantments"), new BuiltInEnchantmentsProvider(event.getObject()));
+//        }
     }
 
     private static boolean canBeEnchanted(ItemStack itemStack){

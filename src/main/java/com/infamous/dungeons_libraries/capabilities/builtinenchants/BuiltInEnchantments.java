@@ -2,15 +2,29 @@ package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
 
 import com.google.common.collect.Lists;
+import com.infamous.dungeons_libraries.items.gearconfig.SwordGearConfig;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+
 public class BuiltInEnchantments implements IBuiltInEnchantments {
     private Map<ResourceLocation, List<EnchantmentData>> enchantments = new HashMap<>();
+
+    public BuiltInEnchantments() {
+    }
+
+    public BuiltInEnchantments(ItemStack itemStack) {
+        if(itemStack.getItem() instanceof SwordGearConfig){
+            SwordGearConfig item = (SwordGearConfig) itemStack.getItem();
+            enchantments.put(new ResourceLocation(MODID, "gear_config"), new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
+        }
+    }
 
     @Override
     public boolean addBuiltInEnchantment(ResourceLocation source, EnchantmentData enchantmentData) {
@@ -25,6 +39,12 @@ public class BuiltInEnchantments implements IBuiltInEnchantments {
             return false;
         }
         enchantments.put(source, enchantments.get(source).stream().filter(enchantmentData -> enchantmentData.enchantment != enchantment).collect(Collectors.toList()));
+        return true;
+    }
+
+    @Override
+    public boolean setBuiltInEnchantments(ResourceLocation source, List<EnchantmentData> enchantmentData) {
+        enchantments.put(source, new ArrayList<>(enchantmentData));
         return true;
     }
 

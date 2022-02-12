@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.items.interfaces.IComboWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
+import com.infamous.dungeons_libraries.utils.DescriptionHelper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -12,8 +14,10 @@ import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
@@ -30,10 +34,10 @@ public class SwordGearConfig extends SwordItem implements IMeleeWeapon, IComboWe
         super(tier,
                 1, -2.4F,
                 properties);
-        loadConfig();
+        reload();
     }
 
-    public void loadConfig(){
+    public void reload(){
         gearConfig = GearConfigRegistry.getConfig(this.getRegistryName());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         gearConfig.getAttributes().forEach(attributeModifier -> {
@@ -47,6 +51,10 @@ public class SwordGearConfig extends SwordItem implements IMeleeWeapon, IComboWe
             builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
         });
         this.defaultModifiers = builder.build();
+    }
+
+    public GearConfig getGearConfig() {
+        return gearConfig;
     }
 
     @Override
@@ -63,4 +71,13 @@ public class SwordGearConfig extends SwordItem implements IMeleeWeapon, IComboWe
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType pEquipmentSlot) {
         return pEquipmentSlot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
+
+    @Override
+    public void appendHoverText(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag)
+    {
+        super.appendHoverText(stack, world, list, flag);
+        DescriptionHelper.addFullDescription(list, stack);
+    }
+
+
 }

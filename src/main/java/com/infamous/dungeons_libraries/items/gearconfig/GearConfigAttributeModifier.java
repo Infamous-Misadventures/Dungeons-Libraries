@@ -13,7 +13,7 @@ public class GearConfigAttributeModifier {
     public static final Codec<GearConfigAttributeModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("attribute").forGetter(GearConfigAttributeModifier::getAttributeResourceLocation),
             Codec.DOUBLE.fieldOf("amount").forGetter(GearConfigAttributeModifier::getAmount),
-            ATTRIBUTE_MODIFIER_OPERATION_CODEC.fieldOf("Operation").forGetter(GearConfigAttributeModifier::getOperation)
+            ATTRIBUTE_MODIFIER_OPERATION_CODEC.fieldOf("operation").forGetter(GearConfigAttributeModifier::getOperation)
     ).apply(instance, GearConfigAttributeModifier::new));
 
     private ResourceLocation attributeResourceLocation;

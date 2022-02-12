@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.mixin;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
+import com.infamous.dungeons_libraries.mixinhandler.EnchantmentHelperMixinHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
@@ -22,8 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
 
-import static com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsProvider.BUILT_IN_ENCHANTMENTS_CAPABILITY;
-
+//ToDo: runIterationOnItem: What if not present as another enchant?!
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
 
@@ -87,4 +87,11 @@ public abstract class EnchantmentHelperMixin {
         }
         return j;
     }
+
+    @Inject(method = "runIterationOnItem(Lnet/minecraft/enchantment/EnchantmentHelper$IEnchantmentVisitor;Lnet/minecraft/item/ItemStack;)V",
+            at = @At("TAIL"))
+    private static void dungeonslibraries_runIterationOnItemWhenOnlyBuiltIn(EnchantmentHelper.IEnchantmentVisitor visitor, ItemStack itemStack, CallbackInfo ci) {
+        EnchantmentHelperMixinHandler.handler(visitor, itemStack);
+    }
+
 }

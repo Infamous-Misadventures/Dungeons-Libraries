@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -16,6 +17,10 @@ public class BuiltInEnchantmentsProvider implements ICapabilitySerializable<INBT
     public static final Capability<IBuiltInEnchantments> BUILT_IN_ENCHANTMENTS_CAPABILITY = null;
 
     private LazyOptional<IBuiltInEnchantments> instance = LazyOptional.of(BUILT_IN_ENCHANTMENTS_CAPABILITY::getDefaultInstance);
+
+    public BuiltInEnchantmentsProvider(ItemStack itemStack) {
+        this.instance = LazyOptional.of(() -> new BuiltInEnchantments(itemStack));
+    }
 
     @Nonnull
     @Override

@@ -11,6 +11,8 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GearConfigRegistry {
+    public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "built_in");
+
     public static final CodecJsonDataManager<GearConfig> GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig", GearConfig.CODEC, DungeonsLibraries.LOGGER);
 
 
@@ -25,5 +27,6 @@ public class GearConfigRegistry {
     @SubscribeEvent
     public static void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(GEAR_CONFIGS);
+        event.addListener(new GearConfigReload());
     }
 }

@@ -13,6 +13,8 @@ public interface IBuiltInEnchantments {
 
     boolean removeBuiltInEnchantment(ResourceLocation source, Enchantment enchantment);
 
+    boolean setBuiltInEnchantments(ResourceLocation source, List<EnchantmentData> enchantmentData);
+
     boolean clearAllBuiltInEnchantments(ResourceLocation source);
 
     List<EnchantmentData> getBuiltInEnchantments(ResourceLocation source);
