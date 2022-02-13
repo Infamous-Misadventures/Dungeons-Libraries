@@ -1,5 +1,8 @@
-package com.infamous.dungeons_libraries.capabilities.minionmaster;
+package com.infamous.dungeons_libraries.capabilities.minionmaster.summon;
 
+import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
 import com.infamous.dungeons_libraries.utils.SoundHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +19,17 @@ import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON
 
 public class SummonHelper {
 
+    private static boolean addSummonedMob(PlayerEntity playerEntity, MobEntity beeEntity) {
+        IMaster masterCap = MinionMasterHelper.getMasterCapability(playerEntity);
+        if(masterCap == null){
+            return false;
+        }
+        if(playerEntity.getAttribute(SUMMON_CAP.get()).getValue() < masterCap.getSummonedMobs().size()) {
+            return masterCap.addSummonedMob(beeEntity.getUUID());
+        }
+        return false;
+    }
+
     public static void summonBee(PlayerEntity playerEntity, BlockPos position) {
         BeeEntity beeEntity = EntityType.BEE.create(playerEntity.level);
         if (beeEntity!= null) {
@@ -27,17 +41,6 @@ public class SummonHelper {
                 beeEntity.remove();
             }
         }
-    }
-
-    private static boolean addSummonedMob(PlayerEntity playerEntity, MobEntity beeEntity) {
-        IMaster masterCap = MinionMasterHelper.getMasterCapability(playerEntity);
-        if(masterCap == null){
-            return false;
-        }
-        if(playerEntity.getAttribute(SUMMON_CAP.get()).getValue() < masterCap.getSummonedMobs().size()) {
-            return masterCap.addSummonedMob(beeEntity.getUUID());
-        }
-        return false;
     }
 
     public static void createBee(PlayerEntity playerEntity, BeeEntity beeEntity, BlockPos position) {

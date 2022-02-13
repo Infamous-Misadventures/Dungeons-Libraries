@@ -88,77 +88,6 @@ public class Master implements IMaster {
     }
 
     @Override
-    public UUID[] getBuzzyNestBees() {
-        return this.buzzyNestBees;
-    }
-
-    @Override
-    public boolean addBuzzyNestBee(UUID buzzyNestBee){
-        if(this.buzzyNestBees[0] == null){
-            this.buzzyNestBees[0] = buzzyNestBee;
-            return true;
-        }
-        else if(this.buzzyNestBees[1] == null){
-            this.buzzyNestBees[1] = buzzyNestBee;
-            return true;
-        }
-        else if(this.buzzyNestBees[2] == null){
-            this.buzzyNestBees[2] = buzzyNestBee;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public UUID[] getTumblebeeBees() {
-        return this.tumblebeeBees;
-    }
-
-    @Override
-    public boolean addTumblebeeBee(UUID tumblebeeBee) {
-        if(this.tumblebeeBees[0] == null){
-            this.tumblebeeBees[0] = tumblebeeBee;
-            return true;
-        }
-        else if(this.tumblebeeBees[1] == null){
-            this.tumblebeeBees[1] = tumblebeeBee;
-            return true;
-        }
-        else if(this.tumblebeeBees[2] == null){
-            this.tumblebeeBees[2] = tumblebeeBee;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public UUID[] getBusyBeeBees() {
-        return this.busyBeeBees;
-    }
-
-    @Override
-    public boolean hasNoBuzzyNestBees() {
-        return this.buzzyNestBees[0] == null && this.buzzyNestBees[1] == null && this.buzzyNestBees[2] == null;
-    }
-
-    @Override
-    public boolean addBusyBeeBee(UUID busyBeeBee) {
-        if(this.busyBeeBees[0] == null){
-            this.busyBeeBees[0] = busyBeeBee;
-            return true;
-        }
-        else if(this.busyBeeBees[1] == null){
-            this.busyBeeBees[1] = busyBeeBee;
-            return true;
-        }
-        else if(this.busyBeeBees[2] == null){
-            this.busyBeeBees[2] = busyBeeBee;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public List<UUID> getSummonedMobs() {
         List<UUID> summonedMobsTotal = IMaster.super.getSummonedMobs();
         summonedMobsTotal.addAll(this.summonedMobs);
@@ -168,5 +97,10 @@ public class Master implements IMaster {
     @Override
     public boolean addSummonedMob(UUID uuid) {
         return summonedMobs.add(uuid);
+    }
+
+    @Override
+    public void setSummonedMobs(List<UUID> summonedMobs) {
+        this.summonedMobs = new ArrayList<>(summonedMobs);
     }
 }

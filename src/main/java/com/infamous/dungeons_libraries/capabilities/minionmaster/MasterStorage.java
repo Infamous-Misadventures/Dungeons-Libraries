@@ -2,9 +2,12 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MasterStorage implements Capability.IStorage<IMaster> {
@@ -27,20 +30,13 @@ public class MasterStorage implements Capability.IStorage<IMaster> {
         if(instance.getSummonedSheep() != null){
             tag.putUUID("sheep", instance.getSummonedSheep());
         }
-        for(int i = 0; i < 3; i++){
-            UUID buzzyNestBee = instance.getBuzzyNestBees()[i];
-            UUID tumblebeeBee = instance.getTumblebeeBees()[i];
-            UUID busyBeeBee = instance.getBusyBeeBees()[i];
-            if(buzzyNestBee != null){
-                tag.putUUID("buzzyNestBee" + i, buzzyNestBee);
-            }
-            if(tumblebeeBee != null){
-                tag.putUUID("tumblebeeBee" + i, tumblebeeBee);
-            }
-            if(busyBeeBee != null){
-                tag.putUUID("busyBeeBee" + i, busyBeeBee);
-            }
-        }
+        ListNBT listnbt = new ListNBT();
+        instance.getSummonedMobs().forEach(uuid -> {
+            CompoundNBT compoundnbt = new CompoundNBT();
+            compoundnbt.putUUID("uuid", uuid);
+            listnbt.add(compoundnbt);
+        });
+        tag.put("summoned", listnbt);
         return tag;
     }
 
@@ -62,19 +58,12 @@ public class MasterStorage implements Capability.IStorage<IMaster> {
         if(tag.hasUUID("sheep")){
             instance.setSummonedSheep(tag.getUUID("sheep"));
         }
-        for(int i = 0; i < 3; i++){
-            String currentBuzzyNestBee = "buzzyNestBee" + i;
-            if(tag.hasUUID(currentBuzzyNestBee)){
-                instance.addBuzzyNestBee(tag.getUUID(currentBuzzyNestBee));
-            }
-            String currentTumblebeeBee = "tumblebeeBee" + i;
-            if(tag.hasUUID(currentTumblebeeBee)){
-                instance.addTumblebeeBee(tag.getUUID(currentTumblebeeBee));
-            }
-            String currentBusyBeeBee = "busyBeeBee" + i;
-            if(tag.hasUUID(currentBusyBeeBee)){
-                instance.addBusyBeeBee(tag.getUUID(currentBusyBeeBee));
-            }
+        ListNBT listNBT = tag.getList("summoned", 10);
+        List<UUID> summoned = new ArrayList<>();
+        for(int i = 0; i < listNBT.size(); ++i) {
+            CompoundNBT compoundnbt = listNBT.getCompound(i);
+            summoned.add(compoundnbt.getUUID("uuid"));
         }
+        instance.setSummonedMobs(summoned);
     }
 }

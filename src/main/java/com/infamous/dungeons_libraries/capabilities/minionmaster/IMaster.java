@@ -21,16 +21,6 @@ public interface IMaster {
     UUID getSummonedBat();
     UUID getSummonedSheep();
 
-    boolean addBuzzyNestBee(UUID buzzyNestBee);
-    boolean addTumblebeeBee(UUID tumblebeeBee);
-    boolean addBusyBeeBee(UUID busyBeeBee);
-
-    UUID[] getBuzzyNestBees();
-    UUID[] getTumblebeeBees();
-    UUID[] getBusyBeeBees();
-
-    boolean hasNoBuzzyNestBees();
-
     default List<UUID> getSummonedMobs(){
         List<UUID> summonedMobs = NonNullList.create();
         if(this.getSummonedBat() != null){
@@ -48,23 +38,10 @@ public interface IMaster {
         if(this.getSummonedWolf() != null){
             summonedMobs.add(this.getSummonedWolf());
         }
-        for(UUID busyBee : this.getBusyBeeBees()){
-            if(busyBee != null){
-                summonedMobs.add(busyBee);
-            }
-        }
-        for(UUID buzzyNestBee : this.getBuzzyNestBees()){
-            if(buzzyNestBee != null){
-                summonedMobs.add(buzzyNestBee);
-            }
-        }
-        for(UUID tumblebeeBee : this.getTumblebeeBees()){
-            if(tumblebeeBee != null){
-                summonedMobs.add(tumblebeeBee);
-            }
-        }
         return summonedMobs;
     }
 
     boolean addSummonedMob(UUID uuid);
+
+    void setSummonedMobs(List<UUID> summonedMobs);
 }
