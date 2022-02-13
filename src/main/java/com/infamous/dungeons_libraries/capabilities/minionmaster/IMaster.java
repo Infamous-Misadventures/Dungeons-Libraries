@@ -65,4 +65,6 @@ public interface IMaster {
         }
         return summonedMobs;
     }
+
+    boolean addSummonedMob(UUID uuid);
 }

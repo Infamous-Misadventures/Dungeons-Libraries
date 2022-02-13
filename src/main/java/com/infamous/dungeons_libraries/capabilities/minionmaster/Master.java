@@ -164,4 +164,9 @@ public class Master implements IMaster {
         summonedMobsTotal.addAll(this.summonedMobs);
         return summonedMobsTotal;
     }
+
+    @Override
+    public boolean addSummonedMob(UUID uuid) {
+        return summonedMobs.add(uuid);
+    }
 }

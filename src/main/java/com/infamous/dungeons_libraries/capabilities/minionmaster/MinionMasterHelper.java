@@ -1,7 +1,11 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtByTargetGoal;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtTargetGoal;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MinionFollowOwnerGoal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
@@ -82,5 +86,16 @@ public class MinionMasterHelper {
             return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summonable capability from the Entity!"));
         }
         return null;
+    }
+
+    public static void addMinionGoals(Entity entity) {
+        IMinion minionCap = getMinionCapability(entity);
+        if(minionCap == null) return;
+        if((entity instanceof IronGolemEntity || entity instanceof BeeEntity) && minionCap.isMinion()){
+            MobEntity mobEntity = (MobEntity) entity;
+            mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 2.1D, 10.0F, 2.0F, false));
+            mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
+            mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
+        }
     }
 }
