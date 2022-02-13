@@ -6,7 +6,7 @@ import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnch
 import com.infamous.dungeons_libraries.capabilities.enchantable.Enchantable;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableStorage;
 import com.infamous.dungeons_libraries.capabilities.enchantable.IEnchantable;
-import com.infamous.dungeons_libraries.capabilities.summoning.*;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.*;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;

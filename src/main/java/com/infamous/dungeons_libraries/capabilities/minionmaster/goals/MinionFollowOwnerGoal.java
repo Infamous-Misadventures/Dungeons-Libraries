@@ -1,6 +1,6 @@
-package com.infamous.dungeons_libraries.capabilities.summoning.goals;
+package com.infamous.dungeons_libraries.capabilities.minionmaster.goals;
 
-import com.infamous.dungeons_libraries.capabilities.summoning.MinionMasterHelper;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.LivingEntity;

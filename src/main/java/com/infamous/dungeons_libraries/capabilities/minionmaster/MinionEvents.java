@@ -1,9 +1,9 @@
-package com.infamous.dungeons_libraries.capabilities.summoning;
+package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import com.infamous.dungeons_libraries.capabilities.summoning.goals.MasterHurtByTargetGoal;
-import com.infamous.dungeons_libraries.capabilities.summoning.goals.MasterHurtTargetGoal;
-import com.infamous.dungeons_libraries.capabilities.summoning.goals.MinionFollowOwnerGoal;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtByTargetGoal;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtTargetGoal;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MinionFollowOwnerGoal;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.infamous.dungeons_libraries.capabilities.summoning.MinionMasterHelper.getMinionCapability;
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMinionCapability;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class MinionEvents {

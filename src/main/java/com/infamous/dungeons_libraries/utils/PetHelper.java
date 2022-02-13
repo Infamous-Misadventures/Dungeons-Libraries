@@ -1,6 +1,6 @@
 package com.infamous.dungeons_libraries.utils;
 
-import com.infamous.dungeons_libraries.capabilities.summoning.MinionMasterHelper;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.TameableEntity;

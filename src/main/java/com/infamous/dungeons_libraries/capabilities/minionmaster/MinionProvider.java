@@ -1,4 +1,4 @@
-package com.infamous.dungeons_libraries.capabilities.summoning;
+package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;

@@ -18,6 +18,7 @@ import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigRegistr
 @Mod.EventBusSubscriber(modid = MODID)
 public class DescriptionHelper {
 
+    // Rewrite to a mixin inside ItemStack::getTooltipLines. Figure out a way to have all styles available.
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event){
         LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(event.getItemStack());

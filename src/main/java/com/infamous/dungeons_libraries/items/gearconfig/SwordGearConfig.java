@@ -79,5 +79,12 @@ public class SwordGearConfig extends SwordItem implements IMeleeWeapon, IComboWe
         DescriptionHelper.addFullDescription(list, stack);
     }
 
+    @Override
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if(attacker.getAttributeBaseValue(ATTACK_SPEED) >= -1.0) {
+            target.invulnerableTime = 0;
+        }
+        return super.hurtEnemy(stack, target, attacker);
+    }
 
 }

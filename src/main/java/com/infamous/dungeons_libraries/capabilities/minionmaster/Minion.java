@@ -1,4 +1,4 @@
-package com.infamous.dungeons_libraries.capabilities.summoning;
+package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

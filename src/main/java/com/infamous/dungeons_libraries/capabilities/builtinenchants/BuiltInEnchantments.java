@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
 
 import com.google.common.collect.Lists;
+import com.infamous.dungeons_libraries.items.gearconfig.GearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.SwordGearConfig;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -22,7 +23,7 @@ public class BuiltInEnchantments implements IBuiltInEnchantments {
     public BuiltInEnchantments(ItemStack itemStack) {
         if(itemStack.getItem() instanceof SwordGearConfig){
             SwordGearConfig item = (SwordGearConfig) itemStack.getItem();
-            enchantments.put(new ResourceLocation(MODID, "gear_config"), new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
+            enchantments.put(GearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
         }
     }
 

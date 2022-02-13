@@ -1,6 +1,8 @@
-package com.infamous.dungeons_libraries.capabilities.summoning;
+package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Master implements IMaster {
@@ -20,12 +22,7 @@ public class Master implements IMaster {
     private UUID[] busyBeeBees = new UUID[3];
     private UUID[] tumblebeeBees = new UUID[3];
 
-    public Master(){
-        //this.summonedGolem = UUID.randomUUID();
-        //this.summonedWolf = UUID.randomUUID();
-        //this.summonedLlama = UUID.randomUUID();
-        //this.summonedBat = UUID.randomUUID();
-    }
+    private List<UUID> summonedMobs = new ArrayList<>();
 
     @Override
     public void copyFrom(IMaster summoner) {
@@ -159,5 +156,12 @@ public class Master implements IMaster {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<UUID> getSummonedMobs() {
+        List<UUID> summonedMobsTotal = IMaster.super.getSummonedMobs();
+        summonedMobsTotal.addAll(this.summonedMobs);
+        return summonedMobsTotal;
     }
 }
