@@ -42,8 +42,9 @@ public class SummonEvents {
 
         IMaster masterCap = getMasterCapability(event.player);
         if(masterCap == null) return;
+        if(event.player.level.isClientSide()) return;
         ServerWorld level = (ServerWorld) event.player.level;
-        if(masterCap.getSummonedGolem() != null && event.player.level instanceof ServerWorld){
+        if(masterCap.getSummonedGolem() != null){
             UUID summonedGolem = masterCap.getSummonedGolem();
             Entity entity = level.getEntity(summonedGolem);
             if(!(entity instanceof IronGolemEntity)) {
@@ -51,7 +52,7 @@ public class SummonEvents {
 //                ArtifactItem.putArtifactOnCooldown(summoner, ItemRegistry.GOLEM_KIT.get());
             }
         }
-        if(masterCap.getSummonedWolf() != null && event.player.level instanceof ServerWorld){
+        if(masterCap.getSummonedWolf() != null){
             UUID summonedWolf = masterCap.getSummonedWolf();
             Entity entity = level.getEntity(summonedWolf);
             if(!(entity instanceof WolfEntity)) {
@@ -59,7 +60,7 @@ public class SummonEvents {
 //                ArtifactItem.putArtifactOnCooldown(summoner, ItemRegistry.TASTY_BONE.get());
             }
         }
-        if(masterCap.getSummonedLlama() != null && event.player.level instanceof ServerWorld){
+        if(masterCap.getSummonedLlama() != null){
             UUID summonedLlama = masterCap.getSummonedLlama();
             Entity entity = level.getEntity(summonedLlama);
             if(!(entity instanceof LlamaEntity)) {
@@ -67,14 +68,14 @@ public class SummonEvents {
 //                ArtifactItem.putArtifactOnCooldown(summoner, ItemRegistry.WONDERFUL_WHEAT.get());
             }
         }
-        if(masterCap.getSummonedBat() != null && event.player.level instanceof ServerWorld){
+        if(masterCap.getSummonedBat() != null){
             UUID summonedBat = masterCap.getSummonedBat();
             Entity entity = level.getEntity(summonedBat);
             if(!(entity instanceof BatEntity)) {
                 masterCap.setSummonedBat(null);
             }
         }
-        if(masterCap.getSummonedSheep() != null && event.player.level instanceof ServerWorld){
+        if(masterCap.getSummonedSheep() != null){
             UUID summonedSheep = masterCap.getSummonedSheep();
             Entity entity = level.getEntity(summonedSheep);
             if(!(entity instanceof SheepEntity)) {

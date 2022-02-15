@@ -24,7 +24,7 @@ public class SummonHelper {
         if(masterCap == null){
             return false;
         }
-        if(playerEntity.getAttribute(SUMMON_CAP.get()).getValue() < masterCap.getSummonedMobs().size()) {
+        if( masterCap.getSummonedMobs().size() <= playerEntity.getAttribute(SUMMON_CAP.get()).getValue()) {
             return masterCap.addSummonedMob(beeEntity.getUUID());
         }
         return false;

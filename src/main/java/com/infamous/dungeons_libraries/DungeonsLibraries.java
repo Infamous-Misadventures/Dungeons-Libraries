@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries;
 
+import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsStorage;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
@@ -38,6 +39,7 @@ public class DungeonsLibraries
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        AttributeRegistry.ATTRIBUTES.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event){
