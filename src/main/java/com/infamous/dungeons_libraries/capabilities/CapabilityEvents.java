@@ -7,6 +7,8 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.MasterProvider;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionProvider;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +30,7 @@ public class CapabilityEvents {
             //TODO 1.18: rename to minion
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summonable"), new MinionProvider());
         }
-        if (event.getObject() instanceof PlayerEntity) {
+        if (event.getObject() instanceof LivingEntity) {
             //TODO 1.18: rename to master
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summoner"), new MasterProvider());
         }

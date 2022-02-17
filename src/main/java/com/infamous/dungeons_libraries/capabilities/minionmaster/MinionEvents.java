@@ -13,15 +13,17 @@ public class MinionEvents {
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event){
         IMinion cap = MinionMasterHelper.getMinionCapability(event.getEntityLiving());
-        if (cap != null) {
+        if (cap != null && cap.isMinion()) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void reAddMinionGoals(EntityJoinWorldEvent event){
-        Entity entity = event.getEntity();
-        MinionMasterHelper.addMinionGoals(entity);
+        if(!event.getWorld().isClientSide()) {
+            Entity entity = event.getEntity();
+            MinionMasterHelper.addMinionGoals(entity);
+        }
     }
 
 }

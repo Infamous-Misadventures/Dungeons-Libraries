@@ -20,7 +20,7 @@ public class Minion implements IMinion {
 
     @Override
     public boolean isMinion() {
-        return master == null;
+        return master != null;
     }
 
 

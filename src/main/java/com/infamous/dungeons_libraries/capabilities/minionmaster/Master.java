@@ -18,10 +18,6 @@ public class Master implements IMaster {
     @Nullable
     private UUID summonedSheep;
 
-    private UUID[] buzzyNestBees = new UUID[3];
-    private UUID[] busyBeeBees = new UUID[3];
-    private UUID[] tumblebeeBees = new UUID[3];
-
     private List<UUID> summonedMobs = new ArrayList<>();
 
     @Override

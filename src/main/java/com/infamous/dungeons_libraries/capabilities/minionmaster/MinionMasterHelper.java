@@ -91,7 +91,7 @@ public class MinionMasterHelper {
     public static void addMinionGoals(Entity entity) {
         IMinion minionCap = getMinionCapability(entity);
         if(minionCap == null) return;
-        if((entity instanceof IronGolemEntity || entity instanceof BeeEntity) && minionCap.isMinion()){
+        if(minionCap.isMinion() && (entity instanceof IronGolemEntity || entity instanceof BeeEntity)){
             MobEntity mobEntity = (MobEntity) entity;
             mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 2.1D, 10.0F, 2.0F, false));
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
