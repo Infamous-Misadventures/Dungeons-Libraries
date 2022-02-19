@@ -3,8 +3,11 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster.summon;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
+import com.infamous.dungeons_libraries.mixin.BeeEntityInvoker;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.IMob;
@@ -16,6 +19,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +35,17 @@ import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMa
 
 @Mod.EventBusSubscriber(modid = MODID)
 public class SummonEvents {
+
+    @SubscribeEvent
+    public static void onHurtTarget(LivingHurtEvent event){
+        Entity entity = event.getSource().getEntity();
+        if(entity instanceof BeeEntity){
+            IMinion minionCapability = getMinionCapability(entity);
+            if(minionCapability != null && minionCapability.isMinion()){
+                ((BeeEntityInvoker) entity).dungeons_gear_setHasStung(false);
+            }
+        }
+    }
 
     // Avoids a situation where your summoned mob died but onSummonableDeath didn't fire in time,
     // making you unable to summon any more of that entity
@@ -186,6 +202,44 @@ public class SummonEvents {
 //                    }
 //                }
 //            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onSummonedMobAttemptsToAttack(LivingSetAttackTargetEvent event){
+        if(event.getTarget() == null) return;
+        if(MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
+            LivingEntity minionAttacker = event.getEntityLiving();
+            IMinion attackerMinionCap = getMinionCapability(minionAttacker);
+            if(attackerMinionCap == null) return;
+            if(attackerMinionCap.getMaster() != null){
+                UUID attackersOwner = attackerMinionCap.getMaster();
+                if(MinionMasterHelper.isMinionEntity(event.getTarget())){
+                    LivingEntity summonableTarget = event.getTarget();
+                    IMinion targetSummonableCap = getMinionCapability(summonableTarget);
+                    if(targetSummonableCap == null) return;
+                    if(targetSummonableCap.getMaster() != null){
+                        UUID targetsOwner = targetSummonableCap.getMaster();
+                        if(targetsOwner.equals(attackersOwner)){
+                            preventAttackForSummonableMob(minionAttacker);
+                        }
+                    }
+                }
+            }
+            if(attackerMinionCap.getMaster() == event.getTarget().getUUID()){
+                preventAttackForSummonableMob(minionAttacker);
+            }
+        }
+    }
+
+    private static void preventAttackForSummonableMob(LivingEntity minionAttacker) {
+        if(minionAttacker instanceof IAngerable){
+            ((IAngerable) minionAttacker).stopBeingAngry();
+        }
+        if(minionAttacker instanceof MobEntity){
+            MobEntity mob = (MobEntity) minionAttacker;
+            mob.setTarget(null);
+            mob.setLastHurtByMob(null);
         }
     }
 }

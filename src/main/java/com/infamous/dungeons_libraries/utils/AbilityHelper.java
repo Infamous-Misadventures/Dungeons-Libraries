@@ -9,7 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOfAttacker;
+import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOf;
 
 public class AbilityHelper {
 
@@ -48,7 +48,7 @@ public class AbilityHelper {
     }
 
     public static boolean isAlly(LivingEntity origin, LivingEntity nearbyEntity) {
-        return isPetOfAttacker(origin, nearbyEntity)
+        return isPetOf(origin, nearbyEntity)
                 || origin.isAlliedTo(nearbyEntity)
                 || (origin instanceof MonsterEntity && nearbyEntity instanceof MonsterEntity);
     }

@@ -56,10 +56,10 @@ public class MinionMasterHelper {
     @Nullable
     public static LivingEntity getMaster(LivingEntity minionMob) {
         try {
-            IMinion summonable = getMinionCapability(minionMob);
-            if(summonable == null) return null;
-            if(summonable.getMaster() != null){
-                UUID ownerUniqueId = summonable.getMaster();
+            IMinion minion = getMinionCapability(minionMob);
+            if(minion == null) return null;
+            if(minion.getMaster() != null){
+                UUID ownerUniqueId = minion.getMaster();
                 return ownerUniqueId == null ? null : minionMob.level.getPlayerByUUID(ownerUniqueId);
             }
             else return null;

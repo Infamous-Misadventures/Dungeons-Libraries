@@ -6,16 +6,13 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHel
 import com.infamous.dungeons_libraries.utils.SoundHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
+import static com.infamous.dungeons_libraries.utils.PetHelper.canPetAttackEntity;
 
 public class SummonHelper {
 
@@ -47,8 +44,7 @@ public class SummonHelper {
         beeEntity.moveTo((double) position.getX() + 0.5D, (double) position.getY() + 0.05D, (double) position.getZ() + 0.5D, 0.0F, 0.0F);
         MinionMasterHelper.addMinionGoals(beeEntity);
         beeEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(beeEntity, LivingEntity.class, 5, false, false,
-                (entityIterator) -> entityIterator instanceof IMob && !(entityIterator instanceof CreeperEntity)));
-
+                (entityIterator) -> canPetAttackEntity(master, beeEntity, entityIterator)));
         SoundHelper.playCreatureSound(master, SoundEvents.BEE_LOOP);
         master.level.addFreshEntity(beeEntity);
     }

@@ -6,7 +6,8 @@
   "refmap": "dungeons_libraries.refmap.json",
   "mixins": [
     "GeoEntityRendererMixin",
-    "EnchantmentHelperMixin"
+    "EnchantmentHelperMixin",
+    "BeeEntityInvoker"
   ],
   "client": [
   ],
