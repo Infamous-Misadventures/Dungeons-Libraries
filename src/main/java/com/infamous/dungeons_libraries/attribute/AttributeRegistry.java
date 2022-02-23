@@ -18,4 +18,18 @@ public class AttributeRegistry {
             0.0D,
             1024.0D)
             .setSyncable(true));
+
+    public static final RegistryObject<Attribute> SOUL_GATHERING = ATTRIBUTES.register("soul_gathering", () -> new RangedAttribute(
+            "attribute.name.generic.dungeons_libraries.soul_gathering",
+            3.0D,
+            0.0D,
+            1024.0D)
+            .setSyncable(true));
+
+    public static final RegistryObject<Attribute> SOUL_CAP = ATTRIBUTES.register("soul_cap", () -> new RangedAttribute(
+            "attribute.name.generic.dungeons_libraries.soul_cap",
+            300.0D,
+            0.0D,
+            1024.0D)
+            .setSyncable(true));
 }

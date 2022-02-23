@@ -23,6 +23,10 @@ public class NetworkHandler {
                 .encoder(MobEnchantmentMessage::encode).decoder(MobEnchantmentMessage::decode)
                 .consumer(MobEnchantmentMessage::onPacketReceived)
                 .add();
+        INSTANCE.messageBuilder(UpdateSoulsMessage.class, 0)
+                .encoder(UpdateSoulsMessage::encode).decoder(UpdateSoulsMessage::decode)
+                .consumer(UpdateSoulsMessage.UpdateSoulsHandler::handle)
+                .add();
     }
 
     public static int incrementAndGetPacketCounter() {
