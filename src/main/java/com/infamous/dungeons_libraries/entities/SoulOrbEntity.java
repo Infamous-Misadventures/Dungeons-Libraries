@@ -147,7 +147,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
             if (this.value > 0) {
                ISoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(playerEntity);
                if(soulCasterCapability != null){
-                  soulCasterCapability.addSouls(this.value, playerEntity);
+                  SoulCasterHelper.addSouls(playerEntity, this.value);
                }
             }
 
