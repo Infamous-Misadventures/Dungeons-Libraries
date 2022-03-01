@@ -20,7 +20,7 @@ public class SoulCasterHelper {
         ISoulCaster soulCasterCapability = getSoulCasterCapability(le);
         if (soulCasterCapability == null) return;
 
-        float newAmount = soulCasterCapability.getSouls() + amount;
+        float newAmount = soulCasterCapability.getSouls() + amount + 1;
         soulCasterCapability.setSouls(newAmount, le);
         if (le instanceof ServerPlayerEntity) {
             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
@@ -41,6 +41,19 @@ public class SoulCasterHelper {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
             }
             return true;
+        }
+        return false;
+    }
+
+    public static boolean canConsumeSouls(LivingEntity le, ItemStack itemStack) {
+        if(le instanceof PlayerEntity && ((PlayerEntity) le).isCreative()) return true;
+        ISoulCaster soulCasterCapability = getSoulCasterCapability(le);
+        if (soulCasterCapability == null) return false;
+
+        Item item = itemStack.getItem();
+        if(item instanceof ISoulConsumer) {
+            ISoulConsumer soulConsumer = (ISoulConsumer) item;
+            return soulCasterCapability.getSouls() > soulConsumer.getActivationCost(itemStack);
         }
         return false;
     }

@@ -15,9 +15,11 @@ import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 
+import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+
 
 public class SoulOrbRenderer extends EntityRenderer<SoulOrbEntity> {
-   private static final ResourceLocation EXPERIENCE_ORB_LOCATION = new ResourceLocation("textures/entity/experience_orb.png");
+   private static final ResourceLocation EXPERIENCE_ORB_LOCATION = new ResourceLocation(MODID,"textures/entity/soul.png");
    private static final RenderType RENDER_TYPE = RenderType.itemEntityTranslucentCull(EXPERIENCE_ORB_LOCATION);
 
    public SoulOrbRenderer(EntityRendererManager p_i46178_1_) {

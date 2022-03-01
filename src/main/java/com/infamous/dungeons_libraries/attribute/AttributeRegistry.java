@@ -21,7 +21,7 @@ public class AttributeRegistry {
 
     public static final RegistryObject<Attribute> SOUL_GATHERING = ATTRIBUTES.register("soul_gathering", () -> new RangedAttribute(
             "attribute.name.generic.dungeons_libraries.soul_gathering",
-            3.0D,
+            0.0D,
             0.0D,
             1024.0D)
             .setSyncable(true));

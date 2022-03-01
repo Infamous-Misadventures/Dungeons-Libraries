@@ -13,11 +13,11 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 public class GearConfigRegistry {
     public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gear_config");
 
-    public static final CodecJsonDataManager<GearConfig> GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig", GearConfig.CODEC, DungeonsLibraries.LOGGER);
+    public static final CodecJsonDataManager<MeleeGearConfig> GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig", MeleeGearConfig.CODEC, DungeonsLibraries.LOGGER);
 
 
-    public static GearConfig getConfig(ResourceLocation resourceLocation) {
-        return GEAR_CONFIGS.data.getOrDefault(resourceLocation, GearConfig.DEFAULT);
+    public static MeleeGearConfig getConfig(ResourceLocation resourceLocation) {
+        return GEAR_CONFIGS.data.getOrDefault(resourceLocation, MeleeGearConfig.DEFAULT);
     }
 
     public static boolean gearConfigExists(ResourceLocation resourceLocation) {
