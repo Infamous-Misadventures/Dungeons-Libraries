@@ -20,7 +20,9 @@ public class SoulEvents {
         Entity sourceEntity = event.getSource().getEntity();
         if(sourceEntity instanceof PlayerEntity) {
             double soulAmount = ((PlayerEntity) sourceEntity).getAttributeValue(SOUL_GATHERING.get());
-            entityLiving.level.addFreshEntity(new SoulOrbEntity((PlayerEntity) sourceEntity,entityLiving.level, entityLiving.getX(), entityLiving.getY() + 0.5D, entityLiving.getZ(), (float) soulAmount));
+            if(soulAmount > 0) {
+                entityLiving.level.addFreshEntity(new SoulOrbEntity((PlayerEntity) sourceEntity, entityLiving.level, entityLiving.getX(), entityLiving.getY() + 0.5D, entityLiving.getZ(), (float) soulAmount));
+            }
         }
     }
 }

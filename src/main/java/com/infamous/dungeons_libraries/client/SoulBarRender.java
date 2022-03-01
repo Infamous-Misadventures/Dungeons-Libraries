@@ -20,13 +20,12 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SOUL_CAP;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
-public class SoulRender {
+public class SoulBarRender {
     private static final ResourceLocation SOUL_BAR_RESOURCE = new ResourceLocation(MODID, "textures/misc/soul_bar.png");
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
-    private static float RENDER_SOULS = 0;
 
     @SubscribeEvent
-    public static void displaySoul(RenderGameOverlayEvent.Post event) {
+    public static void displaySoulBar(RenderGameOverlayEvent.Post event) {
         MatrixStack matrixStack = event.getMatrixStack();
         MainWindow sr = event.getWindow();
         int scaledWidth = sr.getGuiScaledWidth();
@@ -53,11 +52,9 @@ public class SoulRender {
 
             mc.getProfiler().push("soulBar");
 
-            adjustRenderSouls(souls);
-
-            if (RENDER_SOULS > 0) {
+            if (souls > 0) {
                 int backgroundBarWidth = 122;
-                int foregroundBarWidth = (int) (RENDER_SOULS / maxSouls * 122.0F);
+                int foregroundBarWidth = (int) (souls / maxSouls * 122.0F);
                 int xPos = scaledWidth - 123;
                 int yPos = scaledHeight - 7;
                 AbstractGui.blit(matrixStack, xPos, yPos, 0, 0, backgroundBarWidth, 5, 121, 10);
@@ -65,9 +62,9 @@ public class SoulRender {
             }
             mc.getProfiler().pop();
 
-            if (RENDER_SOULS > 0) {
+            if (souls > 0) {
                 mc.getProfiler().push("soulLevel");
-                String soulLevel = "" + RENDER_SOULS;
+                String soulLevel = "" + souls;
                 int baseXPos = scaledWidth - mc.font.width(soulLevel) - (123 / 2) + 11;
                 int baseYPos = scaledHeight - 7 - 6;
                 mc.font.draw(matrixStack, soulLevel, (float)(baseXPos + 1), (float)baseYPos, 0);
@@ -84,19 +81,6 @@ public class SoulRender {
         }
 
 
-    }
-
-    private static void adjustRenderSouls(float souls) {
-        boolean close = true;
-        if (RENDER_SOULS < souls) {
-            RENDER_SOULS++;
-            close = false;
-        }
-        if (RENDER_SOULS > souls) {
-            RENDER_SOULS--;
-            close = !close;
-        }
-        if (close) RENDER_SOULS = souls;
     }
 
 }

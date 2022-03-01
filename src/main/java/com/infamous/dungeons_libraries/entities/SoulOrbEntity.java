@@ -162,50 +162,12 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
    }
 
    public int getIcon() {
-      if (this.value >= 2477) {
+      if(this.value > 10){
          return 10;
-      } else if (this.value >= 1237) {
-         return 9;
-      } else if (this.value >= 617) {
-         return 8;
-      } else if (this.value >= 307) {
-         return 7;
-      } else if (this.value >= 149) {
-         return 6;
-      } else if (this.value >= 73) {
-         return 5;
-      } else if (this.value >= 37) {
-         return 4;
-      } else if (this.value >= 17) {
-         return 3;
-      } else if (this.value >= 7) {
-         return 2;
-      } else {
-         return this.value >= 3 ? 1 : 0;
-      }
-   }
-
-   public static int getExperienceValue(int p_70527_0_) {
-      if (p_70527_0_ >= 2477) {
-         return 2477;
-      } else if (p_70527_0_ >= 1237) {
-         return 1237;
-      } else if (p_70527_0_ >= 617) {
-         return 617;
-      } else if (p_70527_0_ >= 307) {
-         return 307;
-      } else if (p_70527_0_ >= 149) {
-         return 149;
-      } else if (p_70527_0_ >= 73) {
-         return 73;
-      } else if (p_70527_0_ >= 37) {
-         return 37;
-      } else if (p_70527_0_ >= 17) {
-         return 17;
-      } else if (p_70527_0_ >= 7) {
-         return 7;
-      } else {
-         return p_70527_0_ >= 3 ? 3 : 1;
+      }else if(this.value < 1){
+         return 0;
+      }else{
+         return (int) this.value - 1;
       }
    }
 

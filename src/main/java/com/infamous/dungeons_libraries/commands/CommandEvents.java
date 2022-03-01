@@ -13,5 +13,6 @@ public class CommandEvents {
     public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
         MobEnchantmentCommand.register(commandDispatcher);
+        SoulsCommand.register(commandDispatcher);
     }
 }

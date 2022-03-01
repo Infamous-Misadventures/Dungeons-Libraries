@@ -19,8 +19,8 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 
 public class SoulOrbRenderer extends EntityRenderer<SoulOrbEntity> {
-   private static final ResourceLocation EXPERIENCE_ORB_LOCATION = new ResourceLocation(MODID,"textures/entity/soul.png");
-   private static final RenderType RENDER_TYPE = RenderType.itemEntityTranslucentCull(EXPERIENCE_ORB_LOCATION);
+   private static final ResourceLocation SOUL_ORB_LOCATION = new ResourceLocation(MODID,"textures/entity/soul_orb.png");
+   private static final RenderType RENDER_TYPE = RenderType.itemEntityTranslucentCull(SOUL_ORB_LOCATION);
 
    public SoulOrbRenderer(EntityRendererManager p_i46178_1_) {
       super(p_i46178_1_);
@@ -35,18 +35,18 @@ public class SoulOrbRenderer extends EntityRenderer<SoulOrbEntity> {
    public void render(SoulOrbEntity pEntity, float pEntityYaw, float pPartialTicks, MatrixStack pMatrixStack, IRenderTypeBuffer pBuffer, int pPackedLight) {
       pMatrixStack.pushPose();
       int i = pEntity.getIcon();
-      float f = (float)(i % 4 * 16 + 0) / 64.0F;
-      float f1 = (float)(i % 4 * 16 + 16) / 64.0F;
-      float f2 = (float)(i / 4 * 16 + 0) / 64.0F;
-      float f3 = (float)(i / 4 * 16 + 16) / 64.0F;
+      float f = (float)(i % 4 * 16 + 0) / 84.0F;
+      float f1 = (float)(i % 4 * 16 + 16) / 84.0F;
+      float f2 = (float)(i / 4 * 18 + 0) / 84.0F;
+      float f3 = (float)(i / 4 * 18 + 18) / 84.0F;
       float f4 = 1.0F;
       float f5 = 0.5F;
       float f6 = 0.25F;
       float f7 = 255.0F;
       float f8 = ((float)pEntity.tickCount + pPartialTicks) / 2.0F;
-      int j = (int)((MathHelper.sin(f8 + 0.0F) + 1.0F) * 0.5F * 255.0F);
+      int j = (int)((MathHelper.sin(f8 + 0.0F) + 1.0F) * 0.5F * 155.0F);
       int k = 255;
-      int l = (int)((MathHelper.sin(f8 + 4.1887903F) + 1.0F) * 0.1F * 255.0F);
+      int l = (int)((MathHelper.sin(f8 + 4.1887903F) + 1.0F) * 0.1F * 155.0F);
       pMatrixStack.translate(0.0D, (double)0.1F, 0.0D);
       pMatrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
       pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
@@ -56,10 +56,10 @@ public class SoulOrbRenderer extends EntityRenderer<SoulOrbEntity> {
       MatrixStack.Entry matrixstack$entry = pMatrixStack.last();
       Matrix4f matrix4f = matrixstack$entry.pose();
       Matrix3f matrix3f = matrixstack$entry.normal();
-      vertex(ivertexbuilder, matrix4f, matrix3f, -0.5F, -0.25F, 255, j, l, f, f3, pPackedLight);
-      vertex(ivertexbuilder, matrix4f, matrix3f, 0.5F, -0.25F, 255, j, l, f1, f3, pPackedLight);
-      vertex(ivertexbuilder, matrix4f, matrix3f, 0.5F, 0.75F, 255, j, l, f1, f2, pPackedLight);
-      vertex(ivertexbuilder, matrix4f, matrix3f, -0.5F, 0.75F, 255, j, l, f, f2, pPackedLight);
+      vertex(ivertexbuilder, matrix4f, matrix3f, -0.5F, -0.25F, j, l, 255, f, f3, pPackedLight);
+      vertex(ivertexbuilder, matrix4f, matrix3f, 0.5F, -0.25F, j, l, 255, f1, f3, pPackedLight);
+      vertex(ivertexbuilder, matrix4f, matrix3f, 0.5F, 0.75F, j, l, 255, f1, f2, pPackedLight);
+      vertex(ivertexbuilder, matrix4f, matrix3f, -0.5F, 0.75F, j, l, 255, f, f2, pPackedLight);
       pMatrixStack.popPose();
       super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
    }
@@ -72,6 +72,6 @@ public class SoulOrbRenderer extends EntityRenderer<SoulOrbEntity> {
     * Returns the location of an entity's texture.
     */
    public ResourceLocation getTextureLocation(SoulOrbEntity pEntity) {
-      return EXPERIENCE_ORB_LOCATION;
+      return SOUL_ORB_LOCATION;
    }
 }

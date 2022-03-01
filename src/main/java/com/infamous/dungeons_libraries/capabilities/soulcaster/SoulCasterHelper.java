@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -27,6 +28,17 @@ public class SoulCasterHelper {
         }
     }
 
+    public static void setSouls(LivingEntity le, float amount) {
+        ISoulCaster soulCasterCapability = getSoulCasterCapability(le);
+        if (soulCasterCapability == null) return;
+
+        float newAmount = amount;
+        soulCasterCapability.setSouls(newAmount, le);
+        if (le instanceof ServerPlayerEntity) {
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
+        }
+    }
+
     public static boolean consumeSouls(LivingEntity le, ItemStack itemStack) {
         if(le instanceof PlayerEntity && ((PlayerEntity) le).isCreative()) return true;
         ISoulCaster soulCasterCapability = getSoulCasterCapability(le);
@@ -35,7 +47,8 @@ public class SoulCasterHelper {
         Item item = itemStack.getItem();
         if(item instanceof ISoulConsumer) {
             ISoulConsumer soulConsumer = (ISoulConsumer) item;
-            float newAmount = soulCasterCapability.getSouls() + soulConsumer.getActivationCost(itemStack);
+            if(soulCasterCapability.getSouls() < soulConsumer.getActivationCost(itemStack)) return false;
+            float newAmount = soulCasterCapability.getSouls() - soulConsumer.getActivationCost(itemStack);
             soulCasterCapability.setSouls(newAmount, le);
             if (le instanceof ServerPlayerEntity) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));

@@ -6,5 +6,11 @@
   "commands.mobEnchantment.clear.specific.success.single": "Removed mob enchantment %s from %s",
   "commands.mobEnchantment.clear.specific.success.multiple": "Removed mob enchantment %s from %s targets",
   "commands.mobEnchantment.give.failed": "Unable to apply this mobEnchantment (target likely already has it)",
-  "commands.mobEnchantment.clear.everything.failed": "Target has no mobEnchantments to remove"
+  "commands.mobEnchantment.clear.everything.failed": "Target has no mobEnchantments to remove",
+  "attribute.name.generic.dungeons_libraries.soul_gathering": "Soul Gathering",
+
+  "commands.souls.add.failed": "Failed to add souls",
+  "commands.souls.set.failed": "Failed to set souls",
+  "commands.souls.add.success": "Successfully added souls",
+  "commands.souls.set.success": "Successfully set souls"
 }
