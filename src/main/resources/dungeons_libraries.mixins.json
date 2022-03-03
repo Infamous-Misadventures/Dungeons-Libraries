@@ -7,7 +7,7 @@
   "mixins": [
     "GeoEntityRendererMixin",
     "EnchantmentHelperMixin",
-    "BeeEntityInvoker",
+    "BeeEntityMixin",
     "MobEntityMixin"
   ],
   "client": [

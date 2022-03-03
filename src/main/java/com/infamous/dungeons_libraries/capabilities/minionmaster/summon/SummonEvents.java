@@ -3,7 +3,6 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster.summon;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import com.infamous.dungeons_libraries.mixin.BeeEntityInvoker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
@@ -14,12 +13,10 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,17 +32,6 @@ import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMa
 
 @Mod.EventBusSubscriber(modid = MODID)
 public class SummonEvents {
-
-    @SubscribeEvent
-    public static void onHurtTarget(LivingHurtEvent event){
-        Entity entity = event.getSource().getEntity();
-        if(entity instanceof BeeEntity){
-            IMinion minionCapability = getMinionCapability(entity);
-            if(minionCapability != null && minionCapability.isMinion()){
-                ((BeeEntityInvoker) entity).dungeons_gear_setHasStung(false);
-            }
-        }
-    }
 
     // Avoids a situation where your summoned mob died but onSummonableDeath didn't fire in time,
     // making you unable to summon any more of that entity
