@@ -113,7 +113,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     @Override
     public boolean mineBlock(ItemStack itemStack, World level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
         if (blockState.getDestroySpeed(level, blockPos) != 0.0F) {
-            itemStack.hurtAndBreak(2, livingEntity, MojankHelper::hurtEnemyBroadcastBreakEvent);
+            itemStack.hurtAndBreak(1, livingEntity, MojankHelper::hurtEnemyBroadcastBreakEvent);
         }
 
         return true;

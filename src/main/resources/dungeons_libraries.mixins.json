@@ -8,7 +8,9 @@
     "GeoEntityRendererMixin",
     "EnchantmentHelperMixin",
     "BeeEntityMixin",
-    "MobEntityMixin"
+    "MobEntityMixin",
+    "AxeItemAccessor",
+    "PickaxeItemAccessor"
   ],
   "client": [
   ],
