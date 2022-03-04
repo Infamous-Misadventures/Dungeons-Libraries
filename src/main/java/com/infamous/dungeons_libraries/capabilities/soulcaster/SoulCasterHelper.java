@@ -58,6 +58,20 @@ public class SoulCasterHelper {
         return false;
     }
 
+    public static boolean consumeSouls(LivingEntity le, float amount) {
+        if(le instanceof PlayerEntity && ((PlayerEntity) le).isCreative()) return true;
+        ISoulCaster soulCasterCapability = getSoulCasterCapability(le);
+        if (soulCasterCapability == null) return false;
+
+        if(soulCasterCapability.getSouls() < amount) return false;
+        float newAmount = soulCasterCapability.getSouls() - amount;
+        soulCasterCapability.setSouls(newAmount, le);
+        if (le instanceof ServerPlayerEntity) {
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) le), new UpdateSoulsMessage(soulCasterCapability.getSouls()));
+        }
+        return true;
+    }
+
     public static boolean canConsumeSouls(LivingEntity le, ItemStack itemStack) {
         if(le instanceof PlayerEntity && ((PlayerEntity) le).isCreative()) return true;
         ISoulCaster soulCasterCapability = getSoulCasterCapability(le);
