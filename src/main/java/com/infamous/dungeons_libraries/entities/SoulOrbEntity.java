@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.entities;
 
 import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
+import com.infamous.dungeons_libraries.event.PlayerSoulEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
@@ -141,8 +142,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
       if (!this.level.isClientSide) {
          if (this.floatTime == 0) {
             //Throw OrbEvent
-            //if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(playerEntity, this))) return;
-//            playerEntity.take(this, 1); TODO: Is this needed?
+            if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new PlayerSoulEvent.PickupSoul(playerEntity, this))) return;
 
             if (this.value > 0) {
                ISoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(playerEntity);
