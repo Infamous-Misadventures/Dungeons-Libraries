@@ -10,7 +10,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class BuiltInEnchantmentsStorage implements Capability.IStorage<IBuiltInEnchantments> {
@@ -49,9 +51,8 @@ public class BuiltInEnchantmentsStorage implements Capability.IStorage<IBuiltInE
             ResourceLocation resourcelocation = ResourceLocation.tryParse(compoundnbt.getString(SOURCE_KEY));
             ListNBT enchantmentListnbt = new ListNBT();
             Map<Enchantment, Integer> enchantmentIntegerMap = EnchantmentHelper.deserializeEnchantments(compoundnbt.getList(ENCHANTMENT_DATA_KEY, 10));
-            enchantmentIntegerMap.forEach((enchantment, integer) -> {
-                instance.addBuiltInEnchantment(resourcelocation, new EnchantmentData(enchantment, integer));
-            });
+            List<EnchantmentData> enchantmentDataList = enchantmentIntegerMap.entrySet().stream().map(entry -> new EnchantmentData(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+            instance.setBuiltInEnchantments(resourcelocation, enchantmentDataList);
         }
     }
 }

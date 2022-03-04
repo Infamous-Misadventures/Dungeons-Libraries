@@ -1,0 +1,14 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "MIT License"
+
+[[mods]]
+modId = "test_dungeons_libraries"
+version = "1"
+
+[[dependencies.test_dungeons_libraries]]
+modId = "dungeons_libraries" #mandatory
+mandatory = true #mandatory
+versionRange = "[0.0.2,)" #mandatory
+ordering = "AFTER"
+side = "BOTH"

@@ -19,9 +19,13 @@ public class NetworkHandler {
     }
 
     public static void init() {
-        INSTANCE.messageBuilder(MobEnchantmentMessage.class, 0)
+        INSTANCE.messageBuilder(MobEnchantmentMessage.class, incrementAndGetPacketCounter())
                 .encoder(MobEnchantmentMessage::encode).decoder(MobEnchantmentMessage::decode)
                 .consumer(MobEnchantmentMessage::onPacketReceived)
+                .add();
+        INSTANCE.messageBuilder(UpdateSoulsMessage.class, incrementAndGetPacketCounter())
+                .encoder(UpdateSoulsMessage::encode).decoder(UpdateSoulsMessage::decode)
+                .consumer(UpdateSoulsMessage.UpdateSoulsHandler::handle)
                 .add();
     }
 

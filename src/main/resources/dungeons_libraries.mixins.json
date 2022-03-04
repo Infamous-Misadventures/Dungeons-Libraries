@@ -6,7 +6,11 @@
   "refmap": "dungeons_libraries.refmap.json",
   "mixins": [
     "GeoEntityRendererMixin",
-    "EnchantmentHelperMixin"
+    "EnchantmentHelperMixin",
+    "BeeEntityMixin",
+    "MobEntityMixin",
+    "AxeItemAccessor",
+    "PickaxeItemAccessor"
   ],
   "client": [
   ],
