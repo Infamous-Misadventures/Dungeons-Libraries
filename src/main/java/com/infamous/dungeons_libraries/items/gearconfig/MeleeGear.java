@@ -67,7 +67,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @Override
     public int getComboLength(ItemStack stack, LivingEntity attacker) {
-        return 0;
+        return this.getGearConfig().getComboLength();
     }
 
     @Override
