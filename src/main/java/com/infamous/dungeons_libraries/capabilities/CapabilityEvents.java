@@ -12,13 +12,9 @@ import com.infamous.dungeons_libraries.network.UpdateSoulsMessage;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShootableItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -52,9 +48,8 @@ public class CapabilityEvents {
 
     @SubscribeEvent
     public static void onAttachItemStackCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-//        if (canBeEnchanted(event.getObject())) {
+        if (event.getObject().getItem() instanceof ShootableItem)
             event.addCapability(new ResourceLocation(MODID, "built_in_enchantments"), new BuiltInEnchantmentsProvider(event.getObject()));
-//        }
     }
 
     private static boolean canBeEnchanted(ItemStack itemStack){
