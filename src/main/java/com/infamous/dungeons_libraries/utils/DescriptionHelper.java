@@ -5,6 +5,7 @@ import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnch
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.*;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,7 +16,7 @@ import java.util.List;
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION;
 
-@Mod.EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = MODID, value= Dist.CLIENT)
 public class DescriptionHelper {
 
     // Rewrite to a mixin inside ItemStack::getTooltipLines. Figure out a way to have all styles available.
@@ -32,9 +33,6 @@ public class DescriptionHelper {
 
     public static void addFullDescription(List<ITextComponent> list, ItemStack itemStack){
         addLoreDescription(list, itemStack);
-//        addArtifactInfo(list, itemStack);
-//        addChargeableDescription(list, itemStack);
-//        addSoulGatheringDescription(list, itemStack);
     }
 
     public static void addLoreDescription(List<ITextComponent> list, ItemStack itemStack){
