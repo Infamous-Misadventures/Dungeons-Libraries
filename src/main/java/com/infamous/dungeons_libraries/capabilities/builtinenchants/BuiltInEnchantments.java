@@ -2,7 +2,9 @@ package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
 
 import com.google.common.collect.Lists;
-import com.infamous.dungeons_libraries.items.gearconfig.GearConfigRegistry;
+import com.infamous.dungeons_libraries.items.gearconfig.BowGear;
+import com.infamous.dungeons_libraries.items.gearconfig.CrossbowGear;
+import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.MeleeGear;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -21,7 +23,15 @@ public class BuiltInEnchantments implements IBuiltInEnchantments {
     public BuiltInEnchantments(ItemStack itemStack) {
         if(itemStack.getItem() instanceof MeleeGear){
             MeleeGear item = (MeleeGear) itemStack.getItem();
-            enchantments.put(GearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
+            enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
+        }
+        if(itemStack.getItem() instanceof BowGear){
+            BowGear item = (BowGear) itemStack.getItem();
+            enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
+        }
+        if(itemStack.getItem() instanceof CrossbowGear){
+            CrossbowGear item = (CrossbowGear) itemStack.getItem();
+            enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
         }
     }
 

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.items.interfaces.IComboWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
+import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
 import net.minecraft.block.BlockState;
@@ -33,7 +34,7 @@ import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IVanishable {
+public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IVanishable, IReloadableGear {
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private MeleeGearConfig meleeGearConfig;
@@ -44,8 +45,9 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
         reload();
     }
 
+    @Override
     public void reload(){
-        meleeGearConfig = GearConfigRegistry.getConfig(this.getRegistryName());
+        meleeGearConfig = MeleeGearConfigRegistry.getConfig(this.getRegistryName());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());

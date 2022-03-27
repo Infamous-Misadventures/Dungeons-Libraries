@@ -10,7 +10,11 @@
     "BeeEntityMixin",
     "MobEntityMixin",
     "AxeItemAccessor",
-    "PickaxeItemAccessor"
+    "PickaxeItemAccessor",
+    "ItemAccessor",
+    "BowItemMixin",
+    "CrossbowItemMixin",
+    "CrossbowItemInvoker"
   ],
   "client": [
   ],

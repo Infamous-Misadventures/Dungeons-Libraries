@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
-import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION;
+import static com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION;
 
 @Mod.EventBusSubscriber(modid = MODID, value= Dist.CLIENT)
 public class DescriptionHelper {
@@ -40,24 +40,6 @@ public class DescriptionHelper {
                 "lore.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
                 .withStyle(TextFormatting.WHITE, TextFormatting.ITALIC));
     }
-
-    //    public static void addSoulGatheringDescription(List<ITextComponent> list, ItemStack itemStack) {
-//        if(itemStack.getItem() instanceof ISoulGatherer){
-//            ISoulGatherer soulGatherer = (ISoulGatherer) itemStack.getItem();
-//            int gatherAmount = soulGatherer.getGatherAmount(itemStack);
-//            double activationCost = soulGatherer.getActivationCost(itemStack);
-//            if(gatherAmount > 0) {
-//                list.add(new TranslationTextComponent(
-//                        "ability.dungeons_gear.soul_gathering", gatherAmount)
-//                        .withStyle(TextFormatting.LIGHT_PURPLE));
-//            }
-//            if(activationCost > 0) {
-//                list.add(new TranslationTextComponent(
-//                        "artifact.dungeons_gear.activation", activationCost)
-//                        .withStyle(TextFormatting.LIGHT_PURPLE));
-//            }
-//        }
-//    }
 
 //    public static void addChargeableDescription(List<ITextComponent> list, ItemStack itemStack) {
 //        if(itemStack.getItem() instanceof IChargeableItem){
