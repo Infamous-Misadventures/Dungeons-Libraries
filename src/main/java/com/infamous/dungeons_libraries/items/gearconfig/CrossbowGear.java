@@ -249,12 +249,9 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         return (int) getCrossbowChargeTime(null, stack) + 3;
     }
 
-    public Rarity getRarity(ItemStack itemStack) {
-
-        if (this.isUnique()) {
-            return Rarity.RARE;
-        }
-        return Rarity.UNCOMMON;
+    @Override
+    public Rarity getRarity(ItemStack pStack) {
+        return getGearConfig().getRarity();
     }
 
     @Override

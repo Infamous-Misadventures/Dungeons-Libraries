@@ -14,6 +14,8 @@ import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterStorage
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
+import com.infamous.dungeons_libraries.items.materials.ArmorMaterialTypeRegistry;
+import com.infamous.dungeons_libraries.items.materials.ArmorMaterialTypes;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -44,11 +46,12 @@ public class DungeonsLibraries
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ArmorMaterialTypeRegistry.setup(modEventBus);
+        ArmorMaterialTypes.ARMOR_MATERIAL_TYPES.register(modEventBus);
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
     }

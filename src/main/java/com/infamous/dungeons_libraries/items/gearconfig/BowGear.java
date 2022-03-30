@@ -192,12 +192,9 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear {
         return Math.max(event.getChargeTime() - 5 * quickChargeLevel, minTime);
     }
 
-    public Rarity getRarity(ItemStack itemStack){
-
-        if(this.bowGearConfig.isUnique()){
-            return Rarity.RARE;
-        }
-        return Rarity.UNCOMMON;
+    @Override
+    public Rarity getRarity(ItemStack pStack) {
+        return getGearConfig().getRarity();
     }
 
     @Override
