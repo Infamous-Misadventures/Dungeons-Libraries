@@ -14,7 +14,8 @@
     "ItemAccessor",
     "BowItemMixin",
     "CrossbowItemMixin",
-    "CrossbowItemInvoker"
+    "CrossbowItemInvoker",
+    "ArmorItemAccessor"
   ],
   "client": [
   ],
