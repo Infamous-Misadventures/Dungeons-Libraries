@@ -15,6 +15,7 @@ import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
@@ -35,6 +36,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
 import static java.util.UUID.randomUUID;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
@@ -218,6 +220,10 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
     private AbstractArrowEntity createCrossbowArrow(World world, LivingEntity livingEntity, ItemStack stack, ItemStack stack1) {
         ArrowItem arrowItem = (ArrowItem) ((ArrowItem) (stack1.getItem() instanceof ArrowItem ? stack1.getItem() : Items.ARROW));
         AbstractArrowEntity abstractArrowEntity = arrowItem.createArrow(world, stack1, livingEntity);
+        ModifiableAttributeInstance attribute = livingEntity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
+        if(attribute != null) {
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue() + 1));
+        }
         if (livingEntity instanceof PlayerEntity) {
             abstractArrowEntity.setCritArrow(true);
         }

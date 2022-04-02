@@ -13,6 +13,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import java.util.List;
 import java.util.UUID;
 
+import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
 import static java.util.UUID.randomUUID;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
@@ -123,11 +125,15 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear {
 
     public AbstractArrowEntity createBowArrow(ItemStack stack, World world, PlayerEntity playerentity, ItemStack itemstack, float arrowVelocity, int i, boolean hasInfiniteAmmo, boolean isAdditionalShot) {
         ArrowItem arrowitem = (ArrowItem) (itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
-        AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(world, itemstack, playerentity);
-        abstractarrowentity = this.customArrow(abstractarrowentity);
-        this.setArrowTrajectory(playerentity, arrowVelocity, i, abstractarrowentity);
+        AbstractArrowEntity abstractArrowEntity = arrowitem.createArrow(world, itemstack, playerentity);
+        abstractArrowEntity = this.customArrow(abstractArrowEntity);
+        ModifiableAttributeInstance attribute = playerentity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
+        if(attribute != null) {
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue() + 1));
+        }
+        this.setArrowTrajectory(playerentity, arrowVelocity, i, abstractArrowEntity);
         if (arrowVelocity == 1.0F) {
-            abstractarrowentity.setCritArrow(true);
+            abstractArrowEntity.setCritArrow(true);
         }
         int powerLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
 
@@ -135,27 +141,27 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear {
         if(this.shootsHeavyArrows(stack)) powerLevel++;
 
         if (powerLevel > 0) {
-            abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + (double)powerLevel * 0.5D + 0.5D);
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() + (double)powerLevel * 0.5D + 0.5D);
         }
         int punchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
         if (punchLevel > 0) {
-            abstractarrowentity.setKnockback(punchLevel);
+            abstractArrowEntity.setKnockback(punchLevel);
         }
         if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
-            abstractarrowentity.setSecondsOnFire(100);
+            abstractArrowEntity.setSecondsOnFire(100);
         }
         stack.hurtAndBreak(1, playerentity, (p_lambda$onPlayerStoppedUsing$0_1_) -> {
             p_lambda$onPlayerStoppedUsing$0_1_.broadcastBreakEvent(playerentity.getUsedItemHand());
         });
         if (hasInfiniteAmmo || playerentity.abilities.instabuild
                 && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW)) {
-            abstractarrowentity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+            abstractArrowEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
         }
         if(isAdditionalShot){
-            abstractarrowentity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+            abstractArrowEntity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
         }
-        world.addFreshEntity(abstractarrowentity);
-        return abstractarrowentity;
+        world.addFreshEntity(abstractArrowEntity);
+        return abstractArrowEntity;
     }
 
     public void setArrowTrajectory(PlayerEntity playerentity, float arrowVelocity, int i, AbstractArrowEntity abstractarrowentity) {
