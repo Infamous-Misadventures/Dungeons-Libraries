@@ -9,7 +9,10 @@
   "commands.mobEnchantment.clear.everything.failed": "Target has no mobEnchantments to remove",
   "attribute.name.generic.dungeons_libraries.soul_gathering": "Soul Gathering",
   "attribute.name.generic.dungeons_libraries.soul_cap": "Max Soul Capacity",
+  "attribute.name.generic.dungeons_libraries.life_steal": "Life Steal",
   "attribute.name.generic.dungeons_libraries.ranged_damage_multiplier": "Ranged Damage Multiplier",
+  "attribute.name.generic.dungeons_libraries.magic_damage_multiplier": "Magic Damage Multiplier",
+  "attribute.name.generic.dungeons_libraries.artifact_cooldown_multiplier": "Artifact Cooldown Multiplier",
 
   "commands.souls.add.failed": "Failed to add souls",
   "commands.souls.set.failed": "Failed to set souls",

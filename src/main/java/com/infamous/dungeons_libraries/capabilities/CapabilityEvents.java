@@ -7,6 +7,7 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.MasterProvider;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionProvider;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterProvider;
+import com.infamous.dungeons_libraries.capabilities.timers.builtinenchants.TimersProvider;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import com.infamous.dungeons_libraries.network.UpdateSoulsMessage;
 import net.minecraft.enchantment.EnchantmentType;
@@ -40,6 +41,7 @@ public class CapabilityEvents {
             //TODO 1.18: rename to master
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summoner"), new MasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "soul_caster"), new SoulCasterProvider());
+            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "timers"), new TimersProvider());
         }
         if (isEnchantableEntity(event.getObject())) {
             event.addCapability(new ResourceLocation(MODID, "enchantable"), new EnchantableProvider());

@@ -21,7 +21,10 @@ public class AttributeEvents {
         addAttributeToAll(event, SUMMON_CAP.get());
         addAttributeToAll(event, SOUL_GATHERING.get());
         addAttributeToAll(event, SOUL_CAP.get());
+        addAttributeToAll(event, LIFE_STEAL.get());
         addAttributeToAll(event, RANGED_DAMAGE_MULTIPLIER.get());
+        addAttributeToAll(event, ARTIFACT_COOLDOWN_MULTIPLIER.get());
+        addAttributeToAll(event, MAGIC_DAMAGE_MULTIPLIER.get());
     }
 
     private static void addAttributeToAll(EntityAttributeModificationEvent event, Attribute attribute) {

@@ -33,9 +33,30 @@ public class AttributeRegistry {
             1024.0D)
             .setSyncable(true));
 
+    public static final RegistryObject<Attribute> LIFE_STEAL = ATTRIBUTES.register("life_steal", () -> new RangedAttribute(
+            "attribute.name.generic.dungeons_libraries.life_steal",
+            1.0D,
+            0.0D,
+            1024.0D)
+            .setSyncable(true));
+
     public static final RegistryObject<Attribute> RANGED_DAMAGE_MULTIPLIER = ATTRIBUTES.register("ranged_damage_multiplier", () -> new RangedAttribute(
             "attribute.name.generic.dungeons_libraries.ranged_damage_multiplier",
             0.0D,
+            0.0D,
+            1024.0D)
+            .setSyncable(true));
+
+    public static final RegistryObject<Attribute> MAGIC_DAMAGE_MULTIPLIER = ATTRIBUTES.register("magic_damage_multiplier", () -> new RangedAttribute(
+            "attribute.name.generic.dungeons_libraries.magic_damage_multiplier",
+            0.0D,
+            0.0D,
+            1024.0D)
+            .setSyncable(true));
+
+    public static final RegistryObject<Attribute> ARTIFACT_COOLDOWN_MULTIPLIER = ATTRIBUTES.register("artifact_cooldown_multiplier", () -> new RangedAttribute(
+            "attribute.name.generic.dungeons_libraries.artifact_cooldown_multiplier",
+            1.0D,
             0.0D,
             1024.0D)
             .setSyncable(true));

@@ -11,6 +11,9 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.*;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterStorage;
+import com.infamous.dungeons_libraries.capabilities.timers.builtinenchants.ITimers;
+import com.infamous.dungeons_libraries.capabilities.timers.builtinenchants.Timers;
+import com.infamous.dungeons_libraries.capabilities.timers.builtinenchants.TimersStorage;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
@@ -62,6 +65,7 @@ public class DungeonsLibraries
         CapabilityManager.INSTANCE.register(IEnchantable.class, new EnchantableStorage(), Enchantable::new);
         CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
         CapabilityManager.INSTANCE.register(ISoulCaster.class, new SoulCasterStorage(), SoulCaster::new);
+        CapabilityManager.INSTANCE.register(ITimers.class, new TimersStorage(), Timers::new);
         event.enqueueWork(NetworkHandler::init);
     }
 
