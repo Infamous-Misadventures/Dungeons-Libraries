@@ -1,4 +1,4 @@
-package com.infamous.dungeons_libraries.capabilities.timers.builtinenchants;
+package com.infamous.dungeons_libraries.capabilities.timers;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

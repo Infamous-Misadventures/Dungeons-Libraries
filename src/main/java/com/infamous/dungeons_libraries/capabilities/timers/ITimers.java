@@ -1,4 +1,4 @@
-package com.infamous.dungeons_libraries.capabilities.timers.builtinenchants;
+package com.infamous.dungeons_libraries.capabilities.timers;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -9,12 +9,14 @@ import java.util.Map;
 
 public interface ITimers {
 
+    int getEnchantmentTimer(Enchantment enchantment);
+
     boolean setEnchantmentTimer(Enchantment enchantment, int value);
 
     boolean setEnchantmentTimer(ResourceLocation enchantment, int value);
 
     boolean tickTimers();
 
-
     Map<ResourceLocation, Integer> getEnchantmentTimers();
+
 }

@@ -27,17 +27,19 @@ public class SummonHelper {
         return false;
     }
 
-    public static void summonBee(LivingEntity master, BlockPos position) {
+    public static boolean summonBee(LivingEntity master, BlockPos position) {
         BeeEntity beeEntity = EntityType.BEE.create(master.level);
         if (beeEntity!= null) {
             IMinion summonable = MinionMasterHelper.getMinionCapability(beeEntity);
             if(summonable != null && addSummonedMob(master, beeEntity)){
                 summonable.setMaster(master.getUUID());
                 createBee(master, beeEntity, position);
+                return true;
             } else {
                 beeEntity.remove();
             }
         }
+        return false;
     }
 
     public static void createBee(LivingEntity master, BeeEntity beeEntity, BlockPos position) {

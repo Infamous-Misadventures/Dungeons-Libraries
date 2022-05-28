@@ -10,6 +10,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOf;
+import static net.minecraft.entity.EntityType.ARMOR_STAND;
 
 public class AbilityHelper {
 
@@ -54,7 +55,7 @@ public class AbilityHelper {
     }
 
     private static boolean isEntityBlacklisted(LivingEntity entity) {
-        return (ForgeRegistries.ENTITIES.getKey(entity.getType()) != null && DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(entity.getType()).toString()));
+        return (ForgeRegistries.ENTITIES.getKey(entity.getType()) != null && (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(entity.getType()).toString()) || entity.getType().equals(ARMOR_STAND)));
     }
 
     private static boolean isAliveAndCanBeSeen(LivingEntity nearbyEntity, LivingEntity attacker) {

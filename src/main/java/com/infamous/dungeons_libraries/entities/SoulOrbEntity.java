@@ -162,12 +162,12 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
    }
 
    public int getIcon() {
-      if(this.value > 10){
+      if(this.value >= 10){
          return 10;
-      }else if(this.value < 1){
+      }else if(this.value <= 0){
          return 0;
       }else{
-         return (int) this.value - 1;
+         return (int) Math.floor((this.value - 1)/3) + 7;
       }
    }
 

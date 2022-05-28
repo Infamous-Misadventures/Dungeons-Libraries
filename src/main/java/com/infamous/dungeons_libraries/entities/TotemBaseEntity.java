@@ -5,6 +5,8 @@ import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -14,6 +16,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+
+import static com.infamous.dungeons_libraries.utils.AreaOfEffectHelper.applyToNearbyEntities;
+import static com.infamous.dungeons_libraries.utils.AreaOfEffectHelper.getCanApplyToEnemyPredicate;
 
 public abstract class TotemBaseEntity extends Entity {
 	private final EntityPredicate entityTargeting = (new EntityPredicate()).range(8.0D).allowUnseeable().ignoreInvisibilityTesting().allowInvulnerable().allowSameTeam();
@@ -73,11 +78,7 @@ public abstract class TotemBaseEntity extends Entity {
 
 		if(this.lifeTicks > 0){
 			--this.lifeTicks;
-			List<Entity> list = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
-
-			if (!list.isEmpty()) {
-				this.affectTotemPower(list);
-			}
+			this.applyTotemEffect();
 		}else {
 			if(this.deathTicks > 0){
 				--this.deathTicks;
@@ -87,7 +88,7 @@ public abstract class TotemBaseEntity extends Entity {
 		}
 	}
 
-	protected abstract void affectTotemPower(List<Entity> list);
+	protected abstract void applyTotemEffect();
 
 	@OnlyIn(Dist.CLIENT)
 	public float getTotemDeathAnimationScale(float p_189795_1_) {
