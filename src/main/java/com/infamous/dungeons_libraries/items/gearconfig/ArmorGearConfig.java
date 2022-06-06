@@ -1,12 +1,11 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
-import com.infamous.dungeons_libraries.items.materials.ArmorMaterials;
+import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Rarity;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
 

@@ -17,8 +17,8 @@ import com.infamous.dungeons_libraries.capabilities.timers.TimersStorage;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
-import com.infamous.dungeons_libraries.items.materials.ArmorMaterialTypeRegistry;
-import com.infamous.dungeons_libraries.items.materials.ArmorMaterialTypes;
+import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
+import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -53,10 +53,10 @@ public class DungeonsLibraries
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ArmorMaterialTypeRegistry.setup(modEventBus);
-        ArmorMaterialTypes.ARMOR_MATERIAL_TYPES.register(modEventBus);
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
+        ArmorMaterials.setupVanillaMaterials();
+        WeaponMaterials.setupVanillaMaterials();
     }
 
     private void setup(final FMLCommonSetupEvent event){

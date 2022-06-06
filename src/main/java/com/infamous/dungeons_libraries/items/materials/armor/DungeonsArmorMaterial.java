@@ -1,8 +1,9 @@
-package com.infamous.dungeons_libraries.items.materials;
+package com.infamous.dungeons_libraries.items.materials.armor;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -12,20 +13,19 @@ import net.minecraft.util.SoundEvent;
 
 import java.util.List;
 
-import static com.infamous.dungeons_libraries.items.materials.ArmorMaterialTypes.DUNGEONS;
 import static net.minecraftforge.registries.ForgeRegistries.ITEMS;
 
-public class DungeonsArmorMaterial extends ArmorMaterial {
+public class DungeonsArmorMaterial implements IArmorMaterial {
 
-    public static final Codec<DungeonsArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.STRING.fieldOf("name").forGetter(DungeonsArmorMaterial::getName),
-            Codec.INT.fieldOf("durability").forGetter(dungeonsArmorMaterial -> dungeonsArmorMaterial.durability),
-            Codec.INT.listOf().fieldOf("damage_reduction_amounts").forGetter(dungeonsArmorMaterial -> dungeonsArmorMaterial.damageReductionAmounts),
-            Codec.INT.fieldOf("enchantability").forGetter(DungeonsArmorMaterial::getEnchantmentValue),
-            ResourceLocation.CODEC.fieldOf("repair_item").forGetter(dungeonsArmorMaterial -> dungeonsArmorMaterial.repairItemResourceLocation),
-            SoundEvent.CODEC.fieldOf("equip_sound").forGetter(DungeonsArmorMaterial::getEquipSound),
-            Codec.FLOAT.fieldOf("toughness").forGetter(DungeonsArmorMaterial::getToughness),
-            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(DungeonsArmorMaterial::getKnockbackResistance)
+    public static final Codec<IArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getName()),
+            Codec.INT.fieldOf("durability").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).durability),
+            Codec.INT.listOf().fieldOf("damage_reduction_amounts").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).damageReductionAmounts),
+            Codec.INT.fieldOf("enchantability").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEnchantmentValue()),
+            ResourceLocation.CODEC.fieldOf("repair_item").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).repairItemResourceLocation),
+            SoundEvent.CODEC.fieldOf("equip_sound").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEquipSound()),
+            Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getToughness()),
+            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getKnockbackResistance())
     ).apply(instance, DungeonsArmorMaterial::new));
 
     // Armor order: boots, leggings, chestplate, helmet
@@ -42,7 +42,6 @@ public class DungeonsArmorMaterial extends ArmorMaterial {
 
     private DungeonsArmorMaterial(String name, int durability, List<Integer> damageReductionAmounts, int enchantability, ResourceLocation repairItemResourceLocation, SoundEvent equipSound, float toughness, float knockbackResistance)
     {
-        super(DUNGEONS);
         this.name = name;
         this.equipSound = equipSound;
         this.durability = durability;
