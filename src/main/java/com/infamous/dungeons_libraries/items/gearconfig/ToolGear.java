@@ -11,8 +11,8 @@ public class ToolGear extends MeleeGear {
     /** Hardcoded set of blocks this tool can properly dig at full speed. Modders see instead. */
     private final Set<Block> diggableBlocks;
 
-    public ToolGear(IItemTier tier, Set<Block> diggableBlocks, Properties properties) {
-        super(tier, properties);
+    public ToolGear(Set<Block> diggableBlocks, Properties properties) {
+        super(properties);
         this.diggableBlocks = diggableBlocks;
     }
 

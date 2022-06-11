@@ -2,9 +2,7 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 
 import com.infamous.dungeons_libraries.mixin.AxeItemAccessor;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
@@ -16,12 +14,10 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Set;
-
 public class AxeGear extends ToolGear {
 
-    public AxeGear(IItemTier tier, Properties properties) {
-        super(tier, AxeItemAccessor.getOTHER_DIGGABLE_BLOCKS(), properties.addToolType(net.minecraftforge.common.ToolType.AXE, tier.getLevel()));
+    public AxeGear(Properties properties) {
+        super(AxeItemAccessor.getOTHER_DIGGABLE_BLOCKS(), properties.addToolType(net.minecraftforge.common.ToolType.AXE, 0));
     }
 
     @Override

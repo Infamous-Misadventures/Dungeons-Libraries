@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.items.interfaces.IComboWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
+import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
 import net.minecraft.block.BlockState;
@@ -25,8 +26,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
@@ -40,14 +43,18 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     private MeleeGearConfig meleeGearConfig;
     private float attackDamage;
 
-    public MeleeGear(IItemTier tier, Item.Properties properties) {
-        super(tier, properties);
+    public MeleeGear(Item.Properties properties) {
+        super(ItemTier.WOOD, properties);
         reload();
     }
 
     @Override
     public void reload(){
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(this.getRegistryName());
+        IItemTier material = meleeGearConfig.getWeaponMaterial();
+        ((ItemAccessor)this).setMaxDamage(material.getUses());
+        Set<ToolType> toolTypes = ((ItemAccessor) this).getToolClasses().keySet();
+        toolTypes.forEach(toolType -> ((ItemAccessor) this).getToolClasses().put(toolType, material.getLevel()));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
@@ -100,7 +107,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.hurtAndBreak(1, target, MojankHelper::hurtEnemyBroadcastBreakEvent);
+        stack.hurtAndBreak(1, attacker, MojankHelper::hurtEnemyBroadcastBreakEvent);
         if(attacker.getAttributeBaseValue(ATTACK_SPEED) >= -1.0) {
             target.invulnerableTime = 0;
         }

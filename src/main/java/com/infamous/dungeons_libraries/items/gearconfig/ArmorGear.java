@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
+import static net.minecraft.item.ArmorMaterial.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor {
@@ -39,8 +40,8 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor {
     private ArmorGearConfig armorGearConfig;
     private ResourceLocation texture;
 
-    public ArmorGear(IArmorMaterial armorMaterial, EquipmentSlotType slotType, Properties properties, ResourceLocation texture) {
-        super(armorMaterial, slotType, properties);
+    public ArmorGear(EquipmentSlotType slotType, Properties properties, ResourceLocation texture) {
+        super(CHAIN, slotType, properties);
         this.texture = texture;
         reload();
     }
