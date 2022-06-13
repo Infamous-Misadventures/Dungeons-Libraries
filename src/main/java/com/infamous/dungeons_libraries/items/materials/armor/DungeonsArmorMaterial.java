@@ -25,7 +25,8 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
             ResourceLocation.CODEC.fieldOf("repair_item").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).repairItemResourceLocation),
             SoundEvent.CODEC.fieldOf("equip_sound").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEquipSound()),
             Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getToughness()),
-            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getKnockbackResistance())
+            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getKnockbackResistance()),
+            ArmorMaterialBaseType.CODEC.fieldOf("base_type").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).baseType)
     ).apply(instance, DungeonsArmorMaterial::new));
 
     // Armor order: boots, leggings, chestplate, helmet
@@ -39,8 +40,9 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
     private final List<Integer> damageReductionAmounts;
     private final float toughness;
     private final float knockbackResistance;
+    private final ArmorMaterialBaseType baseType;
 
-    private DungeonsArmorMaterial(String name, int durability, List<Integer> damageReductionAmounts, int enchantability, ResourceLocation repairItemResourceLocation, SoundEvent equipSound, float toughness, float knockbackResistance)
+    private DungeonsArmorMaterial(String name, int durability, List<Integer> damageReductionAmounts, int enchantability, ResourceLocation repairItemResourceLocation, SoundEvent equipSound, float toughness, float knockbackResistance, ArmorMaterialBaseType baseType)
     {
         this.name = name;
         this.equipSound = equipSound;
@@ -56,6 +58,7 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
         this.damageReductionAmounts = damageReductionAmounts;
         this.toughness = toughness;
         this.knockbackResistance = knockbackResistance;
+        this.baseType = baseType;
     }
 
     @Override
@@ -104,5 +107,9 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
     @Override
     public float getKnockbackResistance() {
         return this.knockbackResistance;
+    }
+
+    public ArmorMaterialBaseType getBaseType() {
+        return baseType;
     }
 }
