@@ -26,18 +26,14 @@ import java.util.Arrays;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableHelper.isEnchantableEntity;
-import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.isMinionEntity;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class CapabilityEvents {
     @SubscribeEvent
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (isMinionEntity(event.getObject())) {
-            //TODO 1.18: rename to minion
-            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summonable"), new MinionProvider());
-        }
         if (event.getObject() instanceof LivingEntity) {
             //TODO 1.18: rename to master
+            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summonable"), new MinionProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summoner"), new MasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "soul_caster"), new SoulCasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "timers"), new TimersProvider());

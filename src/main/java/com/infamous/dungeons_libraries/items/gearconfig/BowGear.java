@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.event.BowEvent;
 import com.infamous.dungeons_libraries.items.interfaces.IRangedWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
+import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import net.minecraft.client.util.ITooltipFlag;
@@ -34,7 +35,7 @@ import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear {
+public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private BowGearConfig bowGearConfig;

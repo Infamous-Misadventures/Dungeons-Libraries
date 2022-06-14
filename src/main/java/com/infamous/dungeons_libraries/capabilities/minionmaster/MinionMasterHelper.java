@@ -3,16 +3,23 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtByTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MinionFollowOwnerGoal;
+import com.infamous.dungeons_libraries.entities.ai.goal.MeleeAttackGoal;
+import com.infamous.dungeons_libraries.mixin.GoalSelectorAccessor;
+import com.infamous.dungeons_libraries.summon.SummonConfig;
+import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.passive.*;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.UUID;
+
+import static com.infamous.dungeons_libraries.utils.PetHelper.canPetAttackEntity;
 
 public class MinionMasterHelper {
 
@@ -30,26 +37,21 @@ public class MinionMasterHelper {
     }
 
     public static boolean isMinionEntity(Entity target) {
-        return target instanceof IronGolemEntity
-                || target instanceof WolfEntity
-                || target instanceof LlamaEntity
-                || target instanceof BatEntity
-                || target instanceof BeeEntity
-                || target instanceof SheepEntity;
+        IMinion targetSummonableCap = getMinionCapability(target);
+        if(targetSummonableCap == null){
+            return false;
+        }else {
+            return targetSummonableCap.getMaster() != null;
+        }
     }
 
-    public static boolean isMinionOf(LivingEntity target, UUID ownerUUID) {
-        if(isMinionEntity(target)){
-            IMinion targetSummonableCap = getMinionCapability(target);
-            if(targetSummonableCap == null){
-                return false;
-            }
-            else{
-                return targetSummonableCap.getMaster() != null
-                        && targetSummonableCap.getMaster() == ownerUUID;
-            }
-        } else{
+    public static boolean isMinionOf(LivingEntity target, LivingEntity owner) {
+        IMinion targetSummonableCap = getMinionCapability(target);
+        if(targetSummonableCap == null){
             return false;
+        } else{
+            return targetSummonableCap.getMaster() != null
+                    && targetSummonableCap.getMaster() == owner;
         }
     }
 
@@ -58,11 +60,7 @@ public class MinionMasterHelper {
         try {
             IMinion minion = getMinionCapability(minionMob);
             if(minion == null) return null;
-            if(minion.getMaster() != null){
-                UUID ownerUniqueId = minion.getMaster();
-                return ownerUniqueId == null ? null : minionMob.level.getPlayerByUUID(ownerUniqueId);
-            }
-            else return null;
+            return minion.getMaster();
         } catch (IllegalArgumentException var2) {
             return null;
         }
@@ -88,14 +86,23 @@ public class MinionMasterHelper {
         return null;
     }
 
-    public static void addMinionGoals(Entity entity) {
-        IMinion minionCap = getMinionCapability(entity);
+    public static void addMinionGoals(MobEntity mobEntity) {
+        IMinion minionCap = getMinionCapability(mobEntity);
         if(minionCap == null) return;
-        if(minionCap.isMinion() && (entity instanceof IronGolemEntity || entity instanceof BeeEntity)){
-            MobEntity mobEntity = (MobEntity) entity;
+        if(minionCap.isMinion()){
             mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 2.1D, 10.0F, 2.0F, false));
+            ArrayList<PrioritizedGoal> prioritizedGoals = new ArrayList<>(((GoalSelectorAccessor) mobEntity.targetSelector).getAvailableGoals());
+            prioritizedGoals.forEach(prioritizedGoal -> mobEntity.targetSelector.removeGoal(prioritizedGoal.getGoal()));
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
+            mobEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
+                    (entityIterator) -> canPetAttackEntity(minionCap.getMaster(), mobEntity, entityIterator)));
+        }
+        if(minionCap.isSummon()){
+            SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
+            if(config.shouldAddAttackGoal()){
+                mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
+            }
         }
     }
 }

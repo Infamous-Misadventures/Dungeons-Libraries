@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.ArrayList;
@@ -12,58 +13,37 @@ import java.util.UUID;
 
 public class MasterStorage implements Capability.IStorage<IMaster> {
 
+    public static final String LEVEL_KEY = "level";
+
     @Override
     public INBT writeNBT(Capability<IMaster> capability, IMaster instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
-        if(instance.getSummonedGolem() != null){
-            tag.putUUID("golem", instance.getSummonedGolem());
-        }
-        if(instance.getSummonedWolf() != null){
-            tag.putUUID("wolf", instance.getSummonedWolf());
-        }
-        if(instance.getSummonedLlama() != null){
-            tag.putUUID("llama", instance.getSummonedLlama());
-        }
-        if(instance.getSummonedBat() != null){
-            tag.putUUID("bat", instance.getSummonedBat());
-        }
-        if(instance.getSummonedSheep() != null){
-            tag.putUUID("sheep", instance.getSummonedSheep());
-        }
         ListNBT listnbt = new ListNBT();
-        instance.getSummonedMobs().forEach(uuid -> {
+        instance.getSummonedMobs().forEach(entity -> {
             CompoundNBT compoundnbt = new CompoundNBT();
-            compoundnbt.putUUID("uuid", uuid);
+            compoundnbt.putUUID("uuid", entity.getUUID());
             listnbt.add(compoundnbt);
         });
         tag.put("summoned", listnbt);
+        if(!instance.getSummonedMobs().isEmpty()){
+            ResourceLocation location = instance.getSummonedMobs().get(0).level.dimension().location();
+            tag.putString(LEVEL_KEY, location.toString());
+        }
         return tag;
     }
 
     @Override
     public void readNBT(Capability<IMaster> capability, IMaster instance, Direction side, INBT nbt) {
         CompoundNBT tag = (CompoundNBT) nbt;
-        if(tag.hasUUID("golem")){
-            instance.setSummonedGolem(tag.getUUID("golem"));
-        }
-        if(tag.hasUUID("wolf")){
-            instance.setSummonedWolf(tag.getUUID("wolf"));
-        }
-        if(tag.hasUUID("llama")){
-            instance.setSummonedLlama(tag.getUUID("llama"));
-        }
-        if(tag.hasUUID("bat")){
-            instance.setSummonedBat(tag.getUUID("bat"));
-        }
-        if(tag.hasUUID("sheep")){
-            instance.setSummonedSheep(tag.getUUID("sheep"));
-        }
         ListNBT listNBT = tag.getList("summoned", 10);
-        List<UUID> summoned = new ArrayList<>();
+        List<UUID> summonedUUIDs = new ArrayList<>();
         for(int i = 0; i < listNBT.size(); ++i) {
             CompoundNBT compoundnbt = listNBT.getCompound(i);
-            summoned.add(compoundnbt.getUUID("uuid"));
+            summonedUUIDs.add(compoundnbt.getUUID("uuid"));
         }
-        instance.setSummonedMobs(summoned);
+        instance.setSummonedMobsUUID(summonedUUIDs);
+        if(tag.hasUUID(LEVEL_KEY)) {
+            instance.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
+        }
     }
 }

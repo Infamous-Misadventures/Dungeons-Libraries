@@ -1,102 +1,71 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
-import javax.annotation.Nullable;
+import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Master implements IMaster {
 
-    @Nullable
-    private UUID summonedGolem;
-    @Nullable
-    private UUID summonedWolf;
-    @Nullable
-    private UUID summonedLlama;
-    @Nullable
-    private UUID summonedBat;
-    @Nullable
-    private UUID summonedSheep;
-
-    private List<UUID> summonedMobs = new ArrayList<>();
+    private List<Entity> summonedMobs;
+    private List<UUID> summonedMobsUUID = new ArrayList<>();
+    private ResourceLocation levelOnLoad;
 
     @Override
     public void copyFrom(IMaster summoner) {
-        this.setSummonedBat(summoner.getSummonedBat());
-        this.setSummonedGolem(summoner.getSummonedGolem());
-        this.setSummonedLlama(summoner.getSummonedLlama());
-        this.setSummonedSheep(summoner.getSummonedSheep());
-        this.setSummonedWolf(summoner.getSummonedBat());
+        this.setSummonedMobs(summoner.getSummonedMobs());
     }
 
     @Override
-    public void setSummonedGolem(@Nullable UUID golem) {
-        this.summonedGolem = golem;
+    public List<Entity> getSummonedMobs() {
+        if(this.summonedMobs == null && this.summonedMobsUUID != null && this.levelOnLoad != null){
+            if(this.summonedMobsUUID.isEmpty()) return new ArrayList<>();
+            RegistryKey<World> registrykey1 = RegistryKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            ServerWorld world = server.getLevel(registrykey1);
+            if (world != null) {
+                this.summonedMobs = summonedMobsUUID.stream().map(world::getEntity).filter(Objects::nonNull).collect(Collectors.toList());
+            }
+        }else{
+            this.summonedMobs = new ArrayList<>();
+        }
+        return summonedMobs;
     }
 
     @Override
-    public void setSummonedWolf(@Nullable UUID wolf) {
-        this.summonedWolf = wolf;
+    public int getSummonedMobsCost(){
+        return this.getSummonedMobs().stream().map(entity -> SummonConfigRegistry.getConfig(entity.getType().getRegistryName()).getCost()).reduce(0, Integer::sum);
     }
 
     @Override
-    public void setSummonedLlama(@Nullable UUID llama) {
-        this.summonedLlama = llama;
+    public boolean addSummonedMob(Entity entity) {
+        return this.getSummonedMobs().add(entity);
     }
 
     @Override
-    public void setSummonedBat(@Nullable UUID bat) {
-        this.summonedBat = bat;
-    }
-
-    @Override
-    public void setSummonedSheep(UUID enchantedSheep) {
-        this.summonedSheep = enchantedSheep;
-    }
-
-    @Override
-    @Nullable
-    public UUID getSummonedGolem() {
-        return this.summonedGolem;
-    }
-
-    @Override
-    @Nullable
-    public UUID getSummonedWolf() {
-        return this.summonedWolf;
-    }
-
-    @Override
-    @Nullable
-    public UUID getSummonedLlama() {
-        return this.summonedLlama;
-    }
-
-    @Override
-    @Nullable
-    public UUID getSummonedBat() {
-        return this.summonedBat;
-    }
-
-    @Override
-    public UUID getSummonedSheep() {
-        return this.summonedSheep;
-    }
-
-    @Override
-    public List<UUID> getSummonedMobs() {
-        List<UUID> summonedMobsTotal = IMaster.super.getSummonedMobs();
-        summonedMobsTotal.addAll(this.summonedMobs);
-        return summonedMobsTotal;
-    }
-
-    @Override
-    public boolean addSummonedMob(UUID uuid) {
-        return summonedMobs.add(uuid);
-    }
-
-    @Override
-    public void setSummonedMobs(List<UUID> summonedMobs) {
+    public void setSummonedMobs(List<Entity> summonedMobs) {
         this.summonedMobs = new ArrayList<>(summonedMobs);
+    }
+
+    @Override
+    public void setSummonedMobsUUID(List<UUID> summonedMobsUUID) {
+        this.summonedMobsUUID = summonedMobsUUID;
+    }
+
+    @Override
+    public void setLevelOnLoad(ResourceLocation levelOnLoad) {
+        this.levelOnLoad = levelOnLoad;
     }
 }

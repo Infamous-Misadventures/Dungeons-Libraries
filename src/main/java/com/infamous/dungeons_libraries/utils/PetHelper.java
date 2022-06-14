@@ -9,7 +9,6 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,8 +50,7 @@ public class PetHelper {
         IMinion minionCapability = MinionMasterHelper.getMinionCapability(target);
         if(minionCapability == null) return false;
         if(minionCapability.getMaster() == null) return false;
-        PlayerEntity playerByUUID = target.level.getPlayerByUUID(minionCapability.getMaster());
-        return playerByUUID != null;
+        return minionCapability.getMaster() instanceof PlayerEntity;
     }
 
     public static boolean isPetOf(LivingEntity possibleOwner, LivingEntity possiblePet) {
@@ -63,7 +61,7 @@ public class PetHelper {
             AbstractHorseEntity horse = (AbstractHorseEntity) possiblePet;
             return horse.getOwnerUUID() == possibleOwner.getUUID();
         } else {
-            return MinionMasterHelper.isMinionOf(possiblePet, possibleOwner.getUUID());
+            return MinionMasterHelper.isMinionOf(possiblePet, possibleOwner);
         }
     }
 

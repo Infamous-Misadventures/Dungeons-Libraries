@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,9 +21,9 @@ public class MinionEvents {
 
     @SubscribeEvent
     public static void reAddMinionGoals(EntityJoinWorldEvent event){
-        if(!event.getWorld().isClientSide()) {
-            Entity entity = event.getEntity();
-            MinionMasterHelper.addMinionGoals(entity);
+        Entity entity = event.getEntity();
+        if(!event.getWorld().isClientSide() && entity instanceof MobEntity) {
+            MinionMasterHelper.addMinionGoals((MobEntity) entity);
         }
     }
 

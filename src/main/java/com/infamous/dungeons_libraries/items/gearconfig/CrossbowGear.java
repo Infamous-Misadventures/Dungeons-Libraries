@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.event.CrossbowEvent;
 import com.infamous.dungeons_libraries.items.interfaces.IRangedWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
+import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.CrossbowItemInvoker;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
@@ -42,7 +43,7 @@ import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloadableGear {
+public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloadableGear, IUniqueGear {
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private BowGearConfig crossbowGearConfig;
 

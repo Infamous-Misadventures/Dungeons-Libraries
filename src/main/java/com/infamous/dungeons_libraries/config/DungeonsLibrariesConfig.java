@@ -20,7 +20,7 @@ public class DungeonsLibrariesConfig {
                             "If you do not want area of effects being applied to other players, disable this feature. [true / false]")
                     .define("enableAreaOfEffectOnOtherPlayers", false);
             ENEMY_BLACKLIST = builder
-                    .comment("Add entities that will never be targeted by aggressive Dungeons Gear effects. \n"
+                    .comment("Add entities that will never be targeted by aggressive Dungeons effects. \n"
                             + "To do so, enter their registry names.")
                     .defineList("effectTargetBlacklist", Lists.newArrayList(
                             "guardvillagers:guard",

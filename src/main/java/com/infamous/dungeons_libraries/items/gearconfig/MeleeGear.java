@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.items.interfaces.IComboWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
+import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
@@ -37,7 +38,7 @@ import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IVanishable, IReloadableGear {
+public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IVanishable, IReloadableGear, IUniqueGear {
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private MeleeGearConfig meleeGearConfig;
