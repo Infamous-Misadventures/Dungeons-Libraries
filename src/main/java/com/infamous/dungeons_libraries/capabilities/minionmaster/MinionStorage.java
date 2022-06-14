@@ -33,7 +33,7 @@ public class MinionStorage implements Capability.IStorage<IMinion> {
         if(tag.hasUUID(MASTER_KEY)){
             instance.setMasterUUID(tag.getUUID(MASTER_KEY));
         }
-        if(tag.hasUUID(LEVEL_KEY)) {
+        if(tag.contains(LEVEL_KEY)) {
             instance.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
         }
         if(tag.contains(SUMMON_FLAG_KEY)){

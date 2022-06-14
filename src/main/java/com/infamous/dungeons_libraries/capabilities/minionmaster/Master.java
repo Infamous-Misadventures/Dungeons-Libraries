@@ -30,7 +30,8 @@ public class Master implements IMaster {
 
     @Override
     public List<Entity> getSummonedMobs() {
-        if(this.summonedMobs == null && this.summonedMobsUUID != null && this.levelOnLoad != null){
+        if(this.summonedMobs != null) return this.summonedMobs;
+        if(this.summonedMobsUUID != null && this.levelOnLoad != null){
             if(this.summonedMobsUUID.isEmpty()) return new ArrayList<>();
             RegistryKey<World> registrykey1 = RegistryKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();

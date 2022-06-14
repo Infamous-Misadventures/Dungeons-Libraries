@@ -9,7 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOf;
+import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOrColleagueRelation;
 import static net.minecraft.entity.EntityType.ARMOR_STAND;
 
 public class AbilityHelper {
@@ -30,16 +30,8 @@ public class AbilityHelper {
                 && nearbyEntity != attacker;
     }
 
-    private static boolean isNotAPlayerOrCanApplyToPlayers(LivingEntity attacker, LivingEntity nearbyEntity) {
-        if(attacker instanceof PlayerEntity) {
-            if (!(nearbyEntity instanceof PlayerEntity)) {
-                return true;
-            } else {
-                return DungeonsLibrariesConfig.ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS.get();
-            }
-        }else{
-            return true;
-        }
+    private static boolean isBothPlayerAndNoPvP(LivingEntity attacker, LivingEntity nearbyEntity) {
+        return attacker instanceof PlayerEntity && nearbyEntity instanceof PlayerEntity && !DungeonsLibrariesConfig.ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS.get();
     }
 
     public static boolean canHealEntity(LivingEntity healer, LivingEntity nearbyEntity) {
@@ -48,10 +40,16 @@ public class AbilityHelper {
                 && isAliveAndCanBeSeen(nearbyEntity, healer);
     }
 
-    public static boolean isAlly(LivingEntity origin, LivingEntity nearbyEntity) {
-        return isPetOf(origin, nearbyEntity)
-                || origin.isAlliedTo(nearbyEntity)
-                || (origin instanceof MonsterEntity && nearbyEntity instanceof MonsterEntity);
+    public static boolean isAlly(LivingEntity origin, LivingEntity target) {
+        LivingEntity originOwner = PetHelper.getOwner(origin);
+        LivingEntity targetOwner = PetHelper.getOwner(target);
+        if(originOwner != null || targetOwner != null){
+            return isAlly(originOwner != null ? originOwner : origin, targetOwner != null ? targetOwner : target);
+        }
+        return isPetOrColleagueRelation(origin, target)
+                || origin.isAlliedTo(target)
+                || isBothPlayerAndNoPvP(origin, target)
+                || (origin instanceof MonsterEntity && target instanceof MonsterEntity);
     }
 
     private static boolean isEntityBlacklisted(LivingEntity entity) {
@@ -66,7 +64,6 @@ public class AbilityHelper {
         return isNotTheTargetOrAttacker(attacker, target, nearbyEntity)
                 && isAliveAndCanBeSeen(nearbyEntity, attacker)
                 && !isAlly(attacker, nearbyEntity)
-                && isNotAPlayerOrCanApplyToPlayers(attacker, nearbyEntity)
                 && !isEntityBlacklisted(nearbyEntity);
     }
 
@@ -74,7 +71,6 @@ public class AbilityHelper {
         return nearbyEntity != attacker
                 && isAliveAndCanBeSeen(nearbyEntity, attacker)
                 && !isAlly(attacker, nearbyEntity)
-                && isNotAPlayerOrCanApplyToPlayers(attacker, nearbyEntity)
                 && !isEntityBlacklisted(nearbyEntity);
     }
 

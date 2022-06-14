@@ -42,7 +42,7 @@ public class MasterStorage implements Capability.IStorage<IMaster> {
             summonedUUIDs.add(compoundnbt.getUUID("uuid"));
         }
         instance.setSummonedMobsUUID(summonedUUIDs);
-        if(tag.hasUUID(LEVEL_KEY)) {
+        if(tag.contains(LEVEL_KEY)) {
             instance.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
         }
     }

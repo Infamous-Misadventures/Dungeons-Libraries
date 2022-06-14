@@ -8,6 +8,7 @@ import java.util.List;
 
 public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_KEEP_SOULS_ON_DEATH;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
 
     public static class Common {
@@ -54,6 +55,12 @@ public class DungeonsLibrariesConfig {
                             "minecraft:wolf"
                             ),
                             (itemRaw) -> itemRaw instanceof String);
+            builder.pop();
+
+            builder.comment("Souls Configuration").push("souls_configuration");
+            ENABLE_KEEP_SOULS_ON_DEATH = builder
+                    .comment("Enables keeping of souls upon death, disabled by default. [true / false]")
+                    .define("enableKeepSoulsOnDeath", false);
             builder.pop();
         }
     }

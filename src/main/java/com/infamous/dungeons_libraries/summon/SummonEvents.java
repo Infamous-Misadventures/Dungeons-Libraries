@@ -3,6 +3,9 @@ package com.infamous.dungeons_libraries.summon;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
+import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
+import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
+import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
@@ -73,6 +76,13 @@ public class SummonEvents {
         IMaster newSummonerCap = getMasterCapability(event.getPlayer());
         if (oldSummonerCap != null && newSummonerCap != null) {
             newSummonerCap.copyFrom(oldSummonerCap);
+        }
+        if(DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
+            ISoulCaster oldSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getOriginal());
+            ISoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getPlayer());
+            if (oldSoulsCap != null && newSoulsCap != null) {
+                newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getPlayer());
+            }
         }
     }
     @SubscribeEvent

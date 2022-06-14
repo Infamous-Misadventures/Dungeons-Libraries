@@ -96,7 +96,7 @@ public class MinionMasterHelper {
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
-                    (entityIterator) -> canPetAttackEntity(minionCap.getMaster(), mobEntity, entityIterator)));
+                    (entityIterator) -> canPetAttackEntity(mobEntity, entityIterator)));
         }
         if(minionCap.isSummon()){
             SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
