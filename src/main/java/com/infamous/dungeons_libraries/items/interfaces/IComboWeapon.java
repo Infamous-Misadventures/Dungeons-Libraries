@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public interface IComboWeapon<T extends Item> {
+public interface IComboWeapon {
     int getComboLength(ItemStack stack, LivingEntity attacker);
 
     default boolean shouldProcSpecialEffects(ItemStack stack, LivingEntity attacker, int combo) {
