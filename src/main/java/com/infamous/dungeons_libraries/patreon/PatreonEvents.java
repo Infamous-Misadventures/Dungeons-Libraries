@@ -1,6 +1,5 @@
 package com.infamous.dungeons_libraries.patreon;
 
-import com.infamous.dungeons_libraries.DungeonsLibraries;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,7 +11,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
-import static com.infamous.dungeons_libraries.patreon.PatreonHelper.getPatreon;
 import static com.infamous.dungeons_libraries.patreon.PatreonHelper.loadPatreons;
 
 @Mod.EventBusSubscriber(modid = MODID)

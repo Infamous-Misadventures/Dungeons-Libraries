@@ -5,6 +5,7 @@ import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEncha
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableProvider;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MasterProvider;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionProvider;
+import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewardsProvider;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterProvider;
 import com.infamous.dungeons_libraries.capabilities.timers.TimersProvider;
@@ -40,6 +41,9 @@ public class CapabilityEvents {
         }
         if (isEnchantableEntity(event.getObject())) {
             event.addCapability(new ResourceLocation(MODID, "enchantable"), new EnchantableProvider());
+        }
+        if(event.getObject() instanceof ServerPlayerEntity) {
+            event.addCapability(new ResourceLocation(MODID, "playerrewards"), new PlayerRewardsProvider());
         }
     }
 

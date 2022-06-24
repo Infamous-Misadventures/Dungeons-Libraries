@@ -8,6 +8,9 @@ import com.infamous.dungeons_libraries.capabilities.enchantable.Enchantable;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableStorage;
 import com.infamous.dungeons_libraries.capabilities.enchantable.IEnchantable;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.*;
+import com.infamous.dungeons_libraries.capabilities.playerrewards.IPlayerRewards;
+import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewards;
+import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewardsStorage;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterStorage;
@@ -66,6 +69,7 @@ public class DungeonsLibraries
         CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
         CapabilityManager.INSTANCE.register(ISoulCaster.class, new SoulCasterStorage(), SoulCaster::new);
         CapabilityManager.INSTANCE.register(ITimers.class, new TimersStorage(), Timers::new);
+        CapabilityManager.INSTANCE.register(IPlayerRewards.class, new PlayerRewardsStorage(), PlayerRewards::new);
         event.enqueueWork(NetworkHandler::init);
     }
 
