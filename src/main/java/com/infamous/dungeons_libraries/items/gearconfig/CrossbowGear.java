@@ -248,7 +248,7 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
             abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() + (double) powerLevel * 0.5D + 0.5D);
         }
 
-        int punchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+        int punchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
         if (this.shootsHeavyArrows(stack)) punchLevel++;
         if (punchLevel > 0) {
             abstractArrowEntity.setKnockback(punchLevel);
