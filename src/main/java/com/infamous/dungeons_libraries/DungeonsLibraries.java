@@ -20,6 +20,7 @@ import com.infamous.dungeons_libraries.capabilities.timers.TimersStorage;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
+import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
 import com.infamous.dungeons_libraries.items.gearconfig.*;
 import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
@@ -89,6 +90,7 @@ public class DungeonsLibraries
 
     private void doClientStuff(final FMLClientSetupEvent event) {
 
+        MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.SOUL_ORB.get(), SoulOrbRenderer::new);
     }
 

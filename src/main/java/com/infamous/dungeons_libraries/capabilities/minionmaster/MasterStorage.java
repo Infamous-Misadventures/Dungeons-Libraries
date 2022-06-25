@@ -17,19 +17,29 @@ public class MasterStorage implements Capability.IStorage<IMaster> {
 
     @Override
     public INBT writeNBT(Capability<IMaster> capability, IMaster instance, Direction side) {
-        CompoundNBT tag = new CompoundNBT();
-        ListNBT listnbt = new ListNBT();
+        CompoundNBT nbt = new CompoundNBT();
+        ListNBT summoned = new ListNBT();
         instance.getSummonedMobs().forEach(entity -> {
-            CompoundNBT compoundnbt = new CompoundNBT();
-            compoundnbt.putUUID("uuid", entity.getUUID());
-            listnbt.add(compoundnbt);
+            CompoundNBT mob = new CompoundNBT();
+            mob.putUUID("uuid", entity.getUUID());
+            summoned.add(mob);
         });
-        tag.put("summoned", listnbt);
+        nbt.put("summoned", summoned);
+        ListNBT minions = new ListNBT();
+        instance.getOtherMinions().forEach(entity -> {
+            CompoundNBT minion = new CompoundNBT();
+            minion.putUUID("uuid", entity.getUUID());
+            minions.add(minion);
+        });
+        nbt.put("minions", minions);
         if(!instance.getSummonedMobs().isEmpty()){
             ResourceLocation location = instance.getSummonedMobs().get(0).level.dimension().location();
-            tag.putString(LEVEL_KEY, location.toString());
+            nbt.putString(LEVEL_KEY, location.toString());
+        }else if(!instance.getOtherMinions().isEmpty()){
+            ResourceLocation location = instance.getOtherMinions().get(0).level.dimension().location();
+            nbt.putString(LEVEL_KEY, location.toString());
         }
-        return tag;
+        return nbt;
     }
 
     @Override
@@ -42,6 +52,12 @@ public class MasterStorage implements Capability.IStorage<IMaster> {
             summonedUUIDs.add(compoundnbt.getUUID("uuid"));
         }
         instance.setSummonedMobsUUID(summonedUUIDs);
+        ListNBT minionsNBT = tag.getList("minions", 10);
+        List<UUID> minionUUIDs = new ArrayList<>();
+        for(int i = 0; i < minionsNBT.size(); ++i) {
+            CompoundNBT compoundnbt = minionsNBT.getCompound(i);
+            minionUUIDs.add(compoundnbt.getUUID("uuid"));
+        }
         if(tag.contains(LEVEL_KEY)) {
             instance.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
         }

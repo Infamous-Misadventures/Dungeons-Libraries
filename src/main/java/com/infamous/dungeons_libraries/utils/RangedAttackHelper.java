@@ -14,7 +14,7 @@ import static net.minecraft.item.CrossbowItem.containsChargedProjectile;
 public class RangedAttackHelper {
 
     public static float getVanillaArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
-        float bowChargeTime = RangedAttackHelper.getVanillaBowChargeTime(livingEntity, stack);
+        float bowChargeTime = RangedAttackHelper.getBowChargeTime(livingEntity, stack);
         if(bowChargeTime <= 0){
             bowChargeTime = 1;
         }
@@ -33,10 +33,11 @@ public class RangedAttackHelper {
         return arrowVelocity;
     }
 
-    public static float getVanillaBowChargeTime(LivingEntity livingEntity, ItemStack stack){
+    public static float getBowChargeTime(LivingEntity livingEntity, ItemStack stack){
+        float defaultChargeTime = stack.getItem() instanceof BowGear ? ((BowGear)stack.getItem()).getDefaultChargeTime() : 20.0F;
         int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         float minTime = 1;
-        BowEvent.ChargeTime event = new BowEvent.ChargeTime(livingEntity, stack, 20.0F);
+        BowEvent.ChargeTime event = new BowEvent.ChargeTime(livingEntity, stack, defaultChargeTime);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
         return Math.max(event.getChargeTime() - 5 * quickChargeLevel, minTime);
     }
@@ -56,17 +57,6 @@ public class RangedAttackHelper {
         }
         else{
             chargeTime = 25;
-        }
-        return chargeTime;
-    }
-
-    public static float getModdedBowChargeTime(LivingEntity livingEntity, ItemStack stack){
-        float chargeTime;
-        if(stack.getItem() instanceof BowGear){
-            chargeTime = ((BowGear)stack.getItem()).getBowChargeTime(livingEntity, stack);
-        }
-        else{
-            chargeTime = 20.0F;
         }
         return chargeTime;
     }

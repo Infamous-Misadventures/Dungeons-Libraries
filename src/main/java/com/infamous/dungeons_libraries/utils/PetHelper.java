@@ -26,7 +26,7 @@ public class PetHelper {
         if(masterCapability == null) return;
         List<LivingEntity> nearbyEntities = owner.getCommandSenderWorld().getLoadedEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(12), nearbyEntity -> isPetOf(owner, nearbyEntity));
         HashSet<Entity> pets = new HashSet<>();
-        pets.addAll(masterCapability.getSummonedMobs());
+        pets.addAll(masterCapability.getAllMinions());
         pets.addAll(nearbyEntities);
         for (Entity pet : pets) {
             if(pet instanceof MobEntity){

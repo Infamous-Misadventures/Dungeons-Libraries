@@ -11,6 +11,8 @@ public interface IMaster {
 
     void copyFrom(IMaster summoner);
 
+    List<Entity> getAllMinions();
+
     List<Entity> getSummonedMobs();
 
     int getSummonedMobsCost();
@@ -22,4 +24,10 @@ public interface IMaster {
     void setSummonedMobsUUID(List<UUID> summonedMobsUUID);
 
     void setLevelOnLoad(ResourceLocation levelOnLoad);
+
+    boolean addMinion(Entity entity);
+
+    List<Entity> getOtherMinions();
+
+    void setOtherMinions(List<Entity> otherMinions);
 }

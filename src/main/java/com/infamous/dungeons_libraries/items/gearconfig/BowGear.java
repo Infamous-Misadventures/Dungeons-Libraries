@@ -8,6 +8,7 @@ import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
+import com.infamous.dungeons_libraries.utils.RangedAttackHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -176,7 +177,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     }
 
     public float getBowArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
-        float bowChargeTime = getBowChargeTime(livingEntity, stack);
+        float bowChargeTime = RangedAttackHelper.getBowChargeTime(livingEntity, stack);
         float arrowVelocity = (float)charge / bowChargeTime;
         arrowVelocity = (arrowVelocity * arrowVelocity + arrowVelocity * 2.0F) / 3.0F;
         float velocityLimit = 1.0F;
@@ -189,14 +190,6 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
         }
 
         return arrowVelocity;
-    }
-
-    public float getBowChargeTime(LivingEntity livingEntity, ItemStack stack){
-        int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
-        float minTime = 1;
-        BowEvent.ChargeTime event = new BowEvent.ChargeTime(livingEntity, stack, this.getDefaultChargeTime());
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
-        return Math.max(event.getChargeTime() - 5 * quickChargeLevel, minTime);
     }
 
     @Override
