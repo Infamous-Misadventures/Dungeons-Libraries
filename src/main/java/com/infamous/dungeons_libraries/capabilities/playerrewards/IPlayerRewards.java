@@ -20,4 +20,6 @@ public interface IPlayerRewards {
     boolean hasPlayerReward(ResourceLocation source);
 
     Map<ResourceLocation, Integer> getAllPlayerRewards();
+
+    boolean setPlayerRewards(Map<ResourceLocation, Integer> allPlayerRewards);
 }

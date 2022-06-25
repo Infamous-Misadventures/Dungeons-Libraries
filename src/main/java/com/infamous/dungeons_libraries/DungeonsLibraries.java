@@ -20,6 +20,7 @@ import com.infamous.dungeons_libraries.capabilities.timers.TimersStorage;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
+import com.infamous.dungeons_libraries.items.gearconfig.*;
 import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
@@ -37,6 +38,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
+import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
+import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
+import static com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS;
+import static com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry.MELEE_GEAR_CONFIGS;
+import static com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials.ARMOR_MATERIALS;
+import static com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials.WEAPON_MATERIALS;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("dungeons_libraries")
@@ -60,6 +67,13 @@ public class DungeonsLibraries
         ENTITY_TYPES.register(modEventBus);
         ArmorMaterials.setupVanillaMaterials();
         WeaponMaterials.setupVanillaMaterials();
+
+        ARMOR_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArmorGearConfigRegistry::toPacket);
+        MELEE_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, MeleeGearConfigRegistry::toPacket);
+        BOW_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, BowGearConfigRegistry::toPacket);
+        CROSSBOW_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, CrossbowGearConfigRegistry::toPacket);
+        WEAPON_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, WeaponMaterials::toPacket);
+        ARMOR_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArmorMaterials::toPacket);
     }
 
     private void setup(final FMLCommonSetupEvent event){

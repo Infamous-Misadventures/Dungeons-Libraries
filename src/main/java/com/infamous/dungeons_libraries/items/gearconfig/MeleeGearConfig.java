@@ -33,7 +33,6 @@ public class MeleeGearConfig {
     private List<GearConfigAttributeModifier> attributes;
     private List<EnchantmentData> builtInEnchantments;
     private ResourceLocation materialResource;
-    private LazyValue<IItemTier> weaponMaterial;
     private boolean disablesShield;
     private boolean unique;
     private Rarity rarity;
@@ -43,7 +42,6 @@ public class MeleeGearConfig {
         this.attributes = attributes;
         this.builtInEnchantments = builtInEnchantments;
         this.materialResource = materialResource;
-        this.weaponMaterial = new LazyValue<>(() -> WeaponMaterials.getWeaponMaterial(materialResource));
         this.disablesShield = disablesShield;
         this.unique = unique;
         this.rarity = rarity;
@@ -63,7 +61,7 @@ public class MeleeGearConfig {
     }
 
     public IItemTier getWeaponMaterial() {
-        return weaponMaterial.get();
+        return WeaponMaterials.getWeaponMaterial(materialResource);
     }
 
     public boolean isDisablesShield() {

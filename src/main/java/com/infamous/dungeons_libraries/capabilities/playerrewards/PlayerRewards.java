@@ -47,4 +47,10 @@ public class PlayerRewards implements IPlayerRewards {
     public Map<ResourceLocation, Integer> getAllPlayerRewards() {
         return new HashMap<>(rewards);
     }
+
+    @Override
+    public boolean setPlayerRewards(Map<ResourceLocation, Integer> allPlayerRewards) {
+        rewards = new HashMap<>(allPlayerRewards);
+        return true;
+    }
 }

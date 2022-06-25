@@ -39,7 +39,7 @@ public class ItemEvents {
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
             ModifiableAttributeInstance attribute = attacker.getAttribute(LIFE_STEAL.get());
             if (attribute != null) {
-                double lifeStealAmount = attribute.getValue();
+                double lifeStealAmount = attribute.getValue() - 1.0D;
                 float victimMaxHealth = event.getEntityLiving().getMaxHealth();
                 if (attacker.getHealth() < attacker.getMaxHealth()) {
                     attacker.heal(victimMaxHealth * (float) lifeStealAmount);

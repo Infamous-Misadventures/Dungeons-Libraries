@@ -21,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -73,6 +74,11 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         });
         this.defaultModifiers = builder.build();
         ((ItemAccessor) this).setMaxDamage(crossbowGearConfig.getDurability());
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType pEquipmentSlot) {
+        return pEquipmentSlot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     public static float getArrowVelocity(LivingEntity livingEntity, ItemStack stack) {

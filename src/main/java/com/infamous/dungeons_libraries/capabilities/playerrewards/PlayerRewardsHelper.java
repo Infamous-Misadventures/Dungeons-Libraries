@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.playerrewards;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -15,11 +16,11 @@ public class PlayerRewardsHelper {
         return lazyCap;
     }
 
-    public static IPlayerRewards getPlayerRewardsCapability(ItemStack itemStack)
+    public static IPlayerRewards getPlayerRewardsCapability(PlayerEntity playerEntity)
     {
-        LazyOptional<IPlayerRewards> lazyCap = itemStack.getCapability(PlayerRewardsProvider.PLAYER_REWARDS_CAPABILITY);
+        LazyOptional<IPlayerRewards> lazyCap = playerEntity.getCapability(PlayerRewardsProvider.PLAYER_REWARDS_CAPABILITY);
         if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the BuiltInEnchantments capability from the ItemStack!"));
+            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the Player Rewards capability from the Player!"));
         }
         return null;
     }

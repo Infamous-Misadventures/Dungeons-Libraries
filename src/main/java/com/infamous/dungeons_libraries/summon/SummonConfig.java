@@ -9,7 +9,7 @@ public class SummonConfig {
 
     public static final Codec<SummonConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("cost").forGetter(summonConfig -> summonConfig.cost),
-            Codec.BOOL.fieldOf("add_attack_goal").forGetter(summonConfig -> summonConfig.addAttackGoal)
+            Codec.BOOL.optionalFieldOf("add_attack_goal", false).forGetter(summonConfig -> summonConfig.addAttackGoal)
     ).apply(instance, SummonConfig::new));
 
     private int cost;

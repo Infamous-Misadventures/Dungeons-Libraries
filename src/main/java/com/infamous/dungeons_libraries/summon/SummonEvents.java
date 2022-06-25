@@ -67,24 +67,6 @@ public class SummonEvents {
         }
     }
 
-    // Preserves ownership of summoned mobs on respawn
-    // Prevents problems like summoning an entirely new summon of the same type
-    // as one you already have after you respawn
-    @SubscribeEvent
-    public static void cloneSummonerCaps(PlayerEvent.Clone event){
-        IMaster oldSummonerCap = getMasterCapability(event.getOriginal());
-        IMaster newSummonerCap = getMasterCapability(event.getPlayer());
-        if (oldSummonerCap != null && newSummonerCap != null) {
-            newSummonerCap.copyFrom(oldSummonerCap);
-        }
-        if(DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
-            ISoulCaster oldSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getOriginal());
-            ISoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getPlayer());
-            if (oldSoulsCap != null && newSoulsCap != null) {
-                newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getPlayer());
-            }
-        }
-    }
     @SubscribeEvent
     public static void reAddSummonableGoals(EntityJoinWorldEvent event){
         if(MinionMasterHelper.isMinionEntity(event.getEntity())){

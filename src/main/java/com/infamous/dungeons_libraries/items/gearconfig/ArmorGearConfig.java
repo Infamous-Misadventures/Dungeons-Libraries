@@ -30,7 +30,6 @@ public class ArmorGearConfig {
     private List<GearConfigAttributeModifier> attributes;
     private List<EnchantmentData> builtInEnchantments;
     private ResourceLocation materialResource;
-    private LazyValue<IArmorMaterial> armorMaterial;
     private boolean unique;
     private Rarity rarity;
 
@@ -38,7 +37,6 @@ public class ArmorGearConfig {
         this.attributes = attributes;
         this.builtInEnchantments = builtInEnchantments;
         this.materialResource = materialResource;
-        this.armorMaterial = new LazyValue<>(() -> ArmorMaterials.getArmorMaterial(materialResource));
         this.unique = unique;
         this.rarity = rarity;
     }
@@ -52,7 +50,7 @@ public class ArmorGearConfig {
     }
 
     public IArmorMaterial getArmorMaterial(){
-        return armorMaterial.get();
+        return ArmorMaterials.getArmorMaterial(materialResource);
     }
 
     public boolean isUnique() {

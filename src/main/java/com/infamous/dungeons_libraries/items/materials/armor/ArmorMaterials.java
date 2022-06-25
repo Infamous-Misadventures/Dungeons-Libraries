@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.items.materials.armor;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.data.util.DefaultsCodecJsonDataManager;
+import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.util.ResourceLocation;
@@ -67,5 +68,9 @@ public class ArmorMaterials {
                 return UNKNOWN == baseType;
             }
         }).collect(Collectors.toList());
+    }
+
+    public static ArmorMaterialSyncPacket toPacket(Map<ResourceLocation, IArmorMaterial> map){
+        return new ArmorMaterialSyncPacket(map);
     }
 }
