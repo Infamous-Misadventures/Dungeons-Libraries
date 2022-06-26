@@ -18,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Random;
-
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
 
 @Mixin(BowItem.class)
@@ -36,7 +34,7 @@ public class BowItemMixin {
         i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, playerentity, i, !itemstack.isEmpty() || flag);
         if (i < 0) return 0;
 
-        arrowVelocity = RangedAttackHelper.getVanillaArrowVelocity(livingEntity, stack, i);
+        arrowVelocity = RangedAttackHelper.getArrowVelocity(livingEntity, stack, i);
         return arrowVelocity;
     }
 

@@ -13,7 +13,7 @@ import static net.minecraft.item.CrossbowItem.containsChargedProjectile;
 
 public class RangedAttackHelper {
 
-    public static float getVanillaArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
+    public static float getArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
         float bowChargeTime = RangedAttackHelper.getBowChargeTime(livingEntity, stack);
         if(bowChargeTime <= 0){
             bowChargeTime = 1;
@@ -21,15 +21,15 @@ public class RangedAttackHelper {
         float arrowVelocity = (float)charge / bowChargeTime;
         arrowVelocity = (arrowVelocity * arrowVelocity + arrowVelocity * 2.0F) / 3.0F;
         float velocityLimit = 1.0F;
-        int overchargeLevel = 0; //EnchantmentHelper.getItemEnchantmentLevel(RangedEnchantmentList.OVERCHARGE, stack);
+        BowEvent.Overcharge event = new BowEvent.Overcharge(livingEntity, stack, 0);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+        int overchargeLevel = event.getCharges();
         if(overchargeLevel > 0){
             velocityLimit += overchargeLevel;
         }
-
         if (arrowVelocity > velocityLimit) {
             arrowVelocity = velocityLimit;
         }
-
         return arrowVelocity;
     }
 
@@ -68,17 +68,6 @@ public class RangedAttackHelper {
         }
         else{
             arrowVelocity = containsChargedProjectile(stack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
-        }
-        return arrowVelocity;
-    }
-
-    public static float getVanillaOrModdedBowArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
-        float arrowVelocity;
-        if(stack.getItem() instanceof BowGear){
-            arrowVelocity = ((BowGear)stack.getItem()).getBowArrowVelocity(livingEntity, stack, charge);
-        }
-        else{
-            arrowVelocity = getVanillaArrowVelocity(livingEntity, stack, charge);
         }
         return arrowVelocity;
     }

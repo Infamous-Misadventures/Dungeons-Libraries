@@ -92,7 +92,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
                     itemstack = new ItemStack(Items.ARROW);
                 }
 
-                float arrowVelocity = this.getBowArrowVelocity(playerentity, stack, charge);
+                float arrowVelocity = RangedAttackHelper.getArrowVelocity(playerentity, stack, charge);
                 this.fireArrows(stack, world, playerentity, itemstack, arrowVelocity);
             }
         }
@@ -174,22 +174,6 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
         if(i == 4) abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot - 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
         if(i == 5) abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot + 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
         if(i == 6) abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot - 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-    }
-
-    public float getBowArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
-        float bowChargeTime = RangedAttackHelper.getBowChargeTime(livingEntity, stack);
-        float arrowVelocity = (float)charge / bowChargeTime;
-        arrowVelocity = (arrowVelocity * arrowVelocity + arrowVelocity * 2.0F) / 3.0F;
-        float velocityLimit = 1.0F;
-        int overchargeLevel = 0; //EnchantmentHelper.getItemEnchantmentLevel(RangedEnchantmentList.OVERCHARGE, stack);
-        if(overchargeLevel > 0){
-            velocityLimit += overchargeLevel;
-        }
-        if (arrowVelocity > velocityLimit) {
-            arrowVelocity = velocityLimit;
-        }
-
-        return arrowVelocity;
     }
 
     @Override

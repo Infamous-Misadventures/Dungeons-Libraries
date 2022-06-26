@@ -64,4 +64,28 @@ public abstract class BowEvent extends LivingEvent {
             this.velocity = velocity;
         }
     }
+
+    public static class Overcharge extends BowEvent
+    {
+        private int originalCharges;
+        private int charges;
+
+        public Overcharge(LivingEntity entity, ItemStack itemStack, int charges) {
+            super(entity, itemStack);
+            this.originalCharges = charges;
+            this.charges = charges;
+        }
+
+        public int getOriginalCharges() {
+            return originalCharges;
+        }
+
+        public int getCharges() {
+            return charges;
+        }
+
+        public void setCharges(int charges) {
+            this.charges = charges;
+        }
+    }
 }
