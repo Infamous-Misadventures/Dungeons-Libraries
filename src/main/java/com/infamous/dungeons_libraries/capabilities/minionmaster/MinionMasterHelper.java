@@ -118,7 +118,7 @@ public class MinionMasterHelper {
             MobEntity mobEntity = (MobEntity) entityLiving;
             clearGoals(mobEntity.goalSelector);
             clearGoals(mobEntity.targetSelector);
-            ((MobEntityInvoker) entityLiving).registerGoals();
+            ((MobEntityInvoker) entityLiving).invokeRegisterGoals();
         }
     }
 
