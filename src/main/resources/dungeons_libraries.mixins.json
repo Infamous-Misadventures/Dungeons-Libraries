@@ -16,6 +16,7 @@
     "GeoEntityRendererMixin",
     "GoalSelectorAccessor",
     "ItemAccessor",
+    "MobEntityInvoker",
     "MobEntityMixin",
     "PickaxeItemAccessor",
     "TieredItemAccessor"
