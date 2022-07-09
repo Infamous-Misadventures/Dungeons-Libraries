@@ -18,6 +18,9 @@ public class Minion implements IMinion {
     private ResourceLocation levelOnLoad;
     private LivingEntity master;
     private boolean summon = false;
+    private int minionTimer = 0;
+    private boolean temporary = false;
+    private boolean revertsOnExpiration = false;
 
     @Override
     public LivingEntity getMaster() {
@@ -64,5 +67,35 @@ public class Minion implements IMinion {
     @Override
     public void setSummon(boolean summon) {
         this.summon = summon;
+    }
+
+    @Override
+    public void setMinionTimer(int minionTimer) {
+        this.minionTimer = minionTimer;
+    }
+
+    @Override
+    public int getMinionTimer() {
+        return this.minionTimer;
+    }
+
+    @Override
+    public boolean isTemporary() {
+        return temporary;
+    }
+
+    @Override
+    public void setTemporary(boolean temporary) {
+        this.temporary = temporary;
+    }
+
+    @Override
+    public boolean revertsOnExpiration() {
+        return revertsOnExpiration;
+    }
+
+    @Override
+    public void setRevertsOnExpiration(boolean revertsOnExpiration) {
+        this.revertsOnExpiration = revertsOnExpiration;
     }
 }

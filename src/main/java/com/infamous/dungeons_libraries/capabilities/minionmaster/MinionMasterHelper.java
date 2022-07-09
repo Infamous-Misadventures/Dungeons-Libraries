@@ -105,4 +105,13 @@ public class MinionMasterHelper {
             }
         }
     }
+
+    static void removeMinion(LivingEntity entityLiving, IMinion cap) {
+        LivingEntity master = cap.getMaster();
+        IMaster masterCapability = getMasterCapability(master);
+        if(masterCapability != null){
+            masterCapability.removeMinion(entityLiving);
+        }
+        cap.setMaster(null);
+    }
 }

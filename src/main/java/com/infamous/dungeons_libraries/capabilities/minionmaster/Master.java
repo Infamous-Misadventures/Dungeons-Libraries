@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
@@ -99,5 +100,8 @@ public class Master implements IMaster {
         return entities;
     }
 
-
+    @Override
+    public void removeMinion(LivingEntity entityLiving) {
+        this.getOtherMinions().remove(entityLiving);
+    }
 }

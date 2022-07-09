@@ -9,6 +9,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,26 @@ public class MinionEvents {
         IMinion cap = MinionMasterHelper.getMinionCapability(event.getEntityLiving());
         if (cap != null && cap.isMinion()) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingEntityTick(LivingEvent.LivingUpdateEvent event){
+        LivingEntity entityLiving = event.getEntityLiving();
+        if(entityLiving.level.isClientSide) return;
+        IMinion cap = MinionMasterHelper.getMinionCapability(entityLiving);
+        if (cap != null && cap.isMinion()) {
+            if (cap.isTemporary()) {
+                if (cap.getMinionTimer() > 0) {
+                    cap.setMinionTimer(cap.getMinionTimer() - 1);
+                } else {
+                    if (cap.revertsOnExpiration()) {
+                        MinionMasterHelper.removeMinion(entityLiving, cap);
+                    } else {
+                        entityLiving.remove();
+                    }
+                }
+            }
         }
     }
 

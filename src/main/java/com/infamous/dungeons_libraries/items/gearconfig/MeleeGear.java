@@ -148,11 +148,6 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment.category.canEnchant(Items.IRON_SWORD);
-    }
-
-    @Override
     public Rarity getRarity(ItemStack pStack) {
         return getGearConfig().getRarity();
     }

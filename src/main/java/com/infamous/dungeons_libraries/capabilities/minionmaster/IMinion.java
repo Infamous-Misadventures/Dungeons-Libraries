@@ -20,4 +20,16 @@ public interface IMinion {
     boolean isSummon();
 
     void setSummon(boolean summon);
+
+    void setMinionTimer(int minionTimer);
+
+    int getMinionTimer();
+
+    boolean isTemporary();
+
+    void setTemporary(boolean temporary);
+
+    boolean revertsOnExpiration();
+
+    void setRevertsOnExpiration(boolean revertsOnExpiration);
 }

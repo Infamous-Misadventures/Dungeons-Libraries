@@ -13,6 +13,9 @@ public class MinionStorage implements Capability.IStorage<IMinion> {
     public static final String MASTER_KEY = "summoner";
     public static final String LEVEL_KEY = "level";
     public static final String SUMMON_FLAG_KEY = "is_summon";
+    public static final String TEMPORARY_FLAG_KEY = "is_temporary";
+    public static final String REVERTS_ON_EXPIRATION_FLAG_KEY = "reverts_on_expiration";
+    public static final String MINION_TIMER_KEY = "minion_timer";
 
     @Nullable
     @Override
@@ -24,6 +27,9 @@ public class MinionStorage implements Capability.IStorage<IMinion> {
             tag.putString(LEVEL_KEY, location.toString());
         }
         tag.putBoolean(SUMMON_FLAG_KEY, instance.isSummon());
+        tag.putBoolean(TEMPORARY_FLAG_KEY, instance.isTemporary());
+        tag.putBoolean(REVERTS_ON_EXPIRATION_FLAG_KEY, instance.revertsOnExpiration());
+        tag.putInt(MINION_TIMER_KEY, instance.getMinionTimer());
         return tag;
     }
 
@@ -38,6 +44,15 @@ public class MinionStorage implements Capability.IStorage<IMinion> {
         }
         if(tag.contains(SUMMON_FLAG_KEY)){
             instance.setSummon(tag.getBoolean(SUMMON_FLAG_KEY));
+        }
+        if(tag.contains(TEMPORARY_FLAG_KEY)){
+            instance.setTemporary(tag.getBoolean(TEMPORARY_FLAG_KEY));
+        }
+        if(tag.contains(REVERTS_ON_EXPIRATION_FLAG_KEY)){
+            instance.setRevertsOnExpiration(tag.getBoolean(REVERTS_ON_EXPIRATION_FLAG_KEY));
+        }
+        if(tag.contains(MINION_TIMER_KEY)){
+            instance.setMinionTimer(tag.getInt(MINION_TIMER_KEY));
         }
     }
 }

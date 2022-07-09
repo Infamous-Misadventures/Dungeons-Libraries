@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,4 +31,6 @@ public interface IMaster {
     List<Entity> getOtherMinions();
 
     void setOtherMinions(List<Entity> otherMinions);
+
+    void removeMinion(LivingEntity entityLiving);
 }
