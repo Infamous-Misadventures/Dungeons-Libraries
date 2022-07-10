@@ -1,6 +1,6 @@
 package com.infamous.dungeons_libraries.items.interfaces;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface ISoulConsumer {
 

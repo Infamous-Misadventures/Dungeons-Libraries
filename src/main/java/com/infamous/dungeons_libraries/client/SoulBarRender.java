@@ -1,16 +1,14 @@
 package com.infamous.dungeons_libraries.client;
 
-import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
+import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,29 +24,29 @@ public class SoulBarRender {
 
     @SubscribeEvent
     public static void displaySoulBar(RenderGameOverlayEvent.Post event) {
-        MatrixStack matrixStack = event.getMatrixStack();
-        MainWindow sr = event.getWindow();
+        PoseStack matrixStack = event.getMatrixStack();
+        Window sr = event.getWindow();
         int scaledWidth = sr.getGuiScaledWidth();
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
 
-        if (event.getType().equals(RenderGameOverlayEvent.ElementType.HOTBAR) && mc.getCameraEntity() instanceof PlayerEntity) {
+        if (event.getType().equals(RenderGameOverlayEvent.ElementType.LAYER) && mc.getCameraEntity() instanceof Player) {
             //draw souls
-            mc.getTextureManager().bind(SOUL_BAR_RESOURCE);
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, SOUL_BAR_RESOURCE);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            PlayerEntity renderPlayer = (PlayerEntity) mc.getCameraEntity();
+            Player renderPlayer = (Player) mc.getCameraEntity();
             if(renderPlayer == null) return;
-            ISoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(renderPlayer);
+            SoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(renderPlayer);
             if(soulCasterCapability == null) return;
 
             float souls = soulCasterCapability.getSouls();
             double maxSouls = renderPlayer.getAttributeValue(SOUL_CAP.get());
 
-            GlStateManager._enableRescaleNormal();
+//            GlStateManager._enableRescaleNormal();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            RenderHelper.turnBackOn();
+//            RenderHelper.turnBackOn();
 
             mc.getProfiler().push("soulBar");
 
@@ -57,8 +55,8 @@ public class SoulBarRender {
                 int foregroundBarWidth = (int) (souls / maxSouls * 122.0F);
                 int xPos = scaledWidth - 123;
                 int yPos = scaledHeight - 7;
-                AbstractGui.blit(matrixStack, xPos, yPos, 0, 0, backgroundBarWidth, 5, 121, 10);
-                AbstractGui.blit(matrixStack, xPos, yPos, 0, 5, foregroundBarWidth, 5, 121, 10);
+                GuiComponent.blit(matrixStack, xPos, yPos, 0, 0, backgroundBarWidth, 5, 121, 10);
+                GuiComponent.blit(matrixStack, xPos, yPos, 0, 5, foregroundBarWidth, 5, 121, 10);
             }
             mc.getProfiler().pop();
 
@@ -75,8 +73,8 @@ public class SoulBarRender {
                 mc.getProfiler().pop();
             }
 
-            mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
-            RenderHelper.turnOff();
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+//            RenderHelper.turnOff();
             RenderSystem.disableBlend();
         }
 

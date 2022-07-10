@@ -1,19 +1,19 @@
 package com.infamous.dungeons_libraries.client.util;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.settings.ParticleStatus;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -24,21 +24,21 @@ public class ParticleGenerator {
     private static final Random RANDOM = new Random();
 
     @Nullable
-    public static Particle addParticleInternal(IParticleData particleData, boolean guarantee, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        return addParticleInternal(particleData, guarantee, false, x, y, z, xSpeed, ySpeed, zSpeed);
+    public static Particle addParticleInternal(ParticleOptions particleOptions, boolean guarantee, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        return addParticleInternal(particleOptions, guarantee, false, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 
     @Nullable
-    private static Particle addParticleInternal(IParticleData particleData, boolean guarantee, boolean minimize, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        ActiveRenderInfo activerenderinfo = MINECRAFT.gameRenderer.getMainCamera();
-        if (activerenderinfo.isInitialized() && MINECRAFT.particleEngine != null) {
+    private static Particle addParticleInternal(ParticleOptions particleOptions, boolean guarantee, boolean minimize, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        Camera mainCamera = MINECRAFT.gameRenderer.getMainCamera();
+        if (mainCamera.isInitialized() && MINECRAFT.particleEngine != null) {
             ParticleStatus particlestatus = calculateParticleLevel(minimize);
             if (guarantee) {
-                return MINECRAFT.particleEngine.createParticle(particleData, x, y, z, xSpeed, ySpeed, zSpeed);
-            } else if (activerenderinfo.getPosition().distanceToSqr(x, y, z) > 1024.0D) {
+                return MINECRAFT.particleEngine.createParticle(particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
+            } else if (mainCamera.getPosition().distanceToSqr(x, y, z) > 1024.0D) {
                 return null;
             } else {
-                return particlestatus == ParticleStatus.MINIMAL ? null : MINECRAFT.particleEngine.createParticle(particleData, x, y, z, xSpeed, ySpeed, zSpeed);
+                return particlestatus == ParticleStatus.MINIMAL ? null : MINECRAFT.particleEngine.createParticle(particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
             }
         } else {
             return null;
@@ -46,29 +46,29 @@ public class ParticleGenerator {
     }
 
     private static ParticleStatus calculateParticleLevel(boolean minimize) {
-        ParticleStatus particlestatus = MINECRAFT.options.particles;
-        if (minimize && particlestatus == ParticleStatus.MINIMAL && RANDOM.nextInt(10) == 0) {
-            particlestatus = ParticleStatus.DECREASED;
+        ParticleStatus particleStatus = MINECRAFT.options.particles;
+        if (minimize && particleStatus == ParticleStatus.MINIMAL && RANDOM.nextInt(10) == 0) {
+            particleStatus = ParticleStatus.DECREASED;
         }
 
-        if (particlestatus == ParticleStatus.DECREASED && RANDOM.nextInt(3) == 0) {
-            particlestatus = ParticleStatus.MINIMAL;
+        if (particleStatus == ParticleStatus.DECREASED && RANDOM.nextInt(3) == 0) {
+            particleStatus = ParticleStatus.MINIMAL;
         }
 
-        return particlestatus;
+        return particleStatus;
     }
 
-    public static void generatePotionImpact(World level, Potion potion, ItemStack itemStack, BlockPos blockPos, int color, SoundEvent soundEvent) {
-       Vector3d bottomCenterOf = Vector3d.atBottomCenterOf(blockPos);
+    public static void generatePotionImpact(Level level, Potion potion, ItemStack itemStack, BlockPos blockPos, int color, SoundEvent soundEvent) {
+       Vec3 bottomCenterOf = Vec3.atBottomCenterOf(blockPos);
 
        for(int particleIndex = 0; particleIndex < 8; ++particleIndex) {
-          level.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemStack), bottomCenterOf.x, bottomCenterOf.y, bottomCenterOf.z, level.random.nextGaussian() * 0.15D, level.random.nextDouble() * 0.2D, level.random.nextGaussian() * 0.15D);
+          level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemStack), bottomCenterOf.x, bottomCenterOf.y, bottomCenterOf.z, level.random.nextGaussian() * 0.15D, level.random.nextDouble() * 0.2D, level.random.nextGaussian() * 0.15D);
        }
 
        float red = (float)(color >> 16 & 255) / 255.0F;
        float green = (float)(color >> 8 & 255) / 255.0F;
        float blue = (float)(color >> 0 & 255) / 255.0F;
-       IParticleData particleData = potion.hasInstantEffects() ? ParticleTypes.INSTANT_EFFECT : ParticleTypes.EFFECT;
+       ParticleOptions particleData = potion.hasInstantEffects() ? ParticleTypes.INSTANT_EFFECT : ParticleTypes.EFFECT;
 
        for(int internalParticleCount = 0; internalParticleCount < 100; ++internalParticleCount) {
           double power = level.random.nextDouble() * 4.0D;
@@ -84,7 +84,7 @@ public class ParticleGenerator {
           }
        }
 
-       level.playLocalSound((double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double) blockPos.getZ() + 0.5D, soundEvent, SoundCategory.NEUTRAL, 1.0F, level.random.nextFloat() * 0.1F + 0.9F, false);
+       level.playLocalSound((double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double) blockPos.getZ() + 0.5D, soundEvent, SoundSource.NEUTRAL, 1.0F, level.random.nextFloat() * 0.1F + 0.9F, false);
     }
 
 }

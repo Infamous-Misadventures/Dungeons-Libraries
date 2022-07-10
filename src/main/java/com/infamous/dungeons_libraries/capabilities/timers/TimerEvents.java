@@ -11,7 +11,7 @@ public class TimerEvents {
 
     @SubscribeEvent
     public static void onLivingUpdate(LivingEvent.LivingUpdateEvent event){
-        ITimers timersCapability = TimersHelper.getTimersCapability(event.getEntityLiving());
+        Timers timersCapability = TimersHelper.getTimersCapability(event.getEntityLiving());
         if(timersCapability != null){
             timersCapability.tickTimers();
         }
@@ -19,7 +19,7 @@ public class TimerEvents {
 
     @SubscribeEvent
     public static void onPlayerUpdate(TickEvent.PlayerTickEvent event){
-        ITimers timersCapability = TimersHelper.getTimersCapability(event.player);
+        Timers timersCapability = TimersHelper.getTimersCapability(event.player);
         if(timersCapability != null && event.phase == TickEvent.Phase.START && !event.player.isSpectator() && !event.player.level.isClientSide()){
             timersCapability.tickTimers();
         }

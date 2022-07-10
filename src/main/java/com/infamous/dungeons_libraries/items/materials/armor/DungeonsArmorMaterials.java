@@ -3,9 +3,9 @@ package com.infamous.dungeons_libraries.items.materials.armor;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.data.util.DefaultsCodecJsonDataManager;
 import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterialBaseType.UNKNOWN;
-import static net.minecraft.item.ArmorMaterial.*;
+import static net.minecraft.world.item.ArmorMaterials.*;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ArmorMaterials {
+public class DungeonsArmorMaterials {
 
-    public static final DefaultsCodecJsonDataManager<IArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC, DungeonsLibraries.LOGGER);
-    public static final Map<IArmorMaterial, ArmorMaterialBaseType> baseArmorMaterials = new HashMap<>();
+    public static final DefaultsCodecJsonDataManager<ArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC, DungeonsLibraries.LOGGER);
+    public static final Map<ArmorMaterial, ArmorMaterialBaseType> baseArmorMaterials = new HashMap<>();
 
     public static void setupVanillaMaterials(){
         addDefaultArmorMaterial(LEATHER, ArmorMaterialBaseType.LEATHER, new ResourceLocation("minecraft:leather"));
@@ -35,7 +35,7 @@ public class ArmorMaterials {
         addDefaultArmorMaterial(NETHERITE, ArmorMaterialBaseType.METAL, new ResourceLocation("minecraft:netherite"));
     }
 
-    public static void addDefaultArmorMaterial(ArmorMaterial material, ArmorMaterialBaseType baseType, ResourceLocation resourceLocation) {
+    public static void addDefaultArmorMaterial(ArmorMaterials material, ArmorMaterialBaseType baseType, ResourceLocation resourceLocation) {
         ARMOR_MATERIALS.addDefault(resourceLocation, material);
         baseArmorMaterials.put(material, baseType);
     }
@@ -46,7 +46,7 @@ public class ArmorMaterials {
         event.addListener(ARMOR_MATERIALS);
     }
 
-    public static IArmorMaterial getArmorMaterial(ResourceLocation resourceLocation){
+    public static ArmorMaterial getArmorMaterial(ResourceLocation resourceLocation){
         return ARMOR_MATERIALS.data.getOrDefault(resourceLocation, IRON);
     }
 
@@ -58,7 +58,7 @@ public class ArmorMaterials {
         return ARMOR_MATERIALS.data.keySet();
     }
 
-    public static Collection<IArmorMaterial> getArmorMaterials(ArmorMaterialBaseType baseType){
+    public static Collection<ArmorMaterial> getArmorMaterials(ArmorMaterialBaseType baseType){
         return ARMOR_MATERIALS.data.values().stream().filter(iArmorMaterial -> {
             if(iArmorMaterial instanceof  DungeonsArmorMaterial){
                 return ((DungeonsArmorMaterial) iArmorMaterial).getBaseType() == baseType;
@@ -70,7 +70,7 @@ public class ArmorMaterials {
         }).collect(Collectors.toList());
     }
 
-    public static ArmorMaterialSyncPacket toPacket(Map<ResourceLocation, IArmorMaterial> map){
+    public static ArmorMaterialSyncPacket toPacket(Map<ResourceLocation, ArmorMaterial> map){
         return new ArmorMaterialSyncPacket(map);
     }
 }

@@ -3,17 +3,18 @@ package com.infamous.dungeons_libraries.utils;
 import com.infamous.dungeons_libraries.event.BowEvent;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGear;
 import com.infamous.dungeons_libraries.items.gearconfig.CrossbowGear;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 
-import static net.minecraft.item.CrossbowItem.containsChargedProjectile;
+import static net.minecraft.world.item.CrossbowItem.containsChargedProjectile;
+
 
 public class RangedAttackHelper {
 
-    public static float getArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
+        public static float getArrowVelocity(LivingEntity livingEntity, ItemStack stack, int charge) {
         float bowChargeTime = RangedAttackHelper.getBowChargeTime(livingEntity, stack);
         if(bowChargeTime <= 0){
             bowChargeTime = 1;

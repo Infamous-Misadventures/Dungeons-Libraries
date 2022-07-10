@@ -1,11 +1,11 @@
 package com.infamous.dungeons_libraries.mixin;
 
-import net.minecraft.entity.MobEntity;
+import net.minecraft.world.entity.Mob;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(MobEntity.class)
-public interface MobEntityInvoker {
+@Mixin(Mob.class)
+public interface MobInvoker {
 
     @Invoker("registerGoals")
     void invokeRegisterGoals();

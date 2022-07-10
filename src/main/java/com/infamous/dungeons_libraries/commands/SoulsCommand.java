@@ -6,20 +6,20 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
 
 public class SoulsCommand {
-    private static final SimpleCommandExceptionType ERROR_ADD_FAILED = new SimpleCommandExceptionType(new TranslationTextComponent("commands.souls.add.failed"));
-    private static final SimpleCommandExceptionType ERROR_SET_FAILED = new SimpleCommandExceptionType(new TranslationTextComponent("commands.souls.set.failed"));
+    private static final SimpleCommandExceptionType ERROR_ADD_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("commands.souls.add.failed"));
+    private static final SimpleCommandExceptionType ERROR_SET_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("commands.souls.set.failed"));
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralArgumentBuilder<CommandSource> mobEnchantCommand
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralArgumentBuilder<CommandSourceStack> mobEnchantCommand
                 = Commands.literal("souls")
                 .requires((commandSource) -> commandSource.hasPermission(2))
                 .then(Commands.literal("add")
@@ -32,26 +32,26 @@ public class SoulsCommand {
         dispatcher.register(mobEnchantCommand);
     }
 
-    private static int addSouls(CommandSource source, Collection<ServerPlayerEntity> targets, int amount) throws CommandSyntaxException {
-        targets.forEach(serverPlayerEntity -> {
-            SoulCasterHelper.addSouls(serverPlayerEntity, amount-1);
+    private static int addSouls(CommandSourceStack source, Collection<ServerPlayer> targets, int amount) throws CommandSyntaxException {
+        targets.forEach(serverPlayer -> {
+            SoulCasterHelper.addSouls(serverPlayer, amount-1);
         });
         if(targets.isEmpty()){
             throw ERROR_ADD_FAILED.create();
         }else{
-            source.sendSuccess(new TranslationTextComponent("commands.souls.add.success"), true);
+            source.sendSuccess(new TranslatableComponent("commands.souls.add.success"), true);
         }
         return targets.size();
     }
 
-    private static int setSouls(CommandSource source, Collection<ServerPlayerEntity> targets, int amount) throws CommandSyntaxException {
-        targets.forEach(serverPlayerEntity -> {
-            SoulCasterHelper.setSouls(serverPlayerEntity, amount);
+    private static int setSouls(CommandSourceStack source, Collection<ServerPlayer> targets, int amount) throws CommandSyntaxException {
+        targets.forEach(serverPlayer -> {
+            SoulCasterHelper.setSouls(serverPlayer, amount);
         });
         if(targets.isEmpty()){
             throw ERROR_SET_FAILED.create();
         }else{
-            source.sendSuccess(new TranslationTextComponent("commands.souls.set.success"), true);
+            source.sendSuccess(new TranslatableComponent("commands.souls.set.success"), true);
         }
         return targets.size();
     }

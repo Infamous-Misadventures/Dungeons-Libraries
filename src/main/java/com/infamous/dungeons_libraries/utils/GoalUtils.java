@@ -1,21 +1,21 @@
 package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.GhastEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
 
 
 public class GoalUtils {
 
     public static boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
-        if (!(target instanceof CreeperEntity) && !(target instanceof GhastEntity)) {
-            if (target instanceof WolfEntity) {
-                WolfEntity wolfentity = (WolfEntity)target;
+        if (!(target instanceof Creeper) && !(target instanceof Ghast)) {
+            if (target instanceof Wolf) {
+                Wolf wolfentity = (Wolf)target;
                 if (wolfentity.isTame() && wolfentity.getOwner() == owner) {
                     return false;
                 }
@@ -23,12 +23,12 @@ public class GoalUtils {
                 return !MinionMasterHelper.isMinionOf(target, owner);
             }
 
-            if (target instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity)owner).canHarmPlayer((PlayerEntity)target)) {
+            if (target instanceof Player && owner instanceof Player && !((Player)owner).canHarmPlayer((Player)target)) {
                 return false;
-            } else if (target instanceof AbstractHorseEntity && ((AbstractHorseEntity)target).isTamed()) {
+            } else if (target instanceof AbstractHorse && ((AbstractHorse)target).isTamed()) {
                 return false;
             } else {
-                return !(target instanceof CatEntity) || !((CatEntity)target).isTame();
+                return !(target instanceof Cat) || !((Cat)target).isTame();
             }
         } else {
             return false;

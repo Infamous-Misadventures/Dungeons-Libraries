@@ -9,53 +9,46 @@ import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.IVanishable;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
-import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
-import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, IVanishable, IReloadableGear, IUniqueGear {
+public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon, Vanishable, IReloadableGear, IUniqueGear {
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private MeleeGearConfig meleeGearConfig;
     private float attackDamage;
 
     public MeleeGear(Item.Properties properties) {
-        super(ItemTier.WOOD, properties);
+        super(Tiers.WOOD, properties);
         reload();
     }
 
     @Override
     public void reload(){
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(this.getRegistryName());
-        IItemTier material = meleeGearConfig.getWeaponMaterial();
+        Tier material = meleeGearConfig.getWeaponMaterial();
         ((ItemAccessor)this).setMaxDamage(material.getUses());
-        Set<ToolType> toolTypes = ((ItemAccessor) this).getToolClasses().keySet();
-        toolTypes.forEach(toolType -> ((ItemAccessor) this).getToolClasses().put(toolType, material.getLevel()));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
@@ -88,13 +81,13 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag)
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag)
     {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);
@@ -119,12 +112,12 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
         return this.attackDamage;
     }
 
-    public boolean canAttackBlock(BlockState pState, World pLevel, BlockPos pPos, PlayerEntity pPlayer) {
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         return !pPlayer.isCreative();
     }
 
     @Override
-    public boolean mineBlock(ItemStack itemStack, World level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+    public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
         if (blockState.getDestroySpeed(level, blockPos) != 0.0F) {
             itemStack.hurtAndBreak(1, livingEntity, MojankHelper::hurtEnemyBroadcastBreakEvent);
         }
@@ -142,8 +135,8 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
         if (p_150893_2_.is(Blocks.COBWEB) || p_150893_2_.is(BlockTags.LEAVES)) {
             return 15.0F;
         } else {
-            Material lvt_3_1_ = p_150893_2_.getMaterial();
-            return lvt_3_1_ != Material.PLANT && lvt_3_1_ != Material.REPLACEABLE_PLANT && lvt_3_1_ != Material.CORAL && !p_150893_2_.is(BlockTags.LEAVES) && lvt_3_1_ != Material.VEGETABLE ? 1.0F : 1.5F;
+            Material material = p_150893_2_.getMaterial();
+            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && !p_150893_2_.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
         }
     }
 

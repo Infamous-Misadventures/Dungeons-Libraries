@@ -1,27 +1,27 @@
 package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOrColleagueRelation;
-import static net.minecraft.entity.EntityType.ARMOR_STAND;
+import static net.minecraft.world.entity.EntityType.ARMOR_STAND;
 
 public class AbilityHelper {
 
-    public static boolean isFacingEntity(Entity looker, Entity target, Vector3d look, int angle) {
+    public static boolean isFacingEntity(Entity looker, Entity target, Vec3 look, int angle) {
         if (angle <= 0) return false;
-        Vector3d posVec = target.position().add(0, target.getEyeHeight(), 0);
-        Vector3d relativePosVec = posVec.vectorTo(looker.position().add(0, looker.getEyeHeight(), 0)).normalize();
+        Vec3 posVec = target.position().add(0, target.getEyeHeight(), 0);
+        Vec3 relativePosVec = posVec.vectorTo(looker.position().add(0, looker.getEyeHeight(), 0)).normalize();
         //relativePosVec = new Vector3d(relativePosVec.x, 0.0D, relativePosVec.z);
 
         double dotsq = ((relativePosVec.dot(look) * Math.abs(relativePosVec.dot(look))) / (relativePosVec.lengthSqr() * look.lengthSqr()));
-        double cos = MathHelper.cos((float) ((angle / 360d) * Math.PI));
+        double cos = Mth.cos((float) ((angle / 360d) * Math.PI));
         return dotsq < -(cos * cos);
     }
 
@@ -31,7 +31,7 @@ public class AbilityHelper {
     }
 
     private static boolean isBothPlayerAndNoPvP(LivingEntity attacker, LivingEntity nearbyEntity) {
-        return attacker instanceof PlayerEntity && nearbyEntity instanceof PlayerEntity && !DungeonsLibrariesConfig.ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS.get();
+        return attacker instanceof Player && nearbyEntity instanceof Player && !DungeonsLibrariesConfig.ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS.get();
     }
 
     public static boolean canHealEntity(LivingEntity healer, LivingEntity nearbyEntity) {
@@ -49,7 +49,7 @@ public class AbilityHelper {
         return isPetOrColleagueRelation(origin, target)
                 || origin.isAlliedTo(target)
                 || isBothPlayerAndNoPvP(origin, target)
-                || (origin instanceof MonsterEntity && target instanceof MonsterEntity);
+                || (origin instanceof Monster && target instanceof Monster);
     }
 
     private static boolean isEntityBlacklisted(LivingEntity entity) {
@@ -57,7 +57,7 @@ public class AbilityHelper {
     }
 
     private static boolean isAliveAndCanBeSeen(LivingEntity nearbyEntity, LivingEntity attacker) {
-        return nearbyEntity.isAlive() && attacker.canSee(nearbyEntity);
+        return nearbyEntity.isAlive() && attacker.hasLineOfSight(nearbyEntity);
     }
 
     public static boolean canApplyToSecondEnemy(LivingEntity attacker, LivingEntity target, LivingEntity nearbyEntity) {

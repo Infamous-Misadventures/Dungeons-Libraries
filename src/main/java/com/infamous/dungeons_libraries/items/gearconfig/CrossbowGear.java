@@ -9,29 +9,28 @@ import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.CrossbowItemInvoker;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.ICrossbowUser;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,8 +39,8 @@ import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
 import static java.util.UUID.randomUUID;
-import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
-import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloadableGear, IUniqueGear {
@@ -77,8 +76,8 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     public static float getArrowVelocity(LivingEntity livingEntity, ItemStack stack) {
@@ -93,10 +92,10 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
 
     public static float[] getRandomSoundPitches(Random rand) {
         boolean flag = rand.nextBoolean();
-        return new float[]{1.0F, getRandomSoundPitch(flag), getRandomSoundPitch(!flag)};
+        return new float[]{1.0F, getRandomSoundPitch(flag, rand), getRandomSoundPitch(!flag, rand)};
     }
 
-    private static float getRandomSoundPitch(boolean flagIn) {
+    private static float getRandomSoundPitch(boolean flagIn, Random random) {
         float f = flagIn ? 0.63F : 0.43F;
         return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }
@@ -109,8 +108,8 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
             ItemStack itemstack;
             if (!flag && !b1 && !b) {
                 itemstack = stack1.split(1);
-                if (stack1.isEmpty() && livingEntity instanceof PlayerEntity) {
-                    ((PlayerEntity) livingEntity).inventory.removeItem(stack1);
+                if (stack1.isEmpty() && livingEntity instanceof Player) {
+                    ((Player) livingEntity).getInventory().removeItem(stack1);
                 }
             } else {
                 itemstack = stack1.copy();
@@ -127,7 +126,7 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
     }
 
     @Override
-    public void onUseTick(World world, LivingEntity livingEntity, ItemStack stack, int timeLeft) {
+    public void onUseTick(Level world, LivingEntity livingEntity, ItemStack stack, int timeLeft) {
         if (!world.isClientSide) {
             int quickChargeLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
 
@@ -141,25 +140,25 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
 
             if (chargeTime >= 0.2F && !this.isLoadingStart && chargeTime < 1.0F) {
                 this.isLoadingStart = true;
-                world.playSound((PlayerEntity) null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), quickChargeSoundEvent, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                world.playSound((Player) null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), quickChargeSoundEvent, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
 
             if (chargeTime >= 0.5F && loadingMiddleSoundEvent != null && !this.isLoadingMiddle && chargeTime < 1.0F) {
                 this.isLoadingMiddle = true;
-                world.playSound((PlayerEntity) null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), loadingMiddleSoundEvent, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                world.playSound((Player) null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), loadingMiddleSoundEvent, SoundSource.PLAYERS, 0.5F, 1.0F);
             }
         }
 
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity livingEntity, int timeLeft) {
+    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity livingEntity, int timeLeft) {
         float i = getCrossbowChargeTime(livingEntity, stack) + 3 - timeLeft;
         float f = this.getCrossbowCharge(livingEntity, i, stack);
         if (f >= 1.0F && !isCharged(stack) && hasAmmo(livingEntity, stack)) {
             setCharged(stack, true);
-            SoundCategory soundcategory = livingEntity instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
-            worldIn.playSound((PlayerEntity) null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (random.nextFloat() * 0.5F + 1.0F) + 0.2F);
+            SoundSource soundcategory = livingEntity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
+            worldIn.playSound((Player) null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (livingEntity.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
 
     }
@@ -195,13 +194,13 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         }
     }
 
-    public void fireCrossbowProjectiles(World world, LivingEntity livingEntity, Hand hand, ItemStack stack, float velocityIn, float inaccuracyIn) {
+    public void fireCrossbowProjectiles(Level world, LivingEntity livingEntity, InteractionHand hand, ItemStack stack, float velocityIn, float inaccuracyIn) {
         List<ItemStack> list = CrossbowItemInvoker.getChargedProjectiles(stack);
         float[] randomSoundPitches = CrossbowGear.getRandomSoundPitches(livingEntity.getRandom());
 
         for (int i = 0; i < list.size(); ++i) {
             ItemStack currentProjectile = list.get(i);
-            boolean playerInCreativeMode = livingEntity instanceof PlayerEntity && ((PlayerEntity) livingEntity).abilities.instabuild;
+            boolean playerInCreativeMode = livingEntity instanceof Player && ((Player) livingEntity).getAbilities().instabuild;
             if (!currentProjectile.isEmpty()) {
                 if (i == 0) {
                     fireProjectile(world, livingEntity, hand, stack, currentProjectile, randomSoundPitches[i], playerInCreativeMode, velocityIn, inaccuracyIn, 0.0F);
@@ -224,14 +223,14 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         CrossbowItemInvoker.onCrossbowShot(world, livingEntity, stack);
     }
 
-    private AbstractArrowEntity createCrossbowArrow(World world, LivingEntity livingEntity, ItemStack stack, ItemStack stack1) {
+    private AbstractArrow createCrossbowArrow(Level world, LivingEntity livingEntity, ItemStack stack, ItemStack stack1) {
         ArrowItem arrowItem = (ArrowItem) ((ArrowItem) (stack1.getItem() instanceof ArrowItem ? stack1.getItem() : Items.ARROW));
-        AbstractArrowEntity abstractArrowEntity = arrowItem.createArrow(world, stack1, livingEntity);
-        ModifiableAttributeInstance attribute = livingEntity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
+        AbstractArrow abstractArrowEntity = arrowItem.createArrow(world, stack1, livingEntity);
+        AttributeInstance attribute = livingEntity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
         if(attribute != null) {
             abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue() + 1));
         }
-        if (livingEntity instanceof PlayerEntity) {
+        if (livingEntity instanceof Player) {
             abstractArrowEntity.setCritArrow(true);
         }
 
@@ -273,26 +272,26 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
     }
 
     // FORMER CROSSBOWITEM STATIC METHODS MADE NON-STATIC
-    public void fireProjectile(World worldIn, LivingEntity shooter, Hand handIn, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean isCreativeMode, float velocity, float inaccuracy, float projectileAngle) {
+    public void fireProjectile(Level worldIn, LivingEntity shooter, InteractionHand handIn, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean isCreativeMode, float velocity, float inaccuracy, float projectileAngle) {
         if (!worldIn.isClientSide) {
             boolean flag = projectile.getItem() == Items.FIREWORK_ROCKET;
-            ProjectileEntity projectileentity;
+            Projectile projectileentity;
             if (flag) {
                 projectileentity = new FireworkRocketEntity(worldIn, projectile, shooter, shooter.getX(), shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true);
             } else {
                 projectileentity = createCrossbowArrow(worldIn, shooter, crossbow, projectile);
                 if (isCreativeMode || projectileAngle != 0.0F) {
-                    ((AbstractArrowEntity) projectileentity).pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                    ((AbstractArrow) projectileentity).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
 
-            if (shooter instanceof ICrossbowUser) {
-                ICrossbowUser icrossbowuser = (ICrossbowUser) shooter;
+            if (shooter instanceof CrossbowAttackMob) {
+                CrossbowAttackMob icrossbowuser = (CrossbowAttackMob) shooter;
                 icrossbowuser.shootCrossbowProjectile(Objects.requireNonNull(icrossbowuser.getTarget()), crossbow, projectileentity, projectileAngle);
             } else {
-                Vector3d vector3d1 = shooter.getUpVector(1.0F);
+                Vec3 vector3d1 = shooter.getUpVector(1.0F);
                 Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), projectileAngle, true);
-                Vector3d vector3d = shooter.getViewVector(1.0F);
+                Vec3 vector3d = shooter.getViewVector(1.0F);
                 Vector3f vector3f = new Vector3f(vector3d);
                 vector3f.transform(quaternion);
                 projectileentity.shoot((double) vector3f.x(), (double) vector3f.y(), (double) vector3f.z(), velocity, inaccuracy);
@@ -300,11 +299,11 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
 
             damageItem(flag?3:1, crossbow, shooter, handIn);
             worldIn.addFreshEntity(projectileentity);
-            worldIn.playSound((PlayerEntity) null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, soundPitch);
+            worldIn.playSound((Player) null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, soundPitch);
         }
     }
 
-    protected void damageItem(int amount, ItemStack crossbow, LivingEntity shooter, Hand handIn){
+    protected void damageItem(int amount, ItemStack crossbow, LivingEntity shooter, InteractionHand handIn){
         crossbow.hurtAndBreak(amount, shooter, (p_220017_1_) -> {
             p_220017_1_.broadcastBreakEvent(handIn);
         });
@@ -315,7 +314,7 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         CrossbowGear adci= ((CrossbowGear) stack.getItem());
         if (adci.hasExtraMultishot(stack)) multishotLevel++;
         int arrowsToFire = 1 + multishotLevel * 2;
-        boolean flag = entityIn instanceof PlayerEntity && ((PlayerEntity) entityIn).abilities.instabuild;
+        boolean flag = entityIn instanceof Player && ((Player) entityIn).getAbilities().instabuild;
         ItemStack itemstack = entityIn.getProjectile(stack);
         ItemStack itemstack1 = itemstack.copy();
 
@@ -347,7 +346,7 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag)
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag)
     {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);

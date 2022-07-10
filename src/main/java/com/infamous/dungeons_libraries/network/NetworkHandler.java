@@ -7,9 +7,9 @@ import com.infamous.dungeons_libraries.network.gearconfig.CrossbowGearConfigSync
 import com.infamous.dungeons_libraries.network.gearconfig.MeleeGearConfigSyncPacket;
 import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
 import com.infamous.dungeons_libraries.network.materials.WeaponMaterialSyncPacket;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(
@@ -25,10 +25,6 @@ public class NetworkHandler {
     }
 
     public static void init() {
-        INSTANCE.messageBuilder(MobEnchantmentMessage.class, incrementAndGetPacketCounter())
-                .encoder(MobEnchantmentMessage::encode).decoder(MobEnchantmentMessage::decode)
-                .consumer(MobEnchantmentMessage::onPacketReceived)
-                .add();
         INSTANCE.messageBuilder(UpdateSoulsMessage.class, incrementAndGetPacketCounter())
                 .encoder(UpdateSoulsMessage::encode).decoder(UpdateSoulsMessage::decode)
                 .consumer(UpdateSoulsMessage.UpdateSoulsHandler::handle)

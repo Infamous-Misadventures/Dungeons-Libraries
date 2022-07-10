@@ -2,26 +2,27 @@ package com.infamous.dungeons_libraries.mixin;
 
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
+import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
 import com.infamous.dungeons_libraries.mixinhandler.EnchantmentHelperMixinHandler;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.util.LazyOptional;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
+
+import static net.minecraft.world.item.enchantment.EnchantmentHelper.getEnchantmentId;
 
 //ToDo: runIterationOnItem: What if not present as another enchant?!
 @Mixin(EnchantmentHelper.class)
@@ -30,16 +31,16 @@ public abstract class EnchantmentHelperMixin {
     private static Optional<Enchantment> enchantmentOnIteration = null;
     private static ItemStack itemStackOnIteration = null;
 
-    @Inject(method = "Lnet/minecraft/enchantment/EnchantmentHelper;getItemEnchantmentLevel(Lnet/minecraft/enchantment/Enchantment;Lnet/minecraft/item/ItemStack;)I",
+    @Inject(method = "getItemEnchantmentLevel(Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/item/ItemStack;)I",
             at = @At(value = "RETURN", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir, ResourceLocation enchantmentRL, ListNBT listNbt, int i, CompoundNBT compoundnbt, ResourceLocation found) {
-        int currentLvl = MathHelper.clamp(compoundnbt.getInt("lvl"), 0, 255);
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
+    private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir, ResourceLocation enchantmentRL, ListTag listNbt, int i, CompoundTag compoundnbt, ResourceLocation found) {
+        int currentLvl = Mth.clamp(compoundnbt.getInt("lvl"), 0, 255);
+        LazyOptional<BuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
         if (lazyCap.isPresent()) {
-            IBuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
-            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
-                    .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
-                    .map(enchantmentData -> enchantmentData.level)
+            BuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
+            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentInstances().stream()
+                    .filter(enchantmentInstance -> enchantmentInstance.enchantment == enchantment)
+                    .map(enchantmentInstance -> enchantmentInstance.level)
                     .reduce(0, Integer::sum);
             cir.setReturnValue(currentLvl + reduce);
             return;
@@ -48,16 +49,16 @@ public abstract class EnchantmentHelperMixin {
         cir.setReturnValue(currentLvl);
     }
 
-    @Inject(method = "getItemEnchantmentLevel(Lnet/minecraft/enchantment/Enchantment;Lnet/minecraft/item/ItemStack;)I",
+    @Inject(method = "getItemEnchantmentLevel(Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/item/ItemStack;)I",
             at = @At(value = "RETURN", ordinal = 2), cancellable = true)
     private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentNotFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir) {
         int currentLvl = 0;
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
+        LazyOptional<BuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
         if(lazyCap.isPresent()) {
-            IBuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
-            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
-                    .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
-                    .map(enchantmentData -> enchantmentData.level)
+            BuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
+            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentInstances().stream()
+                    .filter(enchantmentInstance -> enchantmentInstance.enchantment == enchantment)
+                    .map(enchantmentInstance -> enchantmentInstance.level)
                     .reduce(0, Integer::sum);
             cir.setReturnValue(currentLvl+reduce);
             return;
@@ -65,32 +66,40 @@ public abstract class EnchantmentHelperMixin {
         cir.setReturnValue(currentLvl);
     }
 
-    @Inject(method = "runIterationOnItem(Lnet/minecraft/enchantment/EnchantmentHelper$IEnchantmentVisitor;Lnet/minecraft/item/ItemStack;)V",
-            at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/nbt/CompoundNBT;getString(Ljava/lang/String;)Ljava/lang/String;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void dungeonslibraries_runIterationOnItemCapture(EnchantmentHelper.IEnchantmentVisitor p_77518_0_, ItemStack p_77518_1_, CallbackInfo ci, ListNBT listNBT, int i, String s) {
-        enchantmentOnIteration = Registry.ENCHANTMENT.getOptional(ResourceLocation.tryParse(s));
+    @Inject(method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
+            at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentId(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/resources/ResourceLocation;"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void dungeonslibraries_runIterationOnItemCapture(EnchantmentHelper.EnchantmentVisitor p_77518_0_, ItemStack p_77518_1_, CallbackInfo ci, ListTag listNBT, int i, CompoundTag compoundtag) {
+        enchantmentOnIteration = Registry.ENCHANTMENT.getOptional(getEnchantmentId(compoundtag));
         itemStackOnIteration = p_77518_1_;
     }
 
-    @ModifyVariable(
-            method = "runIterationOnItem(Lnet/minecraft/enchantment/EnchantmentHelper$IEnchantmentVisitor;Lnet/minecraft/item/ItemStack;)V",
-            at = @At(value = "STORE"), ordinal = 1)
-    private static int dungeonslibraries_runIterationOnItem(int j) {
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStackOnIteration);
-        if(enchantmentOnIteration.isPresent() && lazyCap.isPresent()){
-            IBuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStackOnIteration);
-            Integer reduce = cap.getAllBuiltInEnchantmentDatas().stream()
-                    .filter(enchantmentData -> enchantmentData.enchantment == enchantmentOnIteration.get())
-                    .map(enchantmentData -> enchantmentData.level)
-                    .reduce(0, Integer::sum);
-            return reduce + j;
+    @Inject(
+            method = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/nbt/CompoundTag;)I",
+            at = @At(value = "RETURN"))
+    private static void dungeonslibraries_runIterationOnItem(CompoundTag value, CallbackInfoReturnable<Integer> cir) {
+        if(enchantmentOnIteration == null || itemStackOnIteration == null) {
+            return;
         }
-        return j;
+        LazyOptional<BuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStackOnIteration);
+        if(enchantmentOnIteration.isPresent() && lazyCap.isPresent()){
+            BuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStackOnIteration);
+            Integer reduce = cap.getAllBuiltInEnchantmentInstances().stream()
+                    .filter(enchantmentInstance -> enchantmentInstance.enchantment == enchantmentOnIteration.get())
+                    .map(enchantmentInstance -> enchantmentInstance.level)
+                    .reduce(0, Integer::sum);
+            cir.setReturnValue(reduce + cir.getReturnValue());
+            enchantmentOnIteration = null;
+            itemStackOnIteration = null;
+            return;
+        }
+        enchantmentOnIteration = null;
+        itemStackOnIteration = null;
+        return;
     }
 
-    @Inject(method = "runIterationOnItem(Lnet/minecraft/enchantment/EnchantmentHelper$IEnchantmentVisitor;Lnet/minecraft/item/ItemStack;)V",
+    @Inject(method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
             at = @At("TAIL"))
-    private static void dungeonslibraries_runIterationOnItemWhenOnlyBuiltIn(EnchantmentHelper.IEnchantmentVisitor visitor, ItemStack itemStack, CallbackInfo ci) {
+    private static void dungeonslibraries_runIterationOnItemWhenOnlyBuiltIn(EnchantmentHelper.EnchantmentVisitor visitor, ItemStack itemStack, CallbackInfo ci) {
         EnchantmentHelperMixinHandler.handler(visitor, itemStack);
     }
 

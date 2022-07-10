@@ -1,21 +1,21 @@
 package com.infamous.dungeons_libraries.summon;
 
-import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Minion;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.core.BlockPos;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
 
 public class SummonHelper {
 
     private static boolean addSummonedMob(LivingEntity master, Entity entity) {
-        IMaster masterCap = MinionMasterHelper.getMasterCapability(master);
+        Master masterCap = MinionMasterHelper.getMasterCapability(master);
         if(masterCap == null){
             return false;
         }
@@ -25,8 +25,8 @@ public class SummonHelper {
         return false;
     }
 
-    private static boolean canSummonMob(LivingEntity master, Entity beeEntity, IMaster masterCap) {
-        ModifiableAttributeInstance summonCap = master.getAttribute(SUMMON_CAP.get());
+    private static boolean canSummonMob(LivingEntity master, Entity beeEntity, Master masterCap) {
+        AttributeInstance summonCap = master.getAttribute(SUMMON_CAP.get());
         if(summonCap == null) return false;
         return masterCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(beeEntity.getType().getRegistryName()).getCost() <= summonCap.getValue();
     }
@@ -34,13 +34,13 @@ public class SummonHelper {
     public static Entity summonEntity(LivingEntity master, BlockPos position, EntityType<?> entityType) {
         Entity entity = entityType.create(master.level);
         if(entity != null){
-            IMinion summonable = MinionMasterHelper.getMinionCapability(entity);
+            Minion summonable = MinionMasterHelper.getMinionCapability(entity);
             if(summonable != null && addSummonedMob(master, entity)){
                 summonable.setMaster(master);
                 createSummon(master, entity, position);
                 return entity;
             } else {
-                entity.remove();
+                entity.remove(Entity.RemovalReason.DISCARDED);
             }
         }
         return null;
@@ -48,8 +48,8 @@ public class SummonHelper {
 
     private static void createSummon(LivingEntity master, Entity entity, BlockPos position) {
         entity.moveTo((double) position.getX() + 0.5D, (double) position.getY() + 0.05D, (double) position.getZ() + 0.5D, 0.0F, 0.0F);
-        if(entity instanceof MobEntity) {
-            MobEntity mobEntity = (MobEntity) entity;
+        if(entity instanceof Mob) {
+            Mob mobEntity = (Mob) entity;
             MinionMasterHelper.addMinionGoals(mobEntity);
         }
         master.level.addFreshEntity(entity);

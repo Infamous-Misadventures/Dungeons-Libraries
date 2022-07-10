@@ -20,8 +20,7 @@
 package com.infamous.dungeons_libraries.event;
 
 import com.infamous.dungeons_libraries.entities.SoulOrbEntity;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -36,7 +35,7 @@ import net.minecraftforge.eventbus.api.Cancelable;
 public class PlayerSoulEvent extends PlayerEvent
 {
 
-    public PlayerSoulEvent(PlayerEntity player)
+    public PlayerSoulEvent(Player player)
     {
         super(player);
     }
@@ -51,7 +50,7 @@ public class PlayerSoulEvent extends PlayerEvent
 
         private final SoulOrbEntity orb;
 
-        public PickupSoul(PlayerEntity player, SoulOrbEntity orb)
+        public PickupSoul(Player player, SoulOrbEntity orb)
         {
             super(player);
             this.orb = orb;

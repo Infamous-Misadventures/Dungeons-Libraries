@@ -1,8 +1,7 @@
 package com.infamous.dungeons_libraries.mixin;
 
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -10,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ArmorItemAccessor {
 
     @Accessor
-    void setMaterial(IArmorMaterial armorMaterial);
+    void setMaterial(ArmorMaterial armorMaterial);
 
     @Accessor
     void setDefense(int defense);

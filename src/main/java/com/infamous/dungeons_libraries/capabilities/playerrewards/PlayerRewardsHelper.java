@@ -1,24 +1,25 @@
 package com.infamous.dungeons_libraries.capabilities.playerrewards;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 
-import static com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsProvider.BUILT_IN_ENCHANTMENTS_CAPABILITY;
+import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.PLAYER_REWARDS_CAPABILITY;
+
 
 public class PlayerRewardsHelper {
-    public static LazyOptional<IPlayerRewards> getPlayerRewardsCapabilityLazy(ItemStack itemStack)
+    public static LazyOptional<PlayerRewards> getPlayerRewardsCapabilityLazy(ItemStack itemStack)
     {
-        if(BUILT_IN_ENCHANTMENTS_CAPABILITY == null) {
+        if(PLAYER_REWARDS_CAPABILITY == null) {
             return LazyOptional.empty();
         }
-        LazyOptional<IPlayerRewards> lazyCap = itemStack.getCapability(PlayerRewardsProvider.PLAYER_REWARDS_CAPABILITY);
+        LazyOptional<PlayerRewards> lazyCap = itemStack.getCapability(PLAYER_REWARDS_CAPABILITY);
         return lazyCap;
     }
 
-    public static IPlayerRewards getPlayerRewardsCapability(PlayerEntity playerEntity)
+    public static PlayerRewards getPlayerRewardsCapability(Player playerEntity)
     {
-        LazyOptional<IPlayerRewards> lazyCap = playerEntity.getCapability(PlayerRewardsProvider.PLAYER_REWARDS_CAPABILITY);
+        LazyOptional<PlayerRewards> lazyCap = playerEntity.getCapability(PLAYER_REWARDS_CAPABILITY);
         if (lazyCap.isPresent()) {
             return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the Player Rewards capability from the Player!"));
         }

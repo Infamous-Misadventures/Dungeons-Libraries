@@ -1,7 +1,7 @@
 package com.infamous.dungeons_libraries.mixin;
 
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.TieredItem;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TieredItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface TieredItemAccessor {
 
     @Accessor
-    void setTier(IItemTier itemTier);
+    void setTier(Tier itemTier);
 }

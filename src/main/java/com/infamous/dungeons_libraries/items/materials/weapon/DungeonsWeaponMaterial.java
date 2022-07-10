@@ -2,18 +2,18 @@ package com.infamous.dungeons_libraries.items.materials.weapon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import static net.minecraftforge.registries.ForgeRegistries.ITEMS;
 
-public class DungeonsWeaponMaterial implements IItemTier {
+public class DungeonsWeaponMaterial implements Tier {
 
-    public static final Codec<IItemTier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<Tier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getName()),
             SoundEvent.CODEC.fieldOf("equip_sound").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getEquipSound()),
             Codec.INT.fieldOf("durability").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getUses()),

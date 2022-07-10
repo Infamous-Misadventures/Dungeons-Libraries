@@ -3,11 +3,11 @@ package com.infamous.dungeons_libraries.network.gearconfig;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfig;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry;
 import com.mojang.serialization.Codec;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTDynamicOps;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +25,12 @@ public class BowGearConfigSyncPacket {
         this.data = data;
     }
 
-    public void encode(PacketBuffer buffer) {
-        buffer.writeNbt((CompoundNBT) (MAPPER.encodeStart(NBTDynamicOps.INSTANCE, this.data).result().orElse(new CompoundNBT())));
+    public void encode(FriendlyByteBuf buffer) {
+        buffer.writeNbt((CompoundTag) (MAPPER.encodeStart(NbtOps.INSTANCE, this.data).result().orElse(new CompoundTag())));
     }
 
-    public static BowGearConfigSyncPacket decode(PacketBuffer buffer) {
-        return new BowGearConfigSyncPacket(MAPPER.parse(NBTDynamicOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
+    public static BowGearConfigSyncPacket decode(FriendlyByteBuf buffer) {
+        return new BowGearConfigSyncPacket(MAPPER.parse(NbtOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
     }
 
     public void onPacketReceived(Supplier<NetworkEvent.Context> contextGetter) {

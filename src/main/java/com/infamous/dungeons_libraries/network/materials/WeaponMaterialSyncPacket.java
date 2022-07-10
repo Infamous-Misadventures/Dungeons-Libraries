@@ -1,15 +1,14 @@
 package com.infamous.dungeons_libraries.network.materials;
 
-import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterial;
 import com.infamous.dungeons_libraries.items.materials.weapon.DungeonsWeaponMaterial;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.mojang.serialization.Codec;
-import net.minecraft.item.IItemTier;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTDynamicOps;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Tier;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,21 +18,21 @@ import java.util.stream.Collectors;
 import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigReload.reloadAll;
 
 public class WeaponMaterialSyncPacket {
-    	private static final Codec<Map<ResourceLocation, IItemTier>> MAPPER =
+    	private static final Codec<Map<ResourceLocation, Tier>> MAPPER =
 			Codec.unboundedMap(ResourceLocation.CODEC, DungeonsWeaponMaterial.CODEC);
 
-	public final Map<ResourceLocation, IItemTier> data;
+	public final Map<ResourceLocation, Tier> data;
 
-	public WeaponMaterialSyncPacket(Map<ResourceLocation, IItemTier> data) {
+	public WeaponMaterialSyncPacket(Map<ResourceLocation, Tier> data) {
 		this.data = data.entrySet().stream().filter(entry -> entry.getValue() instanceof DungeonsWeaponMaterial).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
-	public void encode(PacketBuffer buffer) {
-		buffer.writeNbt((CompoundNBT) (MAPPER.encodeStart(NBTDynamicOps.INSTANCE, this.data).result().orElse(new CompoundNBT())));
+	public void encode(FriendlyByteBuf buffer) {
+		buffer.writeNbt((CompoundTag) (MAPPER.encodeStart(NbtOps.INSTANCE, this.data).result().orElse(new CompoundTag())));
 	}
 
-	public static WeaponMaterialSyncPacket decode(PacketBuffer buffer) {
-		return new WeaponMaterialSyncPacket(MAPPER.parse(NBTDynamicOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
+	public static WeaponMaterialSyncPacket decode(FriendlyByteBuf buffer) {
+		return new WeaponMaterialSyncPacket(MAPPER.parse(NbtOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
 	}
 
 	public void onPacketReceived(Supplier<NetworkEvent.Context> contextGetter) {

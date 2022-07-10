@@ -1,9 +1,9 @@
 package com.infamous.dungeons_libraries.patreon;
 
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class PatreonEvents {
         loadPatreons(() -> PATREON_JOIN_CONSUMERS.forEach(consumer -> consumer.accept(event.getPlayer().getUUID())));
     }
 
-    public static void onServerStart(FMLServerStartedEvent event){
+    public static void onServerStart(ServerStartedEvent event){
         loadPatreons(() -> {});
     }
 

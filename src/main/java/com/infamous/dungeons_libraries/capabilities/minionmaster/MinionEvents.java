@@ -1,10 +1,10 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -25,7 +25,7 @@ public class MinionEvents {
 
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event){
-        IMinion cap = MinionMasterHelper.getMinionCapability(event.getEntityLiving());
+        Minion cap = MinionMasterHelper.getMinionCapability(event.getEntityLiving());
         if (cap != null && cap.isMinion()) {
             event.setCanceled(true);
         }
@@ -35,7 +35,7 @@ public class MinionEvents {
     public static void onLivingEntityTick(LivingEvent.LivingUpdateEvent event){
         LivingEntity entityLiving = event.getEntityLiving();
         if(entityLiving.level.isClientSide) return;
-        IMinion cap = MinionMasterHelper.getMinionCapability(entityLiving);
+        Minion cap = MinionMasterHelper.getMinionCapability(entityLiving);
         if (cap != null && cap.isMinion()) {
             if (cap.isTemporary()) {
                 if (cap.getMinionTimer() > 0) {
@@ -44,7 +44,7 @@ public class MinionEvents {
                     if (cap.revertsOnExpiration()) {
                         MinionMasterHelper.removeMinion(entityLiving, cap);
                     } else {
-                        entityLiving.remove();
+                        entityLiving.remove(Entity.RemovalReason.KILLED);
                     }
                 }
             }
@@ -54,8 +54,8 @@ public class MinionEvents {
     @SubscribeEvent
     public static void reAddMinionGoals(EntityJoinWorldEvent event){
         Entity entity = event.getEntity();
-        if(!event.getWorld().isClientSide() && entity instanceof MobEntity) {
-            MinionMasterHelper.addMinionGoals((MobEntity) entity);
+        if(!event.getWorld().isClientSide() && entity instanceof Mob) {
+            MinionMasterHelper.addMinionGoals((Mob) entity);
         }
     }
 
@@ -63,10 +63,10 @@ public class MinionEvents {
     // making you unable to summon any more of that entity
     @SubscribeEvent
     public static void checkSummonedMobIsDead(TickEvent.PlayerTickEvent event){
-        PlayerEntity master = event.player;
+        Player master = event.player;
         if(event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
         if(!master.isAlive()) return;
-        IMaster masterCap = getMasterCapability(event.player);
+        Master masterCap = getMasterCapability(event.player);
         if(masterCap == null) return;
         updateAliveList(masterCap);
     }
@@ -75,18 +75,18 @@ public class MinionEvents {
     public static void onMinionDeath(LivingDeathEvent event){
         if(!event.getEntityLiving().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
             LivingEntity livingEntity = event.getEntityLiving();
-            IMinion minionCapability = getMinionCapability(livingEntity);
+            Minion minionCapability = getMinionCapability(livingEntity);
             if(minionCapability == null) return;
             LivingEntity summoner = minionCapability.getMaster();
             if(summoner != null){
-                IMaster masterCap = getMasterCapability(summoner);
+                Master masterCap = getMasterCapability(summoner);
                 if(masterCap == null) return;
                 updateAliveList(masterCap);
             }
         }
     }
 
-    private static void updateAliveList(IMaster masterCap) {
+    private static void updateAliveList(Master masterCap) {
         List<Entity> aliveSummons = masterCap.getSummonedMobs().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
         masterCap.setSummonedMobs(aliveSummons);
         List<Entity> aliveMinions = masterCap.getOtherMinions().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());

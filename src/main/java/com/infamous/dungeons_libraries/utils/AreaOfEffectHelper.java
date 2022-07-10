@@ -1,10 +1,10 @@
 package com.infamous.dungeons_libraries.utils;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -13,11 +13,11 @@ import java.util.function.Predicate;
 public class AreaOfEffectHelper {
 
     public static void applyToNearbyEntities(LivingEntity origin, float distance, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
-        World world = origin.getCommandSenderWorld();
+        Level world = origin.getCommandSenderWorld();
         applyToNearbyEntities(origin, world, distance, applicablePredicate, entityConsumer);
     }
 
-    public static void applyToNearbyEntities(Entity origin, World world, float distance, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
+    public static void applyToNearbyEntities(Entity origin, Level world, float distance, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
         List<LivingEntity> nearbyEntities = getNearbyEnemies(origin, distance, world, applicablePredicate);
         if (nearbyEntities.isEmpty()) return;
         for (LivingEntity nearbyEntity : nearbyEntities) {
@@ -26,11 +26,11 @@ public class AreaOfEffectHelper {
     }
 
     public static void applyToNearbyEntities(LivingEntity origin, float distance, int limit, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
-        World world = origin.getCommandSenderWorld();
+        Level world = origin.getCommandSenderWorld();
         applyToNearbyEntities(origin, world, distance, limit, applicablePredicate, entityConsumer);
     }
 
-    public static void applyToNearbyEntities(Entity origin, World world, float distance, int limit, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
+    public static void applyToNearbyEntities(Entity origin, Level world, float distance, int limit, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
         List<LivingEntity> nearbyEntities = getNearbyEnemies(origin, distance, world, applicablePredicate);
         if (nearbyEntities.isEmpty()) return;
         if (limit > nearbyEntities.size()) limit = nearbyEntities.size();
@@ -42,13 +42,13 @@ public class AreaOfEffectHelper {
         }
     }
 
-    public static List<LivingEntity> getNearbyEnemies(Entity origin, float distance, World world, Predicate<LivingEntity> applicablePredicate) {
-        return world.getLoadedEntitiesOfClass(LivingEntity.class,
+    public static List<LivingEntity> getNearbyEnemies(Entity origin, float distance, Level world, Predicate<LivingEntity> applicablePredicate) {
+        return world.getEntitiesOfClass(LivingEntity.class,
                 origin.getBoundingBox().inflate(distance),
                 applicablePredicate);
     }
 
-    public static void applyToNearbyEntitiesAtPos(BlockPos origin, World world, float distance, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
+    public static void applyToNearbyEntitiesAtPos(BlockPos origin, Level world, float distance, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
         List<LivingEntity> nearbyEntities = getNearbyEnemies(origin, distance, world, applicablePredicate);
         if (nearbyEntities.isEmpty()) return;
         for (LivingEntity nearbyEntity : nearbyEntities) {
@@ -56,7 +56,7 @@ public class AreaOfEffectHelper {
         }
     }
 
-    public static void applyToNearbyEntitiesAtPos(BlockPos origin, World world, float distance, int limit, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
+    public static void applyToNearbyEntitiesAtPos(BlockPos origin, Level world, float distance, int limit, Predicate<LivingEntity> applicablePredicate, Consumer<LivingEntity> entityConsumer) {
         List<LivingEntity> nearbyEntities = getNearbyEnemies(origin, distance, world, applicablePredicate);
         if (nearbyEntities.isEmpty()) return;
         if (limit > nearbyEntities.size()) limit = nearbyEntities.size();
@@ -68,9 +68,9 @@ public class AreaOfEffectHelper {
         }
     }
 
-    public static List<LivingEntity> getNearbyEnemies(BlockPos origin, float distance, World world, Predicate<LivingEntity> applicablePredicate) {
-        return world.getLoadedEntitiesOfClass(LivingEntity.class,
-                new AxisAlignedBB(origin).inflate(distance),
+    public static List<LivingEntity> getNearbyEnemies(BlockPos origin, float distance, Level world, Predicate<LivingEntity> applicablePredicate) {
+        return world.getEntitiesOfClass(LivingEntity.class,
+                new AABB(origin).inflate(distance),
                 applicablePredicate);
     }
 

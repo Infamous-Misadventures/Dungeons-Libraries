@@ -1,16 +1,12 @@
 package com.infamous.dungeons_libraries.utils;
 
-import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.LlamaEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,15 +18,15 @@ public class PetHelper {
     public static void makeNearbyPetsAttackTarget(LivingEntity target, LivingEntity owner) {
         if (isPetOf(target, owner) || isPetOf(owner, target))
             return;//don't kill your pets or master!
-        IMaster masterCapability = MinionMasterHelper.getMasterCapability(owner);
+        Master masterCapability = MinionMasterHelper.getMasterCapability(owner);
         if(masterCapability == null) return;
-        List<LivingEntity> nearbyEntities = owner.getCommandSenderWorld().getLoadedEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(12), nearbyEntity -> isPetOf(owner, nearbyEntity));
+        List<LivingEntity> nearbyEntities = owner.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(12), nearbyEntity -> isPetOf(owner, nearbyEntity));
         HashSet<Entity> pets = new HashSet<>();
         pets.addAll(masterCapability.getAllMinions());
         pets.addAll(nearbyEntities);
         for (Entity pet : pets) {
-            if(pet instanceof MobEntity){
-                ((MobEntity) pet).setTarget(target);
+            if(pet instanceof Mob){
+                ((Mob) pet).setTarget(target);
             }
         }
     }
@@ -56,10 +52,10 @@ public class PetHelper {
 
     public static LivingEntity getOwner(LivingEntity potentialPet) {
         LivingEntity owner = null;
-        if (potentialPet instanceof TameableEntity)
-            owner = ((TameableEntity) potentialPet).getOwner();
-        if (potentialPet instanceof AbstractHorseEntity)
-            owner = MinionMasterHelper.getOwnerForHorse((AbstractHorseEntity) potentialPet);
+        if (potentialPet instanceof TamableAnimal)
+            owner = ((TamableAnimal) potentialPet).getOwner();
+        if (potentialPet instanceof AbstractHorse)
+            owner = MinionMasterHelper.getOwnerForHorse((AbstractHorse) potentialPet);
         if(MinionMasterHelper.getMaster(potentialPet) != null)
             owner = MinionMasterHelper.getMaster(potentialPet);
         return owner;

@@ -1,52 +1,47 @@
 package com.infamous.dungeons_libraries.network;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableHelper.getEnchantableCapabilityLazy;
 import static net.minecraftforge.registries.ForgeRegistries.ENCHANTMENTS;
 
 public class BuiltInEnchantmentsMessage {
     private int entityId;
     private ResourceLocation resourceLocation;
-    private List<EnchantmentData> enchantmentDataList;
+    private List<EnchantmentInstance> enchantmentInstanceList;
 
-    public BuiltInEnchantmentsMessage(int entityId, ResourceLocation resourceLocation, List<EnchantmentData> enchantmentDataList) {
+    public BuiltInEnchantmentsMessage(int entityId, ResourceLocation resourceLocation, List<EnchantmentInstance> enchantmentInstanceList) {
         this.entityId = entityId;
         this.resourceLocation = resourceLocation;
-        this.enchantmentDataList = enchantmentDataList;
+        this.enchantmentInstanceList = enchantmentInstanceList;
     }
 
-    public void encode(PacketBuffer buffer) {
+    public void encode(FriendlyByteBuf buffer) {
         buffer.writeInt(this.entityId);
         buffer.writeResourceLocation(resourceLocation);
-        buffer.writeVarInt(enchantmentDataList.size());
-        this.enchantmentDataList.forEach(enchantmentData -> {
-            buffer.writeResourceLocation(enchantmentData.enchantment.getRegistryName());
-            buffer.writeInt(enchantmentData.level);
+        buffer.writeVarInt(enchantmentInstanceList.size());
+        this.enchantmentInstanceList.forEach(enchantmentInstance -> {
+            buffer.writeResourceLocation(enchantmentInstance.enchantment.getRegistryName());
+            buffer.writeInt(enchantmentInstance.level);
         });
     }
 
-    public static BuiltInEnchantmentsMessage decode(PacketBuffer buffer) {
+    public static BuiltInEnchantmentsMessage decode(FriendlyByteBuf buffer) {
         int entityId = buffer.readInt();
         ResourceLocation resourceLocation = buffer.readResourceLocation();
-        List<EnchantmentData> enchantmentData = new ArrayList<>();
+        List<EnchantmentInstance> enchantmentInstance = new ArrayList<>();
         int length = buffer.readVarInt();
         for (int x = 0; x < length; x++) {
-            enchantmentData.add(new EnchantmentData(ENCHANTMENTS.getValue(buffer.readResourceLocation()), buffer.readInt()));
+            enchantmentInstance.add(new EnchantmentInstance(ENCHANTMENTS.getValue(buffer.readResourceLocation()), buffer.readInt()));
         }
 
-        return new BuiltInEnchantmentsMessage(entityId, resourceLocation, enchantmentData);
+        return new BuiltInEnchantmentsMessage(entityId, resourceLocation, enchantmentInstance);
     }
 
     public static boolean onPacketReceived(BuiltInEnchantmentsMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -57,7 +52,7 @@ public class BuiltInEnchantmentsMessage {
                 if (entity instanceof LivingEntity) {
                     getEnchantableCapabilityLazy(entity).ifPresent(iEnchantable -> {
                         iEnchantable.clearAllEnchantments();
-                        message.enchantmentDataList.forEach(iEnchantable::addEnchantment);
+                        message.enchantmentInstanceList.forEach(iEnchantable::addEnchantment);
                     });
                 }
             });

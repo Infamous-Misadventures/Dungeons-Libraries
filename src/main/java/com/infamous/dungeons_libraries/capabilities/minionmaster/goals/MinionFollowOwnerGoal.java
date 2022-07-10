@@ -1,30 +1,34 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster.goals;
 
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
 public class MinionFollowOwnerGoal extends Goal {
-    private final MobEntity mobEntity;
+    private final Mob mobEntity;
     private LivingEntity owner;
-    private final IWorldReader world;
+    private final LevelReader world;
     private final double followSpeed;
-    private final PathNavigator navigator;
+    private final PathNavigation navigator;
     private int timeToRecalcPath;
     private final float maxDist;
     private final float minDist;
     private float oldWaterCost;
     private final boolean passesThroughLeaves;
 
-    public MinionFollowOwnerGoal(MobEntity mobEntity, double followSpeed, float minDist, float maxDist, boolean passesThroughLeaves) {
+    public MinionFollowOwnerGoal(Mob mobEntity, double followSpeed, float minDist, float maxDist, boolean passesThroughLeaves) {
         this.mobEntity = mobEntity;
         this.world = mobEntity.level;
         this.followSpeed = followSpeed;
@@ -33,7 +37,7 @@ public class MinionFollowOwnerGoal extends Goal {
         this.maxDist = maxDist;
         this.passesThroughLeaves = passesThroughLeaves;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        if (!(mobEntity.getNavigation() instanceof GroundPathNavigator) && !(mobEntity.getNavigation() instanceof FlyingPathNavigator)) {
+        if (!(mobEntity.getNavigation() instanceof GroundPathNavigation) && !(mobEntity.getNavigation() instanceof FlyingPathNavigation)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
     }
@@ -76,8 +80,8 @@ public class MinionFollowOwnerGoal extends Goal {
      */
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.mobEntity.getPathfindingMalus(PathNodeType.WATER);
-        this.mobEntity.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+        this.oldWaterCost = this.mobEntity.getPathfindingMalus(BlockPathTypes.WATER);
+        this.mobEntity.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
     /**
@@ -86,7 +90,7 @@ public class MinionFollowOwnerGoal extends Goal {
     public void stop() {
         this.owner = null;
         this.navigator.stop();
-        this.mobEntity.setPathfindingMalus(PathNodeType.WATER, this.oldWaterCost);
+        this.mobEntity.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
     }
 
     /**
@@ -128,15 +132,15 @@ public class MinionFollowOwnerGoal extends Goal {
         } else if (!this.canTeleportTo(new BlockPos(p_226328_1_, p_226328_2_, p_226328_3_))) {
             return false;
         } else {
-            this.mobEntity.moveTo((double)p_226328_1_ + 0.5D, (double)p_226328_2_, (double)p_226328_3_ + 0.5D, this.mobEntity.yRot, this.mobEntity.xRot);
+            this.mobEntity.moveTo((double)p_226328_1_ + 0.5D, (double)p_226328_2_, (double)p_226328_3_ + 0.5D, this.mobEntity.getYRot(), this.mobEntity.getXRot());
             this.navigator.stop();
             return true;
         }
     }
 
     private boolean canTeleportTo(BlockPos p_226329_1_) {
-        PathNodeType pathnodetype = WalkNodeProcessor.getBlockPathTypeStatic(this.world, p_226329_1_.mutable());
-        if (pathnodetype != PathNodeType.WALKABLE) {
+        BlockPathTypes pathnodetype = WalkNodeEvaluator.getBlockPathTypeStatic(this.world, p_226329_1_.mutable());
+        if (pathnodetype != BlockPathTypes.WALKABLE) {
             return false;
         } else {
             BlockState blockstate = this.world.getBlockState(p_226329_1_.below());

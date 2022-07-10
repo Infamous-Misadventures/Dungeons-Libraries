@@ -1,14 +1,14 @@
 package com.infamous.dungeons_libraries.network;
 
-import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
+import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.DistExecutor.SafeRunnable;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -19,11 +19,11 @@ public class UpdateSoulsMessage {
         this.newAmount = souls;
     }
 
-    public static void encode(UpdateSoulsMessage packet, PacketBuffer buf) {
+    public static void encode(UpdateSoulsMessage packet, FriendlyByteBuf buf) {
         buf.writeFloat(packet.newAmount);
     }
 
-    public static UpdateSoulsMessage decode(PacketBuffer buf) {
+    public static UpdateSoulsMessage decode(FriendlyByteBuf buf) {
         return new UpdateSoulsMessage(buf.readFloat());
     }
 
@@ -37,9 +37,9 @@ public class UpdateSoulsMessage {
 
                     @Override
                     public void run() {
-                        ClientPlayerEntity player = Minecraft.getInstance().player;
+                        LocalPlayer player = Minecraft.getInstance().player;
                         if (player != null) {
-                            ISoulCaster soulCasterCap = SoulCasterHelper.getSoulCasterCapability(player);
+                            SoulCaster soulCasterCap = SoulCasterHelper.getSoulCasterCapability(player);
                             if (soulCasterCap != null) {
                                 soulCasterCap.setSouls(packet.newAmount, player);
                             }

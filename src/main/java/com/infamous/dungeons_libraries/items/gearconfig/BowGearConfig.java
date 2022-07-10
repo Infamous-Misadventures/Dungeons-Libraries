@@ -2,8 +2,8 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,13 @@ public class BowGearConfig {
     ).apply(instance, BowGearConfig::new));
 
     private List<GearConfigAttributeModifier> attributes;
-    private List<EnchantmentData> builtInEnchantments;
+    private List<EnchantmentInstance> builtInEnchantments;
     private int durability;
     private float defaultChargeTime;
     private boolean unique;
     private Rarity rarity;
 
-    public BowGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentData> builtInEnchantments, int durability, float defaultChargeTime, boolean unique, Rarity rarity) {
+    public BowGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentInstance> builtInEnchantments, int durability, float defaultChargeTime, boolean unique, Rarity rarity) {
         this.attributes = attributes;
         this.builtInEnchantments = builtInEnchantments;
         this.durability = durability;
@@ -44,7 +44,7 @@ public class BowGearConfig {
         return attributes;
     }
 
-    public List<EnchantmentData> getBuiltInEnchantments() {
+    public List<EnchantmentInstance> getBuiltInEnchantments() {
         return builtInEnchantments;
     }
 

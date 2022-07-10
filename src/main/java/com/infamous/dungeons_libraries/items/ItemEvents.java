@@ -1,11 +1,9 @@
 package com.infamous.dungeons_libraries.items;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,7 +23,7 @@ public class ItemEvents {
             float originalDamage = event.getAmount();
 
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-            ModifiableAttributeInstance magicDamageMultiplierAttribute = attacker.getAttribute(MAGIC_DAMAGE_MULTIPLIER.get());
+            AttributeInstance magicDamageMultiplierAttribute = attacker.getAttribute(MAGIC_DAMAGE_MULTIPLIER.get());
             double attributeModifier = magicDamageMultiplierAttribute != null ? magicDamageMultiplierAttribute.getValue() : 1.0D;
             double additionalDamage = originalDamage * attributeModifier;
 
@@ -37,7 +35,7 @@ public class ItemEvents {
     public static void onEntityKilled(LivingDeathEvent event) {
         if (event.getSource().getEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-            ModifiableAttributeInstance attribute = attacker.getAttribute(LIFE_STEAL.get());
+            AttributeInstance attribute = attacker.getAttribute(LIFE_STEAL.get());
             if (attribute != null) {
                 double lifeStealAmount = attribute.getValue() - 1.0D;
                 float victimMaxHealth = event.getEntityLiving().getMaxHealth();

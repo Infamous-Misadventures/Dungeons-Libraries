@@ -1,11 +1,11 @@
 package com.infamous.dungeons_libraries.mixin;
 
-import net.minecraft.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ArmorMaterial.class)
-public interface ArmorMaterialAccessor {
+@Mixin(ArmorMaterials.class)
+public interface ArmorMaterialsAccessor {
 
     @Accessor
     String getName();

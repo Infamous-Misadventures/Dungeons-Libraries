@@ -1,35 +1,21 @@
 package com.infamous.dungeons_libraries;
 
 import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsStorage;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
-import com.infamous.dungeons_libraries.capabilities.enchantable.Enchantable;
-import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableStorage;
-import com.infamous.dungeons_libraries.capabilities.enchantable.IEnchantable;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.*;
-import com.infamous.dungeons_libraries.capabilities.playerrewards.IPlayerRewards;
-import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewards;
-import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewardsStorage;
-import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
-import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
-import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterStorage;
-import com.infamous.dungeons_libraries.capabilities.timers.ITimers;
-import com.infamous.dungeons_libraries.capabilities.timers.Timers;
-import com.infamous.dungeons_libraries.capabilities.timers.TimersStorage;
+import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
 import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
-import com.infamous.dungeons_libraries.items.gearconfig.*;
-import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
+import com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry;
+import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry;
+import com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry;
+import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
+import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -43,10 +29,10 @@ import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRe
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry.MELEE_GEAR_CONFIGS;
-import static com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials.ARMOR_MATERIALS;
+import static com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials.ARMOR_MATERIALS;
 import static com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials.WEAPON_MATERIALS;
 
-// The value here should match an entry in the META-INF/mods.toml file
+
 @Mod("dungeons_libraries")
 public class DungeonsLibraries
 {
@@ -66,7 +52,7 @@ public class DungeonsLibraries
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
-        ArmorMaterials.setupVanillaMaterials();
+        DungeonsArmorMaterials.setupVanillaMaterials();
         WeaponMaterials.setupVanillaMaterials();
 
         ARMOR_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArmorGearConfigRegistry::toPacket);
@@ -74,24 +60,17 @@ public class DungeonsLibraries
         BOW_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, BowGearConfigRegistry::toPacket);
         CROSSBOW_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, CrossbowGearConfigRegistry::toPacket);
         WEAPON_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, WeaponMaterials::toPacket);
-        ARMOR_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArmorMaterials::toPacket);
+        ARMOR_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, DungeonsArmorMaterials::toPacket);
+
+        ModCapabilities.setupCapabilities();
     }
 
     private void setup(final FMLCommonSetupEvent event){
-        CapabilityManager.INSTANCE.register(IMinion.class, new MinionStorage(), Minion::new);
-        CapabilityManager.INSTANCE.register(IMaster.class, new MasterStorage(), Master::new);
-        CapabilityManager.INSTANCE.register(IEnchantable.class, new EnchantableStorage(), Enchantable::new);
-        CapabilityManager.INSTANCE.register(IBuiltInEnchantments.class, new BuiltInEnchantmentsStorage(), BuiltInEnchantments::new);
-        CapabilityManager.INSTANCE.register(ISoulCaster.class, new SoulCasterStorage(), SoulCaster::new);
-        CapabilityManager.INSTANCE.register(ITimers.class, new TimersStorage(), Timers::new);
-        CapabilityManager.INSTANCE.register(IPlayerRewards.class, new PlayerRewardsStorage(), PlayerRewards::new);
         event.enqueueWork(NetworkHandler::init);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-
         MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.SOUL_ORB.get(), SoulOrbRenderer::new);
     }
 
 }

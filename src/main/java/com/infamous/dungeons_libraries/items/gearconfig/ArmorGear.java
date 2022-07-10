@@ -9,29 +9,27 @@ import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ArmorItemAccessor;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
-import static net.minecraft.item.ArmorMaterial.CHAIN;
+import static net.minecraft.world.item.ArmorMaterials.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUniqueGear {
@@ -41,7 +39,7 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
     private ArmorGearConfig armorGearConfig;
     private ResourceLocation texture;
 
-    public ArmorGear(EquipmentSlotType slotType, Properties properties, ResourceLocation texture) {
+    public ArmorGear(EquipmentSlot slotType, Properties properties, ResourceLocation texture) {
         super(CHAIN, slotType, properties);
         this.texture = texture;
         reload();
@@ -50,7 +48,7 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
     @Override
     public void reload(){
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.getRegistryName());
-        IArmorMaterial material = armorGearConfig.getArmorMaterial();
+        ArmorMaterial material = armorGearConfig.getArmorMaterial();
         ((ArmorItemAccessor)this).setMaterial(material);
         ((ArmorItemAccessor)this).setDefense(material.getDefenseForSlot(this.slot));
         ((ArmorItemAccessor)this).setToughness(material.getToughness());
@@ -84,32 +82,42 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType pEquipmentSlot) {
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
         return pEquipmentSlot == this.slot ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
+
     @Override
-    public void appendHoverText(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag)
+    public void appendHoverText(ItemStack stack, Level level, List<Component> list, TooltipFlag flag)
     {
-        super.appendHoverText(stack, world, list, flag);
+        super.appendHoverText(stack, level, list, flag);
         DescriptionHelper.addLoreDescription(list, stack);
     }
+
 
     @Override
     public Rarity getRarity(ItemStack pStack) {
         return getGearConfig().getRarity();
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack stack, EquipmentSlotType armorSlot, A _default) {
-        return (A) ArmorGearModels.getModel(this.getRegistryName()).apply(1.0F, armorSlot, entityLiving);
+    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.IItemRenderProperties> consumer)
+    {
+        consumer.accept(new IItemRenderProperties()
+        {
+            @Nullable
+            @Override
+            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+                return ArmorGearModels.getModel(itemStack.getItem().getRegistryName()).apply(1.0F, armorSlot, entityLiving);
+            }
+        });
     }
 
+
+
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return texture.toString();
     }
 

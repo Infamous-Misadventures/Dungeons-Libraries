@@ -1,14 +1,13 @@
 package com.infamous.dungeons_libraries.summon;
 
-import com.infamous.dungeons_libraries.capabilities.minionmaster.IMinion;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Minion;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import net.minecraft.entity.IAngerable;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.BeeEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,13 +22,13 @@ public class SummonEvents {
     @SubscribeEvent
     public static void reAddSummonableGoals(EntityJoinWorldEvent event){
         if(MinionMasterHelper.isMinionEntity(event.getEntity())){
-            IMinion minionCapability = getMinionCapability(event.getEntity());
+            Minion minionCapability = getMinionCapability(event.getEntity());
             if(minionCapability == null) return;
-            if(event.getEntity() instanceof BeeEntity){
-                BeeEntity beeEntity = (BeeEntity) event.getEntity();
+            if(event.getEntity() instanceof Bee){
+                Bee beeEntity = (Bee) event.getEntity();
                 if(minionCapability.getMaster() != null){
                     beeEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(beeEntity, LivingEntity.class, 5, false, false,
-                            (entityIterator) -> entityIterator instanceof IMob && !(entityIterator instanceof CreeperEntity)));
+                            (entityIterator) -> entityIterator instanceof Mob && !(entityIterator instanceof Creeper)));
                 }
             }
         }
@@ -40,13 +39,13 @@ public class SummonEvents {
         if(event.getTarget() == null) return;
         if(MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
             LivingEntity minionAttacker = event.getEntityLiving();
-            IMinion attackerMinionCap = getMinionCapability(minionAttacker);
+            Minion attackerMinionCap = getMinionCapability(minionAttacker);
             if(attackerMinionCap == null) return;
             if(attackerMinionCap.getMaster() != null){
                 LivingEntity attackersOwner = attackerMinionCap.getMaster();
                 if(MinionMasterHelper.isMinionEntity(event.getTarget())){
                     LivingEntity summonableTarget = event.getTarget();
-                    IMinion targetSummonableCap = getMinionCapability(summonableTarget);
+                    Minion targetSummonableCap = getMinionCapability(summonableTarget);
                     if(targetSummonableCap == null) return;
                     if(targetSummonableCap.getMaster() != null){
                         LivingEntity targetsOwner = targetSummonableCap.getMaster();
@@ -63,11 +62,11 @@ public class SummonEvents {
     }
 
     private static void preventAttackForSummonableMob(LivingEntity minionAttacker) {
-        if(minionAttacker instanceof IAngerable){
-            ((IAngerable) minionAttacker).stopBeingAngry();
+        if(minionAttacker instanceof NeutralMob){
+            ((NeutralMob) minionAttacker).stopBeingAngry();
         }
-        if(minionAttacker instanceof MobEntity){
-            MobEntity mob = (MobEntity) minionAttacker;
+        if(minionAttacker instanceof Mob){
+            Mob mob = (Mob) minionAttacker;
             mob.setTarget(null);
             mob.setLastHurtByMob(null);
         }

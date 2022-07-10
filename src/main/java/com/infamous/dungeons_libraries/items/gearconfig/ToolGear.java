@@ -1,25 +1,46 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
 
 public class ToolGear extends MeleeGear {
-    /** Hardcoded set of blocks this tool can properly dig at full speed. Modders see instead. */
-    private final Set<Block> diggableBlocks;
+    private final TagKey<Block> blocks;
 
-    public ToolGear(Set<Block> diggableBlocks, Properties properties) {
+    public ToolGear(TagKey<Block> blocks, Properties properties) {
         super(properties);
-        this.diggableBlocks = diggableBlocks;
+        this.blocks = blocks;
     }
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
-        if (getToolTypes(pStack).stream().anyMatch(e -> pState.isToolEffective(e))) return this.getTier().getSpeed();
-        return this.diggableBlocks.contains(pState.getBlock()) ? this.getTier().getSpeed() : 1.0F;
+        return pState.is(this.blocks) ? this.getTier().getSpeed() : 1.0F;
+    }
+
+    @Deprecated // FORGE: Use stack sensitive variant below
+    @Override
+    public boolean isCorrectToolForDrops(BlockState p_150816_) {
+        if (net.minecraftforge.common.TierSortingRegistry.isTierSorted(getTier())) {
+            return net.minecraftforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), p_150816_) && p_150816_.is(this.blocks);
+        }
+        int i = this.getTier().getLevel();
+        if (i < 3 && p_150816_.is(BlockTags.NEEDS_DIAMOND_TOOL)) {
+            return false;
+        } else if (i < 2 && p_150816_.is(BlockTags.NEEDS_IRON_TOOL)) {
+            return false;
+        } else {
+            return i < 1 && p_150816_.is(BlockTags.NEEDS_STONE_TOOL) ? false : p_150816_.is(this.blocks);
+        }
+    }
+
+    // FORGE START
+    @Override
+    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
+        return state.is(blocks) && net.minecraftforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
     }
 
 }

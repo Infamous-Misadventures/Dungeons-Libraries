@@ -3,16 +3,22 @@ package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
 import com.google.common.collect.Lists;
 import com.infamous.dungeons_libraries.items.gearconfig.*;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BuiltInEnchantments implements IBuiltInEnchantments {
-    private Map<ResourceLocation, List<EnchantmentData>> enchantments = new HashMap<>();
+import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.BUILT_IN_ENCHANTMENTS_CAPABILITY;
+
+public class BuiltInEnchantments implements INBTSerializable<CompoundTag> {
+    private Map<ResourceLocation, List<EnchantmentInstance>> enchantments = new HashMap<>();
 
     public BuiltInEnchantments() {
     }
@@ -36,72 +42,101 @@ public class BuiltInEnchantments implements IBuiltInEnchantments {
         }
     }
 
-    @Override
-    public boolean addBuiltInEnchantment(ResourceLocation source, EnchantmentData enchantmentData) {
+    public boolean addBuiltInEnchantment(ResourceLocation source, EnchantmentInstance enchantmentInstance) {
         enchantments.computeIfAbsent(source, resourceLocation -> enchantments.put(resourceLocation, new ArrayList<>()));
-        enchantments.get(source).add(enchantmentData);
+        enchantments.get(source).add(enchantmentInstance);
         return true;
     }
 
-    @Override
     public boolean removeBuiltInEnchantment(ResourceLocation source, Enchantment enchantment) {
         if(!enchantments.containsKey(source)){
             return false;
         }
-        enchantments.put(source, enchantments.get(source).stream().filter(enchantmentData -> enchantmentData.enchantment != enchantment).collect(Collectors.toList()));
+        enchantments.put(source, enchantments.get(source).stream().filter(enchantmentInstance -> enchantmentInstance.enchantment != enchantment).collect(Collectors.toList()));
         return true;
     }
 
-    @Override
-    public boolean setBuiltInEnchantments(ResourceLocation source, List<EnchantmentData> enchantmentData) {
-        enchantments.put(source, new ArrayList<>(enchantmentData));
+    public boolean setBuiltInEnchantments(ResourceLocation source, List<EnchantmentInstance> enchantmentInstance) {
+        enchantments.put(source, new ArrayList<>(enchantmentInstance));
         return true;
     }
 
-    @Override
     public boolean clearAllBuiltInEnchantments(ResourceLocation source) {
         enchantments.remove(source);
         return true;
     }
 
-    @Override
-    public List<EnchantmentData> getBuiltInEnchantments(ResourceLocation source) {
-        List<EnchantmentData> enchantmentData = enchantments.get(source);
-        if(enchantmentData == null){
+    public List<EnchantmentInstance> getBuiltInEnchantments(ResourceLocation source) {
+        List<EnchantmentInstance> enchantmentInstance = enchantments.get(source);
+        if(enchantmentInstance == null){
             return Lists.newArrayList();
         }
-        return enchantmentData;
+        return enchantmentInstance;
     }
 
-    @Override
-    public List<EnchantmentData> getAllBuiltInEnchantmentDatas() {
+    public List<EnchantmentInstance> getAllBuiltInEnchantmentInstances() {
         return enchantments.values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Map<ResourceLocation, List<EnchantmentData>> getAllBuiltInEnchantmentDatasPerSource() {
+    public Map<ResourceLocation, List<EnchantmentInstance>> getAllBuiltInEnchantmentInstancesPerSource() {
         return enchantments;
     }
 
-    @Override
     public boolean hasBuiltInEnchantment(ResourceLocation source) {
         return !getBuiltInEnchantments(source).isEmpty();
     }
 
-    @Override
     public boolean hasBuiltInEnchantment() {
         return !this.enchantments.isEmpty();
     }
 
-    @Override
     public boolean hasBuiltInEnchantment(Enchantment enchantment) {
-        return getAllBuiltInEnchantmentDatas().stream().anyMatch(enchantmentData -> enchantmentData.enchantment.equals(enchantment));
+        return getAllBuiltInEnchantmentInstances().stream().anyMatch(enchantmentInstance -> enchantmentInstance.enchantment.equals(enchantment));
+    }
+
+    public int getBuiltInItemEnchantmentLevel(Enchantment enchantment) {
+        return getAllBuiltInEnchantmentInstances().stream().filter(enchantmentInstance -> enchantmentInstance.enchantment.equals(enchantment)).map(enchantmentInstance -> enchantmentInstance.level).max(Comparator.naturalOrder()).orElse(0);
+    }
+    public static final String ENCHANTS_KEY = "BuiltInEnchantments";
+    public static final String SOURCE_KEY = "source";
+    public static final String ENCHANTMENT_DATA_KEY = "data";
+
+    @Override
+    public CompoundTag serializeNBT() {
+        if (BUILT_IN_ENCHANTMENTS_CAPABILITY == null) {
+            return new CompoundTag();
+        }
+        CompoundTag tag = new CompoundTag();
+        ListTag listnbt = new ListTag();
+        this.getAllBuiltInEnchantmentInstancesPerSource().forEach((resourceLocation, enchantmentInstances) -> {
+            CompoundTag compoundnbt = new CompoundTag();
+            compoundnbt.putString(SOURCE_KEY, String.valueOf( resourceLocation));
+            ListTag enchantmentListnbt = new ListTag();
+            enchantmentInstances.forEach(enchantmentInstance -> {
+                CompoundTag enchantmentInstanceNBT = new CompoundTag();
+                enchantmentInstanceNBT.putString("id", String.valueOf(enchantmentInstance.enchantment.getRegistryName()));
+                enchantmentInstanceNBT.putShort("lvl", (short)enchantmentInstance.level);
+                enchantmentListnbt.add(enchantmentInstanceNBT);
+            });
+            compoundnbt.put(ENCHANTMENT_DATA_KEY, enchantmentListnbt);
+            listnbt.add(compoundnbt);
+        });
+        tag.put(ENCHANTS_KEY, listnbt);
+        return tag;
     }
 
     @Override
-    public int getBuiltInItemEnchantmentLevel(Enchantment enchantment) {
-        return getAllBuiltInEnchantmentDatas().stream().filter(enchantmentData -> enchantmentData.enchantment.equals(enchantment)).map(enchantmentData -> enchantmentData.level).max(Comparator.naturalOrder()).orElse(0);
+    public void deserializeNBT(CompoundTag tag) {
+        ListTag listNBT = tag.getList(ENCHANTS_KEY, 10);
+        for(int i = 0; i < listNBT.size(); ++i) {
+            CompoundTag compoundnbt = listNBT.getCompound(i);
+            ResourceLocation resourcelocation = ResourceLocation.tryParse(compoundnbt.getString(SOURCE_KEY));
+            ListTag enchantmentListnbt = new ListTag();
+            Map<Enchantment, Integer> enchantmentIntegerMap = EnchantmentHelper.deserializeEnchantments(compoundnbt.getList(ENCHANTMENT_DATA_KEY, 10));
+            List<EnchantmentInstance> enchantmentInstanceList = enchantmentIntegerMap.entrySet().stream().map(entry -> new EnchantmentInstance(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+            this.setBuiltInEnchantments(resourcelocation, enchantmentInstanceList);
+        }
     }
 }

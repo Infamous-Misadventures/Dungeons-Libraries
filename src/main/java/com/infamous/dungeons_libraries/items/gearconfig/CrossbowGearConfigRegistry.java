@@ -3,7 +3,7 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
 import com.infamous.dungeons_libraries.network.gearconfig.CrossbowGearConfigSyncPacket;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

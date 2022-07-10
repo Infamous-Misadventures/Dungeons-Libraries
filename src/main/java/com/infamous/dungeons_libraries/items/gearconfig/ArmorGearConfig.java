@@ -1,13 +1,12 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
-import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
+import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +27,12 @@ public class ArmorGearConfig {
     ).apply(instance, ArmorGearConfig::new));
 
     private List<GearConfigAttributeModifier> attributes;
-    private List<EnchantmentData> builtInEnchantments;
+    private List<EnchantmentInstance> builtInEnchantments;
     private ResourceLocation materialResource;
     private boolean unique;
     private Rarity rarity;
 
-    public ArmorGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentData> builtInEnchantments, ResourceLocation materialResource, boolean unique, Rarity rarity) {
+    public ArmorGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentInstance> builtInEnchantments, ResourceLocation materialResource, boolean unique, Rarity rarity) {
         this.attributes = attributes;
         this.builtInEnchantments = builtInEnchantments;
         this.materialResource = materialResource;
@@ -45,12 +44,12 @@ public class ArmorGearConfig {
         return attributes;
     }
 
-    public List<EnchantmentData> getBuiltInEnchantments() {
+    public List<EnchantmentInstance> getBuiltInEnchantments() {
         return builtInEnchantments;
     }
 
-    public IArmorMaterial getArmorMaterial(){
-        return ArmorMaterials.getArmorMaterial(materialResource);
+    public ArmorMaterial getArmorMaterial(){
+        return DungeonsArmorMaterials.getArmorMaterial(materialResource);
     }
 
     public boolean isUnique() {

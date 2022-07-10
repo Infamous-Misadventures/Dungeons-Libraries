@@ -1,21 +1,23 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster.goals;
 
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.EnumSet;
 
 import static com.infamous.dungeons_libraries.utils.GoalUtils.shouldAttackEntity;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class MasterHurtByTargetGoal extends TargetGoal {
-    private final MobEntity mobEntity;
+    private final Mob mobEntity;
     private LivingEntity attacker;
     private int timestamp;
 
-    public MasterHurtByTargetGoal(MobEntity mobEntity) {
+    public MasterHurtByTargetGoal(Mob mobEntity) {
         super(mobEntity, false);
         this.mobEntity = mobEntity;
         this.setFlags(EnumSet.of(Flag.TARGET));
@@ -29,7 +31,7 @@ public class MasterHurtByTargetGoal extends TargetGoal {
             } else {
                 this.attacker = owner.getLastHurtByMob();
                 int revengeTimer = owner.getLastHurtByMobTimestamp();
-                return revengeTimer != this.timestamp && this.canAttack(this.attacker, EntityPredicate.DEFAULT) && shouldAttackEntity(this.attacker, owner);
+                return revengeTimer != this.timestamp && this.canAttack(this.attacker, TargetingConditions.DEFAULT) && shouldAttackEntity(this.attacker, owner);
             }
 //        } else {
 //            return false;

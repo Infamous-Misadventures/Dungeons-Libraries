@@ -4,29 +4,30 @@ import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHur
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MinionFollowOwnerGoal;
 import com.infamous.dungeons_libraries.entities.ai.goal.MeleeAttackGoal;
-import com.infamous.dungeons_libraries.mixin.GoalSelectorAccessor;
-import com.infamous.dungeons_libraries.mixin.MobEntityInvoker;
+import com.infamous.dungeons_libraries.mixin.MobInvoker;
 import com.infamous.dungeons_libraries.summon.SummonConfig;
 import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.MASTER_CAPABILITY;
+import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.MINION_CAPABILITY;
 import static com.infamous.dungeons_libraries.utils.PetHelper.canPetAttackEntity;
 
 public class MinionMasterHelper {
 
     @Nullable
-    public static LivingEntity getOwnerForHorse(AbstractHorseEntity horseEntity){
+    public static LivingEntity getOwnerForHorse(AbstractHorse horseEntity){
         try {
             if(horseEntity.getOwnerUUID() != null){
                 UUID ownerUniqueId = horseEntity.getOwnerUUID();
@@ -39,7 +40,7 @@ public class MinionMasterHelper {
     }
 
     public static boolean isMinionEntity(Entity target) {
-        IMinion targetSummonableCap = getMinionCapability(target);
+        Minion targetSummonableCap = getMinionCapability(target);
         if(targetSummonableCap == null){
             return false;
         }else {
@@ -48,7 +49,7 @@ public class MinionMasterHelper {
     }
 
     public static boolean isMinionOf(LivingEntity target, LivingEntity owner) {
-        IMinion targetSummonableCap = getMinionCapability(target);
+        Minion targetSummonableCap = getMinionCapability(target);
         if(targetSummonableCap == null){
             return false;
         } else{
@@ -60,7 +61,7 @@ public class MinionMasterHelper {
     @Nullable
     public static LivingEntity getMaster(LivingEntity minionMob) {
         try {
-            IMinion minion = getMinionCapability(minionMob);
+            Minion minion = getMinionCapability(minionMob);
             if(minion == null) return null;
             return minion.getMaster();
         } catch (IllegalArgumentException var2) {
@@ -69,9 +70,9 @@ public class MinionMasterHelper {
     }
 
     @Nullable
-    public static IMaster getMasterCapability(Entity entity)
+    public static Master getMasterCapability(Entity entity)
     {
-        LazyOptional<IMaster> lazyCap = entity.getCapability(MasterProvider.MASTER_CAPABILITY);
+        LazyOptional<Master> lazyCap = entity.getCapability(MASTER_CAPABILITY);
         if (lazyCap.isPresent()) {
             return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summoner capability from the Entity!"));
         }
@@ -79,17 +80,17 @@ public class MinionMasterHelper {
     }
 
     @Nullable
-    public static IMinion getMinionCapability(Entity entity)
+    public static Minion getMinionCapability(Entity entity)
     {
-        LazyOptional<IMinion> lazyCap = entity.getCapability(MinionProvider.MINION_CAPABILITY);
+        LazyOptional<Minion> lazyCap = entity.getCapability(MINION_CAPABILITY);
         if (lazyCap.isPresent()) {
             return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summonable capability from the Entity!"));
         }
         return null;
     }
 
-    public static void addMinionGoals(MobEntity mobEntity) {
-        IMinion minionCap = getMinionCapability(mobEntity);
+    public static void addMinionGoals(Mob mobEntity) {
+        Minion minionCap = getMinionCapability(mobEntity);
         if(minionCap == null) return;
         if(minionCap.isMinion()){
             mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 2.1D, 10.0F, 2.0F, false));
@@ -107,23 +108,23 @@ public class MinionMasterHelper {
         }
     }
 
-    static void removeMinion(LivingEntity entityLiving, IMinion cap) {
+    static void removeMinion(LivingEntity entityLiving, Minion cap) {
         LivingEntity master = cap.getMaster();
-        IMaster masterCapability = getMasterCapability(master);
+        Master masterCapability = getMasterCapability(master);
         if(masterCapability != null){
             masterCapability.removeMinion(entityLiving);
         }
         cap.setMaster(null);
-        if(entityLiving instanceof MobEntity){
-            MobEntity mobEntity = (MobEntity) entityLiving;
+        if(entityLiving instanceof Mob){
+            Mob mobEntity = (Mob) entityLiving;
             clearGoals(mobEntity.goalSelector);
             clearGoals(mobEntity.targetSelector);
-            ((MobEntityInvoker) entityLiving).invokeRegisterGoals();
+            ((MobInvoker) entityLiving).invokeRegisterGoals();
         }
     }
 
     private static void clearGoals(GoalSelector goalSelector) {
-        ArrayList<PrioritizedGoal> prioritizedGoals = new ArrayList<>(((GoalSelectorAccessor) goalSelector).getAvailableGoals());
-        prioritizedGoals.forEach(prioritizedGoal -> goalSelector.removeGoal(prioritizedGoal.getGoal()));
+        ArrayList<WrappedGoal> wrappedGoals = new ArrayList<>(goalSelector.getAvailableGoals());
+        wrappedGoals.forEach(prioritizedGoal -> goalSelector.removeGoal(prioritizedGoal.getGoal()));
     }
 }

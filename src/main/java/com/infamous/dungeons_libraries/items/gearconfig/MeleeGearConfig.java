@@ -1,20 +1,18 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
-import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.infamous.dungeons_libraries.data.Codecs.*;
+import static com.infamous.dungeons_libraries.data.Codecs.ENCHANTMENT_DATA_CODEC;
+import static com.infamous.dungeons_libraries.data.Codecs.ITEM_RARITY_CODEC;
 
 public class MeleeGearConfig {
 
@@ -31,14 +29,14 @@ public class MeleeGearConfig {
     ).apply(instance, MeleeGearConfig::new));
 
     private List<GearConfigAttributeModifier> attributes;
-    private List<EnchantmentData> builtInEnchantments;
+    private List<EnchantmentInstance> builtInEnchantments;
     private ResourceLocation materialResource;
     private boolean disablesShield;
     private boolean unique;
     private Rarity rarity;
     private int comboLength;
 
-    public MeleeGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentData> builtInEnchantments, ResourceLocation materialResource, boolean disablesShield, boolean unique, Rarity rarity, int comboLength) {
+    public MeleeGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentInstance> builtInEnchantments, ResourceLocation materialResource, boolean disablesShield, boolean unique, Rarity rarity, int comboLength) {
         this.attributes = attributes;
         this.builtInEnchantments = builtInEnchantments;
         this.materialResource = materialResource;
@@ -52,7 +50,7 @@ public class MeleeGearConfig {
         return attributes;
     }
 
-    public List<EnchantmentData> getBuiltInEnchantments() {
+    public List<EnchantmentInstance> getBuiltInEnchantments() {
         return builtInEnchantments;
     }
 
@@ -60,7 +58,7 @@ public class MeleeGearConfig {
         return materialResource;
     }
 
-    public IItemTier getWeaponMaterial() {
+    public Tier getWeaponMaterial() {
         return WeaponMaterials.getWeaponMaterial(materialResource);
     }
 

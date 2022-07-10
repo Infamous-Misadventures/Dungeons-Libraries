@@ -3,9 +3,9 @@ package com.infamous.dungeons_libraries.data.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class DefaultsCodecJsonDataManager<T> extends CodecJsonDataManager<T>{
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsons, IResourceManager resourceManager, IProfiler profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
         super.apply(jsons, resourceManager, profiler);
         defaults.forEach((resourceLocation, t) -> this.data.putIfAbsent(resourceLocation, t));
     }

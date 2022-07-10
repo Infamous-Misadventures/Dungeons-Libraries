@@ -8,14 +8,14 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
+//        classpath 'org.parchmentmc:librarian:1.+'
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
+//apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge and Mixin to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
@@ -29,7 +29,7 @@ version = "${mc_version}-${mod_version}"
 group = 'com.infamous.dungeons_libraries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${modid}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8) //Gradle 7+ & FG v5.1+ are compatible with JDK 16 but for minecraft versions below 1.17 we have to target Java 8
+java.toolchain.languageVersion = JavaLanguageVersion.of(17) //Gradle 7+ & FG v5.1+ are compatible with JDK 16 but for minecraft versions below 1.17 we have to target Java 8
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
@@ -49,6 +49,7 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
+            arg "-mixin.config=${modid}.mixins.json"
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
@@ -133,9 +134,9 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.45')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.28')
 
 
 

@@ -1,15 +1,15 @@
 package com.infamous.dungeons_libraries.client;
 
 import com.infamous.dungeons_libraries.network.CommonProxy;
-import net.minecraft.entity.Entity;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.Random;
 
 public class ClientProxy extends CommonProxy {
 
     @Override
-    public void spawnParticles(Entity entity, BasicParticleType particleType) {
+    public void spawnParticles(Entity entity, SimpleParticleType particleType) {
         for (int k = 0; k < 20; ++k)
         {
             Random rand = new Random();

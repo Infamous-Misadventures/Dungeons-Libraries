@@ -2,22 +2,22 @@ package com.infamous.dungeons_libraries.items.materials.armor;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
 import static net.minecraftforge.registries.ForgeRegistries.ITEMS;
 
-public class DungeonsArmorMaterial implements IArmorMaterial {
+public class DungeonsArmorMaterial implements ArmorMaterial {
 
-    public static final Codec<IArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ArmorMaterial> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getName()),
             Codec.INT.fieldOf("durability").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).durability),
             Codec.INT.listOf().fieldOf("damage_reduction_amounts").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).damageReductionAmounts),
@@ -36,7 +36,7 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
     private final int durability;
     private final int enchantability;
     private final ResourceLocation repairItemResourceLocation;
-    private final LazyValue<Ingredient> repairItem;
+    private final LazyLoadedValue<Ingredient> repairItem;
     private final List<Integer> damageReductionAmounts;
     private final float toughness;
     private final float knockbackResistance;
@@ -51,9 +51,9 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
         this.repairItemResourceLocation = repairItemResourceLocation;
         if(ITEMS.containsKey(repairItemResourceLocation)){
             Item item = ITEMS.getValue(repairItemResourceLocation);
-            this.repairItem = new LazyValue<>(() -> Ingredient.of(item));
+            this.repairItem = new LazyLoadedValue<>(() -> Ingredient.of(item));
         }else{
-            this.repairItem = new LazyValue<>(() -> Ingredient.of(Items.IRON_INGOT));
+            this.repairItem = new LazyLoadedValue<>(() -> Ingredient.of(Items.IRON_INGOT));
         }
         this.damageReductionAmounts = damageReductionAmounts;
         this.toughness = toughness;
@@ -62,13 +62,13 @@ public class DungeonsArmorMaterial implements IArmorMaterial {
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlotType slot)
+    public int getDefenseForSlot(EquipmentSlot slot)
     {
         return this.damageReductionAmounts.get(slot.getIndex());
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlotType slot)
+    public int getDurabilityForSlot(EquipmentSlot slot)
     {
         return BASE_DURABILITY_ARRAY[slot.getIndex()] * this.durability;
     }

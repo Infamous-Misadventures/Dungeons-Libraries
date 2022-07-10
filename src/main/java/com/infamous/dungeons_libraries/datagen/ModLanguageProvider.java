@@ -1,7 +1,6 @@
 package com.infamous.dungeons_libraries.datagen;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import com.infamous.dungeons_libraries.mobenchantments.MobEnchantment;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
