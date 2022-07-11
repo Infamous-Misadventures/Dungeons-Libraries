@@ -9,21 +9,16 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 //        classpath 'org.parchmentmc:librarian:1.+'
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 //apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge and Mixin to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-
-mixin {
-    add sourceSets.main, "dungeons_libraries.refmap.json"
-    config "dungeons_libraries.mixins.json"
-}
+apply plugin: 'org.spongepowered.mixin'
 
 version = "${mc_version}-${mod_version}"
 group = 'com.infamous.dungeons_libraries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -142,6 +137,11 @@ dependencies {
 
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+}
+
+mixin {
+    add sourceSets.main, "dungeons_libraries.refmap.json"
+    config "dungeons_libraries.mixins.json"
 }
 
 jar {
