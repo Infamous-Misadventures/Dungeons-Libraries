@@ -141,7 +141,7 @@ dependencies {
 
 mixin {
     add sourceSets.main, "dungeons_libraries.refmap.json"
-    config "dungeons_libraries.mixins.json"
+    //config "dungeons_libraries.mixins.json"
 }
 
 jar {
