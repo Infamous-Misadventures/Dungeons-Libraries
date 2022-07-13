@@ -19,7 +19,7 @@ public class AttacherMaster {
 
     private static class MasterProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "timers");
+        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "master");
         private final Master backend = new Master();
         private final LazyOptional<Master> optionalData = LazyOptional.of(() -> backend);
 

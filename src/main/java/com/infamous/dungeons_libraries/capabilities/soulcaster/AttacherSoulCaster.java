@@ -19,7 +19,7 @@ public class AttacherSoulCaster {
 
     private static class SoulCasterProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "timers");
+        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "soul_caster");
         private final SoulCaster backend = new SoulCaster();
         private final LazyOptional<SoulCaster> optionalData = LazyOptional.of(() -> backend);
 
