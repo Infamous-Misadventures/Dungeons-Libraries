@@ -2,7 +2,6 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.infamous.dungeons_libraries.items.gearconfig.client.ArmorGearModels;
 import com.infamous.dungeons_libraries.items.interfaces.IArmor;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
@@ -12,36 +11,49 @@ import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
-import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.item.GeoArmorItem;
+import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.item.ArmorMaterials.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUniqueGear {
+public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, IUniqueGear, IAnimatable {
     private static final UUID[] ARMOR_MODIFIER_UUID_PER_SLOT = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private ArmorGearConfig armorGearConfig;
-    private ResourceLocation texture;
+    private ResourceLocation modelLocation;
+    private ResourceLocation textureLocation;
+    private ResourceLocation animationFileLocation;
 
-    public ArmorGear(EquipmentSlot slotType, Properties properties, ResourceLocation texture) {
+    public ArmorGear(EquipmentSlot slotType, Properties properties, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties);
-        this.texture = texture;
+        this.modelLocation = modelLocation;
+        this.textureLocation = textureLocation;
+        this.animationFileLocation = animationFileLocation;
         reload();
     }
 
@@ -101,24 +113,45 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
         return getGearConfig().getRarity();
     }
 
+    protected AnimationFactory factory = new AnimationFactory(this);
+
     @Override
-    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.IItemRenderProperties> consumer)
-    {
-        consumer.accept(new IItemRenderProperties()
-        {
-            @Nullable
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController<>(this, "controller",
+            20, this::predicate));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
+    }
+
+    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+        return PlayState.CONTINUE;
+    }
+
+    public ResourceLocation getModelLocation() {
+        return modelLocation;
+    }
+
+    public ResourceLocation getTextureLocation() {
+        return textureLocation;
+    }
+
+    public ResourceLocation getAnimationFileLocation() {
+        return animationFileLocation;
+    }
+    @Override
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        super.initializeClient(consumer);
+        consumer.accept(new IItemRenderProperties() {
             @Override
-            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-                return ArmorGearModels.getModel(itemStack.getItem().getRegistryName()).apply(1.0F, armorSlot, entityLiving);
+            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack,
+                                                  EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+                return (HumanoidModel<?>) GeoArmorRenderer.getRenderer(ArmorGear.class, entityLiving).applyEntityStats(_default)
+                    .setCurrentItem(entityLiving, itemStack, armorSlot).applySlot(armorSlot);
             }
         });
     }
-
-
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return texture.toString();
-    }
-
 }
