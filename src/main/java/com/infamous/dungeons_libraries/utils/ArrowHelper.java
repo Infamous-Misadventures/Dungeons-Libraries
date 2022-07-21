@@ -1,14 +1,13 @@
 package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
-import net.minecraft.resources.ResourceLocation;
+import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectile;
+import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectileHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
@@ -16,15 +15,9 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class ArrowHelper {
@@ -117,35 +110,19 @@ public class ArrowHelper {
         }
     }
 
-    public static void addEnchantmentTagsToArrow(ItemStack itemStack, AbstractArrow arrowEntity){
-        Map<ResourceLocation, Integer> enchantments = itemStack.getEnchantmentTags().stream().collect(Collectors.toMap(inbt -> ResourceLocation.tryParse(((CompoundTag) inbt).getString("id")), inbt -> ((CompoundTag) inbt).getInt("lvl")));
-        Set<ResourceLocation> resourceLocations = enchantments.keySet();
-        LazyOptional<BuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
-        if(lazyCap.isPresent()){
-            Map<ResourceLocation, Integer> builtInEnchantments = lazyCap.resolve().get().getAllBuiltInEnchantmentInstances().stream()
-                    .filter(enchantmentInstance -> !resourceLocations.contains(enchantmentInstance.enchantment.getRegistryName()))
-                    .collect(Collectors.groupingBy(enchantmentInstance -> enchantmentInstance.enchantment.getRegistryName(), Collectors.summingInt(value -> value.level)));
-            enchantments = Stream.concat(enchantments.entrySet().stream(), builtInEnchantments.entrySet().stream())
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            (value1, value2) -> value1 + value2));
+    public static void addEnchantmentTagsToArrow(ItemStack itemStack, Projectile projectileEntity){
+        EnchantedProjectile cap = EnchantedProjectileHelper.getEnchantedProjectileCapability(projectileEntity);
+        if(cap != null){
+            cap.setEnchantments(itemStack);
         }
-        enchantments.forEach((resourceLocation, integer) -> {
-            String enchantmentTag = resourceLocation.toString() + integer;
-            arrowEntity.addTag(enchantmentTag);
-        });
     }
 
-    public static int enchantmentTagToLevel(AbstractArrow arrowEntity, Enchantment enchantment){
-        String enchantmentAsString = enchantment.getRegistryName().toString();
-        int maxLevel = enchantment.getMaxLevel()+10;
-        for(int i = 1; i < maxLevel + 1; i++){
-            String enchantmentTag = enchantmentAsString + i;
-            if(arrowEntity.getTags().contains(enchantmentTag)){
-                return i;
-            }
+    public static int enchantmentTagToLevel(Projectile projectileEntity, Enchantment enchantment){
+        EnchantedProjectile cap = EnchantedProjectileHelper.getEnchantedProjectileCapability(projectileEntity);
+        if(cap != null){
+            return cap.getEnchantmentLevel(enchantment);
+        }else {
+            return 0;
         }
-        return 0;
     }
 }
