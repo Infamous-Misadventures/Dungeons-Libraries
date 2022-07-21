@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.capabilities;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsProvider;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableProvider;
+import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectileProvider;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.IMaster;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MasterProvider;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionProvider;
@@ -20,6 +21,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -52,6 +54,9 @@ public class CapabilityEvents {
         }
         if(event.getObject() instanceof ServerPlayerEntity) {
             event.addCapability(new ResourceLocation(MODID, "playerrewards"), new PlayerRewardsProvider());
+        }
+        if(event.getObject() instanceof ProjectileEntity) {
+            event.addCapability(new ResourceLocation(MODID, "enchanted_projectile"), new EnchantedProjectileProvider());
         }
     }
 
