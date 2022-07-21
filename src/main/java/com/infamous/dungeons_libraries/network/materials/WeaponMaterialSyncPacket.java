@@ -1,6 +1,5 @@
 package com.infamous.dungeons_libraries.network.materials;
 
-import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterial;
 import com.infamous.dungeons_libraries.items.materials.weapon.DungeonsWeaponMaterial;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.mojang.serialization.Codec;
@@ -16,7 +15,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigReload.reloadAll;
+import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.reloadAllItems;
 
 public class WeaponMaterialSyncPacket {
     	private static final Codec<Map<ResourceLocation, IItemTier>> MAPPER =
@@ -44,6 +43,6 @@ public class WeaponMaterialSyncPacket {
 
 	private void handlePacketOnMainThread() {
 		WeaponMaterials.WEAPON_MATERIALS.data = this.data;
-		reloadAll();
+		reloadAllItems();
 	}
 }

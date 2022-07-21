@@ -6,20 +6,15 @@ import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterialBaseType.UNKNOWN;
 import static net.minecraft.item.ArmorMaterial.*;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ArmorMaterials {
 
     public static final DefaultsCodecJsonDataManager<IArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC, DungeonsLibraries.LOGGER);
@@ -38,12 +33,6 @@ public class ArmorMaterials {
     public static void addDefaultArmorMaterial(ArmorMaterial material, ArmorMaterialBaseType baseType, ResourceLocation resourceLocation) {
         ARMOR_MATERIALS.addDefault(resourceLocation, material);
         baseArmorMaterials.put(material, baseType);
-    }
-
-    @SubscribeEvent
-    public static void onAddReloadListeners(AddReloadListenerEvent event)
-    {
-        event.addListener(ARMOR_MATERIALS);
     }
 
     public static IArmorMaterial getArmorMaterial(ResourceLocation resourceLocation){
