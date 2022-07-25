@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigReload.reloadAll;
+import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.reloadAllItems;
 
 public class ArmorGearConfigSyncPacket {
     private static final Codec<Map<ResourceLocation, ArmorGearConfig>> MAPPER =
@@ -41,6 +41,6 @@ public class ArmorGearConfigSyncPacket {
 
     private void handlePacketOnMainThread() {
         ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS.data = this.data;
-        reloadAll();
+        reloadAllItems();
     }
 }

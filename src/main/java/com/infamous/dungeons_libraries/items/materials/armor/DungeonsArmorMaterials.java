@@ -19,7 +19,6 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterialBaseType.UNKNOWN;
 import static net.minecraft.world.item.ArmorMaterials.*;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DungeonsArmorMaterials {
 
     public static final DefaultsCodecJsonDataManager<ArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC, DungeonsLibraries.LOGGER);
@@ -38,12 +37,6 @@ public class DungeonsArmorMaterials {
     public static void addDefaultArmorMaterial(ArmorMaterials material, ArmorMaterialBaseType baseType, ResourceLocation resourceLocation) {
         ARMOR_MATERIALS.addDefault(resourceLocation, material);
         baseArmorMaterials.put(material, baseType);
-    }
-
-    @SubscribeEvent
-    public static void onAddReloadListeners(AddReloadListenerEvent event)
-    {
-        event.addListener(ARMOR_MATERIALS);
     }
 
     public static ArmorMaterial getArmorMaterial(ResourceLocation resourceLocation){

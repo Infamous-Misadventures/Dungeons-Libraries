@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.infamous.dungeons_libraries.items.gearconfig.GearConfigReload.reloadAll;
+import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.reloadAllItems;
 
 public class ArmorMaterialSyncPacket {
     private static final Codec<Map<ResourceLocation, ArmorMaterial>> MAPPER =
@@ -43,6 +43,6 @@ public class ArmorMaterialSyncPacket {
 
     private void handlePacketOnMainThread() {
         DungeonsArmorMaterials.ARMOR_MATERIALS.data = this.data;
-        reloadAll();
+        reloadAllItems();
     }
 }

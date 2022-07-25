@@ -12,7 +12,6 @@ import java.util.Map;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class MeleeGearConfigRegistry {
     public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gear_config");
 
@@ -25,11 +24,6 @@ public class MeleeGearConfigRegistry {
 
     public static boolean gearConfigExists(ResourceLocation resourceLocation) {
         return MELEE_GEAR_CONFIGS.data.containsKey(resourceLocation);
-    }
-
-    @SubscribeEvent
-    public static void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(MELEE_GEAR_CONFIGS);
     }
 
     public static MeleeGearConfigSyncPacket toPacket(Map<ResourceLocation, MeleeGearConfig> map) {
