@@ -24,21 +24,20 @@ public class BuiltInEnchantments implements INBTSerializable<CompoundTag> {
     }
 
     public BuiltInEnchantments(ItemStack itemStack) {
-        if(itemStack.getItem() instanceof MeleeGear){
-            MeleeGear item = (MeleeGear) itemStack.getItem();
+        if(itemStack.getItem() instanceof MeleeGear item){
             enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
         }
-        if(itemStack.getItem() instanceof BowGear){
-            BowGear item = (BowGear) itemStack.getItem();
+        if(itemStack.getItem() instanceof BowGear item){
             enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
         }
-        if(itemStack.getItem() instanceof CrossbowGear){
-            CrossbowGear item = (CrossbowGear) itemStack.getItem();
+        if(itemStack.getItem() instanceof CrossbowGear item){
             enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
         }
-        if(itemStack.getItem() instanceof ArmorGear){
-            ArmorGear item = (ArmorGear) itemStack.getItem();
-            enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, new ArrayList<>(item.getGearConfig().getBuiltInEnchantments()));
+        if(itemStack.getItem() instanceof ArmorGear item){
+            List<EnchantmentInstance> builtInEnchantments = item.getGearConfig().getBuiltInEnchantments().stream()
+                .filter(enchantmentInstance -> enchantmentInstance.enchantment.canEnchant(itemStack))
+                .toList();
+            enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, builtInEnchantments);
         }
     }
 

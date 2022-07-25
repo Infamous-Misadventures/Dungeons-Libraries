@@ -45,12 +45,14 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private ArmorGearConfig armorGearConfig;
+    private ResourceLocation armorSet;
     private ResourceLocation modelLocation;
     private ResourceLocation textureLocation;
     private ResourceLocation animationFileLocation;
 
-    public ArmorGear(EquipmentSlot slotType, Properties properties, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
+    public ArmorGear(EquipmentSlot slotType, Properties properties, ResourceLocation armorSet, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties);
+        this.armorSet = armorSet;
         this.modelLocation = modelLocation;
         this.textureLocation = textureLocation;
         this.animationFileLocation = animationFileLocation;
@@ -59,7 +61,7 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
 
     @Override
     public void reload(){
-        armorGearConfig = ArmorGearConfigRegistry.getConfig(this.getRegistryName());
+        armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
         ArmorMaterial material = armorGearConfig.getArmorMaterial();
         ((ArmorItemAccessor)this).setMaterial(material);
         ((ArmorItemAccessor)this).setDefense(material.getDefenseForSlot(this.slot));
