@@ -25,7 +25,11 @@ public class ArmoredMobConfigRegistry {
     }
 
     public static ArmoredMobConfig getRandomConfig(ResourceLocation resourceLocation, Random random) {
-        return WeightedRandom.getRandomItem(random, ARMORED_MOB_CONFIGS.data.getOrDefault(resourceLocation, Collections.emptyList()));
+        List<ArmoredMobConfig> armoredMobConfigs = ARMORED_MOB_CONFIGS.data.getOrDefault(resourceLocation, Collections.emptyList());
+        if(armoredMobConfigs.isEmpty()){
+            return null;
+        }
+        return WeightedRandom.getRandomItem(random, armoredMobConfigs);
     }
 
     public static boolean ArmoredMobConfigExists(ResourceLocation resourceLocation) {

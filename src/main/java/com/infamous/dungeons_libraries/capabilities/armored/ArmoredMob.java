@@ -3,8 +3,8 @@ package com.infamous.dungeons_libraries.capabilities.armored;
 import net.minecraft.nbt.CompoundNBT;
 
 public class ArmoredMob {
-    private boolean isArmored;
-    private boolean hasSpawned;
+    private boolean isArmored = false;
+    private boolean hasSpawned = false;
 
     public boolean isArmored() {
         return isArmored;

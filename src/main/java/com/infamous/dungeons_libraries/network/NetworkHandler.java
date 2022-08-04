@@ -7,6 +7,7 @@ import com.infamous.dungeons_libraries.network.gearconfig.CrossbowGearConfigSync
 import com.infamous.dungeons_libraries.network.gearconfig.MeleeGearConfigSyncPacket;
 import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
 import com.infamous.dungeons_libraries.network.materials.WeaponMaterialSyncPacket;
+import com.infamous.dungeons_libraries.network.message.ArmoredMobMessage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -56,6 +57,10 @@ public class NetworkHandler {
         INSTANCE.messageBuilder(WeaponMaterialSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(WeaponMaterialSyncPacket::encode).decoder(WeaponMaterialSyncPacket::decode)
                 .consumer(WeaponMaterialSyncPacket::onPacketReceived)
+                .add();
+        INSTANCE.messageBuilder(ArmoredMobMessage.class, 0)
+                .encoder(ArmoredMobMessage::encode).decoder(ArmoredMobMessage::decode)
+                .consumer(ArmoredMobMessage::onPacketReceived)
                 .add();
     }
 

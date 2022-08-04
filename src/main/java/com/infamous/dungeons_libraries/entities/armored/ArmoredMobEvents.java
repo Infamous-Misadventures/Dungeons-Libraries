@@ -4,10 +4,14 @@ import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMob;
 import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMobHelper;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import com.infamous.dungeons_libraries.network.NetworkHandler;
+import com.infamous.dungeons_libraries.network.message.ArmoredMobMessage;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,8 +19,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class ArmoredMobEvents {
@@ -24,12 +30,12 @@ public class ArmoredMobEvents {
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ARMORED_MOBS.get()) {
+        if (!event.getWorld().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ARMORED_MOBS.get()) {
             LivingEntity entity = (LivingEntity) event.getEntity();
             ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(entity);
             if(cap == null) return;
             ArmoredMobConfig config = ArmoredMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
-            if (!cap.hasSpawned() && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ARMORED_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier() && config != null) {
+            if (!cap.hasSpawned() && config != null && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ARMORED_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
                 setItemSlot(entity, EquipmentSlotType.HEAD, config.getHeadItem());
                 setItemSlot(entity, EquipmentSlotType.CHEST, config.getChestItem());
                 setItemSlot(entity, EquipmentSlotType.LEGS, config.getLegsItem());
@@ -83,6 +89,19 @@ public class ArmoredMobEvents {
         if(cap == null) return;
         if (cap.isArmored()) {
             event.getMatrixStack().popPose();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerStartTracking(PlayerEvent.StartTracking event){
+        PlayerEntity player = event.getPlayer();
+        Entity target = event.getTarget();
+        if (player instanceof ServerPlayerEntity && target instanceof LivingEntity) {
+            ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(event.getTarget());
+            if(cap == null) return;
+            if (cap.isArmored()) {
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new ArmoredMobMessage(target.getId(), cap.isArmored()));
+            }
         }
     }
 }

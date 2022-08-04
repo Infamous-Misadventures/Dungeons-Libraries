@@ -66,7 +66,7 @@ public class DungeonsLibrariesConfig {
                     .define("enableKeepSoulsOnDeath", false);
             builder.pop();
 
-            builder.comment("Armored Mob Configuration").push("souls_configuration");
+            builder.comment("Armored Mob Configuration").push("armored_mob_configuration");
             ENABLE_ARMORED_MOBS = builder
                     .comment("Enables armored mobs, enabled by default. [true / false]")
                     .define("enableArmoredMobs", true);
