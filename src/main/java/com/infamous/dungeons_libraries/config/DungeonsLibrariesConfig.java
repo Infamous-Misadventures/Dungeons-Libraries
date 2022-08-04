@@ -10,8 +10,11 @@ public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_KEEP_SOULS_ON_DEATH;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ARMORED_MOBS;
+    public static ForgeConfigSpec.ConfigValue<Double> ARMORED_MOBS_BASE_CHANCE;
 
     public static class Common {
+
 
         public Common(ForgeConfigSpec.Builder builder){
 
@@ -61,6 +64,17 @@ public class DungeonsLibrariesConfig {
             ENABLE_KEEP_SOULS_ON_DEATH = builder
                     .comment("Enables keeping of souls upon death, disabled by default. [true / false]")
                     .define("enableKeepSoulsOnDeath", false);
+            builder.pop();
+
+            builder.comment("Armored Mob Configuration").push("souls_configuration");
+            ENABLE_ARMORED_MOBS = builder
+                    .comment("Enables armored mobs, enabled by default. [true / false]")
+                    .define("enableArmoredMobs", true);
+            ARMORED_MOBS_BASE_CHANCE = builder
+                    .comment("Base chance of an armored mob spawning. [0.0 - 1.0] \n" +
+                            "Calculation: chance * difficulty.getSpecialMultiplier() \n" +
+                            "Base chance for vanilla armor spawning is 0.15. Default is 0.05")
+                    .defineInRange("armoredMobsBaseChance", 0.05, 0.0, 1.0);
             builder.pop();
         }
     }

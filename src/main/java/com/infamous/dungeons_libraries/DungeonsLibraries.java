@@ -1,6 +1,8 @@
 package com.infamous.dungeons_libraries;
 
 import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
+import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMob;
+import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMobStorage;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsStorage;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
@@ -88,6 +90,7 @@ public class DungeonsLibraries
         CapabilityManager.INSTANCE.register(ITimers.class, new TimersStorage(), Timers::new);
         CapabilityManager.INSTANCE.register(IPlayerRewards.class, new PlayerRewardsStorage(), PlayerRewards::new);
         CapabilityManager.INSTANCE.register(EnchantedProjectile.class, new EnchantedProjectileStorage(), EnchantedProjectile::new);
+        CapabilityManager.INSTANCE.register(ArmoredMob.class, new ArmoredMobStorage(), ArmoredMob::new);
         event.enqueueWork(NetworkHandler::init);
     }
 

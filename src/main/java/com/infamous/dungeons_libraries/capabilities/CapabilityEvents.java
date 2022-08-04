@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
+import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMobProvider;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsProvider;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableProvider;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectileProvider;
@@ -48,6 +49,7 @@ public class CapabilityEvents {
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summoner"), new MasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "soul_caster"), new SoulCasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "timers"), new TimersProvider());
+            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "armored_mob"), new ArmoredMobProvider());
         }
         if (isEnchantableEntity(event.getObject())) {
             event.addCapability(new ResourceLocation(MODID, "enchantable"), new EnchantableProvider());
