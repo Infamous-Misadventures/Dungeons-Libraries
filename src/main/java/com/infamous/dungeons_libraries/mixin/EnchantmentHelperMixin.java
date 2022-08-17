@@ -75,7 +75,7 @@ public abstract class EnchantmentHelperMixin {
 
     @Inject(
             method = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/nbt/CompoundTag;)I",
-            at = @At(value = "RETURN"))
+            at = @At(value = "RETURN"), cancellable = true)
     private static void dungeonslibraries_runIterationOnItem(CompoundTag value, CallbackInfoReturnable<Integer> cir) {
         if(enchantmentOnIteration == null || itemStackOnIteration == null) {
             return;
@@ -88,13 +88,9 @@ public abstract class EnchantmentHelperMixin {
                     .map(enchantmentInstance -> enchantmentInstance.level)
                     .reduce(0, Integer::sum);
             cir.setReturnValue(reduce + cir.getReturnValue());
-            enchantmentOnIteration = null;
-            itemStackOnIteration = null;
-            return;
         }
         enchantmentOnIteration = null;
         itemStackOnIteration = null;
-        return;
     }
 
     @Inject(method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
