@@ -16,6 +16,7 @@ public class ArmoredMobConfig extends WeightedRandom.Item {
             ItemStack.CODEC.optionalFieldOf("feetItem", ItemStack.EMPTY).forGetter(armoredMobConfig -> armoredMobConfig.feetItem),
             ItemStack.CODEC.optionalFieldOf("handItem", ItemStack.EMPTY).forGetter(armoredMobConfig -> armoredMobConfig.handItem),
             ItemStack.CODEC.optionalFieldOf("offhandItem", ItemStack.EMPTY).forGetter(armoredMobConfig -> armoredMobConfig.offhandItem),
+            GearConfigAttributeModifier.CODEC.listOf().optionalFieldOf("attributes", new ArrayList<>()).forGetter(armoredMobConfig -> armoredMobConfig.attribtutes),
             Codec.INT.fieldOf("weight").forGetter(armoredMobConfig -> armoredMobConfig.weight)
     ).apply(instance, ArmoredMobConfig::new));
 
@@ -25,9 +26,11 @@ public class ArmoredMobConfig extends WeightedRandom.Item {
     private final ItemStack feetItem;
     private final ItemStack handItem;
     private final ItemStack offhandItem;
+    private List<GearConfigAttributeModifier> attributes;
 
-    public ArmoredMobConfig(ItemStack headItem, ItemStack chestItem, ItemStack legsItem, ItemStack feetItem, ItemStack handItem, ItemStack offhandItem, int weight) {
+    public ArmoredMobConfig(ItemStack headItem, ItemStack chestItem, ItemStack legsItem, ItemStack feetItem, ItemStack handItem, ItemStack offhandItem, List<GearConfigAttributeModifier> attributes, int weight) {
         super(weight);
+        this.attributes = attributes;
         this.headItem = headItem;
         this.chestItem = chestItem;
         this.legsItem = legsItem;
@@ -58,6 +61,10 @@ public class ArmoredMobConfig extends WeightedRandom.Item {
 
     public ItemStack getOffhandItem() {
         return offhandItem;
+    }
+
+    public List<GearConfigAttributeModifier> getAttributes() {
+        return attributes;
     }
 
     public int getWeight() {
