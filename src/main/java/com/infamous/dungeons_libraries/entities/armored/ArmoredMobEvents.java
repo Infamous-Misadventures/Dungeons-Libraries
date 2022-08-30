@@ -22,6 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -116,6 +117,18 @@ public class ArmoredMobEvents {
             if (cap.isArmored()) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new ArmoredMobMessage(target.getId(), cap.isArmored()));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingConvert(LivingConversionEvent.Post event)
+    {
+        ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(event.getEntity());
+        ArmoredMob outcomeCap = ArmoredMobHelper.getArmoredMobCapability(event.getOutcome());
+        if(cap == null || outcomeCap == null) return;
+        outcomeCap.setHasSpawned(true);
+        if(cap.isArmored()) {
+            outcomeCap.setArmored(true);
         }
     }
 }
