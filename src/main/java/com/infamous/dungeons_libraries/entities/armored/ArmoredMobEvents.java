@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.entities.armored;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMob;
 import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMobHelper;
@@ -10,6 +11,8 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -23,6 +26,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import static java.util.UUID.randomUUID;
+import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class ArmoredMobEvents {
@@ -42,6 +48,14 @@ public class ArmoredMobEvents {
                 setItemSlot(entity, EquipmentSlotType.FEET, config.getFeetItem());
                 setItemSlot(entity, EquipmentSlotType.MAINHAND, config.getHandItem());
                 setItemSlot(entity, EquipmentSlotType.OFFHAND, config.getOffhandItem());
+                ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+                config.getAttributes().forEach(attributeModifier -> {
+                    Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+                    if(attribute != null) {
+                        builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+                    }
+                });
+                entity.getAttributes().addTransientAttributeModifiers(builder.build());
                 cap.setArmored(true);
             }
             cap.setHasSpawned(true);
