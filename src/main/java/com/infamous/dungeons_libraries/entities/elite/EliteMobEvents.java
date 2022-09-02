@@ -1,12 +1,12 @@
-package com.infamous.dungeons_libraries.entities.armored;
+package com.infamous.dungeons_libraries.entities.elite;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMob;
-import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMobHelper;
+import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
+import com.infamous.dungeons_libraries.capabilities.elite.EliteMobHelper;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
-import com.infamous.dungeons_libraries.network.message.ArmoredMobMessage;
+import com.infamous.dungeons_libraries.network.message.EliteMobMessage;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -32,17 +32,17 @@ import static java.util.UUID.randomUUID;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
-public class ArmoredMobEvents {
+public class EliteMobEvents {
     public static final float SIZE_ADJUSTMENT = 1.1F;
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ARMORED_MOBS.get()) {
+        if (!event.getWorld().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ELITE_MOBS.get()) {
             LivingEntity entity = (LivingEntity) event.getEntity();
-            ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(entity);
+            EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
             if(cap == null) return;
-            ArmoredMobConfig config = ArmoredMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
-            if (!cap.hasSpawned() && config != null && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ARMORED_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
+            EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
+            if (!cap.hasSpawned() && config != null && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
                 setItemSlot(entity, EquipmentSlotType.HEAD, config.getHeadItem());
                 setItemSlot(entity, EquipmentSlotType.CHEST, config.getChestItem());
                 setItemSlot(entity, EquipmentSlotType.LEGS, config.getLegsItem());
@@ -57,7 +57,8 @@ public class ArmoredMobEvents {
                     }
                 });
                 entity.getAttributes().addTransientAttributeModifiers(builder.build());
-                cap.setArmored(true);
+                cap.setElite(true);
+                cap.setTexture(config.getTexture());
             }
             cap.setHasSpawned(true);
         }
@@ -73,9 +74,9 @@ public class ArmoredMobEvents {
     public static void onEntityEventSize(EntityEvent.Size event) {
         Entity entity = event.getEntity();
 
-        ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(entity);
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
         if(cap == null) return;
-        if (cap.isArmored()) {
+        if (cap.isElite()) {
             float totalWidth = event.getNewSize().width * SIZE_ADJUSTMENT;
             float totalHeight = event.getNewSize().height * SIZE_ADJUSTMENT;
             event.setNewEyeHeight(event.getNewEyeHeight() * SIZE_ADJUSTMENT);
@@ -87,9 +88,9 @@ public class ArmoredMobEvents {
     @OnlyIn(Dist.CLIENT)
     public static void onRenderLivingEventPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
         final LivingEntity entity = event.getEntity();
-        ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(entity);
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
         if(cap == null) return;
-        if (cap.isArmored()) {
+        if (cap.isElite()) {
             event.getMatrixStack().pushPose();
             event.getMatrixStack().scale(SIZE_ADJUSTMENT, SIZE_ADJUSTMENT, SIZE_ADJUSTMENT);
 
@@ -100,9 +101,9 @@ public class ArmoredMobEvents {
     @OnlyIn(Dist.CLIENT)
     public static void onRenderLivingEventPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
         final LivingEntity entity = event.getEntity();
-        ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(entity);
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
         if(cap == null) return;
-        if (cap.isArmored()) {
+        if (cap.isElite()) {
             event.getMatrixStack().popPose();
         }
     }
@@ -112,10 +113,10 @@ public class ArmoredMobEvents {
         PlayerEntity player = event.getPlayer();
         Entity target = event.getTarget();
         if (player instanceof ServerPlayerEntity && target instanceof LivingEntity) {
-            ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(event.getTarget());
+            EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getTarget());
             if(cap == null) return;
-            if (cap.isArmored()) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new ArmoredMobMessage(target.getId(), cap.isArmored()));
+            if (cap.isElite()) {
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new EliteMobMessage(target.getId(), cap.isElite(), cap.getTexture()));
             }
         }
     }
@@ -123,12 +124,12 @@ public class ArmoredMobEvents {
     @SubscribeEvent
     public static void onLivingConvert(LivingConversionEvent.Post event)
     {
-        ArmoredMob cap = ArmoredMobHelper.getArmoredMobCapability(event.getEntity());
-        ArmoredMob outcomeCap = ArmoredMobHelper.getArmoredMobCapability(event.getOutcome());
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getEntity());
+        EliteMob outcomeCap = EliteMobHelper.getEliteMobCapability(event.getOutcome());
         if(cap == null || outcomeCap == null) return;
         outcomeCap.setHasSpawned(true);
-        if(cap.isArmored()) {
-            outcomeCap.setArmored(true);
+        if(cap.isElite()) {
+            outcomeCap.setElite(true);
         }
     }
 }

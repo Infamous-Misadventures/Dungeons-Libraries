@@ -1,6 +1,5 @@
-package com.infamous.dungeons_libraries.capabilities.armored;
+package com.infamous.dungeons_libraries.capabilities.elite;
 
-import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectile;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -11,12 +10,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ArmoredMobProvider implements ICapabilitySerializable<INBT> {
+public class EliteMobProvider implements ICapabilitySerializable<INBT> {
 
-    @CapabilityInject(ArmoredMob.class)
-    public static final Capability<ArmoredMob> ARMORED_MOB_CAPABILITY = null;
+    @CapabilityInject(EliteMob.class)
+    public static final Capability<EliteMob> ARMORED_MOB_CAPABILITY = null;
 
-    private LazyOptional<ArmoredMob> instance = LazyOptional.of(ARMORED_MOB_CAPABILITY::getDefaultInstance);
+    private LazyOptional<EliteMob> instance = LazyOptional.of(ARMORED_MOB_CAPABILITY::getDefaultInstance);
 
     @Nonnull
     @Override

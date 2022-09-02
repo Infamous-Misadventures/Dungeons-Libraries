@@ -1,7 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import com.infamous.dungeons_libraries.capabilities.armored.ArmoredMobProvider;
+import com.infamous.dungeons_libraries.capabilities.elite.EliteMobProvider;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsProvider;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableProvider;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectileProvider;
@@ -20,7 +20,6 @@ import com.infamous.dungeons_libraries.network.UpdateSoulsMessage;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -49,7 +48,7 @@ public class CapabilityEvents {
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "summoner"), new MasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "soul_caster"), new SoulCasterProvider());
             event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "timers"), new TimersProvider());
-            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "armored_mob"), new ArmoredMobProvider());
+            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "elite_mob"), new EliteMobProvider());
         }
         if (isEnchantableEntity(event.getObject())) {
             event.addCapability(new ResourceLocation(MODID, "enchantable"), new EnchantableProvider());
