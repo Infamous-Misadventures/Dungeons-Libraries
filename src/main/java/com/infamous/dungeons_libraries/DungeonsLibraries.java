@@ -21,6 +21,7 @@ import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterStorage
 import com.infamous.dungeons_libraries.capabilities.timers.ITimers;
 import com.infamous.dungeons_libraries.capabilities.timers.Timers;
 import com.infamous.dungeons_libraries.capabilities.timers.TimersStorage;
+import com.infamous.dungeons_libraries.client.renderer.ArmorGearRenderer;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
@@ -41,6 +42,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
@@ -98,6 +100,8 @@ public class DungeonsLibraries
 
         MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.SOUL_ORB.get(), SoulOrbRenderer::new);
+
+        GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, new ArmorGearRenderer());
     }
 
 }
