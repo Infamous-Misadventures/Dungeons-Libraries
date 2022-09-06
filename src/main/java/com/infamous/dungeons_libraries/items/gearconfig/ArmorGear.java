@@ -62,6 +62,9 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
     @Override
     public void reload(){
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
+        if(armorGearConfig == ArmorGearConfig.DEFAULT){
+            armorGearConfig = ArmorGearConfigRegistry.getConfig(this.getRegistryName());
+        }
         ArmorMaterial material = armorGearConfig.getArmorMaterial();
         ((ArmorItemAccessor)this).setMaterial(material);
         ((ArmorItemAccessor)this).setDefense(material.getDefenseForSlot(this.slot));
