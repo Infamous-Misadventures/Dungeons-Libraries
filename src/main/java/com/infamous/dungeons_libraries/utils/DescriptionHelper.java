@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,6 +43,12 @@ public class DescriptionHelper {
     public static void addLoreDescription(List<Component> list, ItemStack itemStack){
         list.add(new TranslatableComponent(
                 "lore.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
+                .withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC));
+    }
+
+    public static void addLoreDescription(List<Component> list, ResourceLocation registryName){
+        list.add(new TranslatableComponent(
+                "lore."+ registryName.getNamespace() +"." + registryName.getPath())
                 .withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC));
     }
 

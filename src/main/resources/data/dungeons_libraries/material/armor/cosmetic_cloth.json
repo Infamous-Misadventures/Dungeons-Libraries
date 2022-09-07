@@ -1,0 +1,12 @@
+{
+  "type": "dungeons_libraries:dungeons_armor_material",
+  "name": "dungeons_libraries:cosmetic",
+  "durability": 99,
+  "damage_reduction_amounts":  [0, 0, 0, 0],
+  "enchantability": 0,
+  "repair_item":  "minecraft:iron_ingot",
+  "equip_sound": "minecraft:item.armor.equip_leather",
+  "toughness":  0.0,
+  "knockback_resistance": 0.0,
+  "base_type": "cloth"
+}
