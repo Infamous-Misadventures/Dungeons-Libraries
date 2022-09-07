@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEncha
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.IBuiltInEnchantments;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
@@ -36,8 +37,15 @@ public class DescriptionHelper {
     }
 
     public static void addLoreDescription(List<ITextComponent> list, ItemStack itemStack){
+        ResourceLocation registryName = itemStack.getItem().getRegistryName();
         list.add(new TranslationTextComponent(
-                "lore.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
+                "lore."+ registryName.getNamespace() +"." + registryName.getPath())
+                .withStyle(TextFormatting.WHITE, TextFormatting.ITALIC));
+    }
+
+    public static void addLoreDescription(List<ITextComponent> list, ResourceLocation registryName){
+        list.add(new TranslationTextComponent(
+                "lore."+ registryName.getNamespace() +"." + registryName.getPath())
                 .withStyle(TextFormatting.WHITE, TextFormatting.ITALIC));
     }
 

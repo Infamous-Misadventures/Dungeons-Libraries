@@ -2,6 +2,7 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.items.gearconfig.client.ArmorGearModels;
 import com.infamous.dungeons_libraries.items.interfaces.IArmor;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
@@ -44,6 +45,7 @@ import static net.minecraft.item.ArmorMaterial.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUniqueGear, IAnimatable {
+    private static final ResourceLocation DEFAULT_ARMOR_ANIMATIONS = new ResourceLocation(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
     private static final UUID[] ARMOR_MODIFIER_UUID_PER_SLOT = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
@@ -54,15 +56,21 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
     private ResourceLocation textureLocation;
     private ResourceLocation animationFileLocation;
 
-    public ArmorGear(EquipmentSlotType slotType, Properties properties, ResourceLocation texture) {
+    public ArmorGear(EquipmentSlotType slotType, Properties properties, ResourceLocation armorSet, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties);
-        this.texture = texture;
+        this.armorSet = armorSet;
+        this.modelLocation = modelLocation;
+        this.textureLocation = textureLocation;
+        this.animationFileLocation = animationFileLocation;
         reload();
     }
 
     @Override
     public void reload(){
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
+        if(armorGearConfig == ArmorGearConfig.DEFAULT){
+            armorGearConfig = ArmorGearConfigRegistry.getConfig(this.getRegistryName());
+        }
         IArmorMaterial material = armorGearConfig.getArmorMaterial();
         ((ArmorItemAccessor)this).setMaterial(material);
         ((ArmorItemAccessor)this).setDefense(material.getDefenseForSlot(this.slot));
@@ -106,7 +114,11 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
     public void appendHoverText(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag flag)
     {
         super.appendHoverText(stack, world, list, flag);
-        DescriptionHelper.addLoreDescription(list, stack);
+        if(armorSet != null) {
+            DescriptionHelper.addLoreDescription(list, armorSet);
+        }else {
+            DescriptionHelper.addLoreDescription(list, this.getRegistryName());
+        }
     }
 
     @Override
@@ -116,7 +128,7 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return texture.toString();
+        return textureLocation.toString();
     }
 
     protected AnimationFactory factory = new AnimationFactory(this);
@@ -154,7 +166,7 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
     @Override
     @OnlyIn(Dist.CLIENT)
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack stack, EquipmentSlotType armorSlot, A _default) {
-        return (A) GeoArmorRenderer.getRenderer(ArmorGear.class).applyEntityStats(_default)
+        return (A) GeoArmorRenderer.getRenderer(ArmorGear.class, entityLiving).applyEntityStats(_default)
                 .setCurrentItem(entityLiving, stack, armorSlot).applySlot(armorSlot);
     }
 }
