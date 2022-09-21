@@ -1,25 +1,26 @@
 package com.infamous.dungeons_libraries.items.gearconfig;
 
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 
 public class ArmorSet {
-    private final String armorSetId;
+    private final ResourceLocation armorSet;
     private final RegistryObject<Item> head;
     private final RegistryObject<Item> chest;
     private final RegistryObject<Item> legs;
     private final RegistryObject<Item> feet;
 
-    public ArmorSet(String armorSetId, RegistryObject<Item> head, RegistryObject<Item> chest, RegistryObject<Item> legs, RegistryObject<Item> feet) {
-        this.armorSetId = armorSetId;
+    public ArmorSet(ResourceLocation armorSet, RegistryObject<Item> head, RegistryObject<Item> chest, RegistryObject<Item> legs, RegistryObject<Item> feet) {
+        this.armorSet = armorSet;
         this.head = head;
         this.chest = chest;
         this.legs = legs;
         this.feet = feet;
     }
 
-    public String getArmorSetId() {
-        return armorSetId;
+    public ResourceLocation getArmorSet() {
+        return armorSet;
     }
 
     public RegistryObject<Item> getHead() {

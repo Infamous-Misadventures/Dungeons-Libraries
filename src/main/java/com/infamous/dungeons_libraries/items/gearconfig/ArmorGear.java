@@ -34,6 +34,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.item.GeoArmorItem;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import java.util.List;
@@ -44,7 +45,7 @@ import static java.util.UUID.randomUUID;
 import static net.minecraft.item.ArmorMaterial.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUniqueGear, IAnimatable {
+public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, IUniqueGear, IAnimatable {
     private static final ResourceLocation DEFAULT_ARMOR_ANIMATIONS = new ResourceLocation(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
     private static final UUID[] ARMOR_MODIFIER_UUID_PER_SLOT = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
@@ -126,9 +127,8 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
         return getGearConfig().getRarity();
     }
 
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return textureLocation.toString();
+    public ResourceLocation getArmorSet() {
+        return armorSet;
     }
 
     protected AnimationFactory factory = new AnimationFactory(this);
@@ -159,14 +159,5 @@ public class ArmorGear extends ArmorItem implements IReloadableGear, IArmor, IUn
 
     public ResourceLocation getAnimationFileLocation() {
         return animationFileLocation;
-    }
-
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack stack, EquipmentSlotType armorSlot, A _default) {
-        return (A) GeoArmorRenderer.getRenderer(ArmorGear.class, entityLiving).applyEntityStats(_default)
-                .setCurrentItem(entityLiving, stack, armorSlot).applySlot(armorSlot);
     }
 }

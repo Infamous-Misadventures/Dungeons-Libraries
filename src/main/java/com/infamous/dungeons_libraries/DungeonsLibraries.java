@@ -101,7 +101,7 @@ public class DungeonsLibraries
         MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.SOUL_ORB.get(), SoulOrbRenderer::new);
 
-        GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, new ArmorGearRenderer());
+        GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, ArmorGearRenderer::new);
     }
 
 }
