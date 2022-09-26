@@ -31,6 +31,12 @@ public class SummonHelper {
         return masterCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(beeEntity.getType().getRegistryName()).getCost() <= summonCap.getValue();
     }
 
+    public static boolean canSummonMob(LivingEntity master, IMaster masterCap) {
+        ModifiableAttributeInstance summonCap = master.getAttribute(SUMMON_CAP.get());
+        if(summonCap == null) return false;
+        return masterCap.getSummonedMobsCost() < summonCap.getValue();
+    }
+
     public static Entity summonEntity(LivingEntity master, BlockPos position, EntityType<?> entityType) {
         Entity entity = entityType.create(master.level);
         if(entity != null){
