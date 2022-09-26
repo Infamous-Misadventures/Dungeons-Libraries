@@ -78,7 +78,6 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
         ((ArmorItemAccessor)this).setToughness(material.getToughness());
         ((ArmorItemAccessor)this).setKnockbackResistance(material.getKnockbackResistance());
         ((ItemAccessor)this).setMaxDamage(material.getDurabilityForSlot(this.slot));
-        armorGearConfig = ArmorGearConfigRegistry.getConfig(this.getRegistryName());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         UUID primaryUuid = ARMOR_MODIFIER_UUID_PER_SLOT[this.slot.getIndex()];
         builder.put(Attributes.ARMOR, new AttributeModifier(primaryUuid, "Armor modifier", (double)material.getDefenseForSlot(this.slot), AttributeModifier.Operation.ADDITION));
