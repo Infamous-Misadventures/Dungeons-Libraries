@@ -10,6 +10,7 @@ public enum ArmorMaterialBaseType {
     LEATHER("leather"),
     METAL("metal"),
     GEM("gem"),
+    WOOD("wood"),
     UNKNOWN("unknown");
 
     public static final Codec<ArmorMaterialBaseType> CODEC = Codec.STRING.flatComapMap(s -> ArmorMaterialBaseType.byName(s, null), d -> DataResult.success(d.getName()));
