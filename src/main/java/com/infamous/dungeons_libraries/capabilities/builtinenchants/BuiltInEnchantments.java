@@ -34,7 +34,7 @@ public class BuiltInEnchantments implements IBuiltInEnchantments {
             ArmorGear item = (ArmorGear) itemStack.getItem();
             List<EnchantmentData> builtInEnchantments = item.getGearConfig().getBuiltInEnchantments().stream()
                     .filter(enchantmentInstance -> enchantmentInstance.enchantment.canEnchant(itemStack))
-                    .toList();
+                    .collect(Collectors.toList());
             enchantments.put(MeleeGearConfigRegistry.GEAR_CONFIG_BUILTIN_RESOURCELOCATION, builtInEnchantments);
         }
     }
