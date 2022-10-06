@@ -10,6 +10,7 @@ public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_KEEP_SOULS_ON_DEATH;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
+    public static ForgeConfigSpec.ConfigValue<Integer> ARTIFACT_DURABILITY;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ELITE_MOBS;
     public static ForgeConfigSpec.ConfigValue<Double> ELITE_MOBS_BASE_CHANCE;
 
@@ -66,6 +67,12 @@ public class DungeonsLibrariesConfig {
             ENABLE_KEEP_SOULS_ON_DEATH = builder
                     .comment("Enables keeping of souls upon death, disabled by default. [true / false]")
                     .define("enableKeepSoulsOnDeath", false);
+            builder.pop();
+
+            builder.comment("Artifact Configuration").push("artifact_configuration");
+            ARTIFACT_DURABILITY = builder
+                    .comment("Set the durability for artifacts. [0-1024, default: 64")
+                    .defineInRange("artifactDurability", 64, 0, 1024);
             builder.pop();
 
             builder.comment("Elite Mob Configuration").push("elite_mob_configuration");

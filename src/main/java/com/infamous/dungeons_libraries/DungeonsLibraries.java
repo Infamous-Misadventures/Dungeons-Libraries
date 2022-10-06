@@ -1,6 +1,9 @@
 package com.infamous.dungeons_libraries;
 
 import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
+import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
+import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageStorage;
+import com.infamous.dungeons_libraries.capabilities.artifact.IArtifactUsage;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMobStorage;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
@@ -45,6 +48,7 @@ import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
+import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.setupCuriosKeybindings;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS;
@@ -93,6 +97,7 @@ public class DungeonsLibraries
         CapabilityManager.INSTANCE.register(IPlayerRewards.class, new PlayerRewardsStorage(), PlayerRewards::new);
         CapabilityManager.INSTANCE.register(EnchantedProjectile.class, new EnchantedProjectileStorage(), EnchantedProjectile::new);
         CapabilityManager.INSTANCE.register(EliteMob.class, new EliteMobStorage(), EliteMob::new);
+        CapabilityManager.INSTANCE.register(IArtifactUsage.class, new ArtifactUsageStorage(), ArtifactUsage::new);
         event.enqueueWork(NetworkHandler::init);
     }
 
@@ -100,6 +105,8 @@ public class DungeonsLibraries
 
         MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.SOUL_ORB.get(), SoulOrbRenderer::new);
+
+        setupCuriosKeybindings();
 
         GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, ArmorGearRenderer::new);
     }

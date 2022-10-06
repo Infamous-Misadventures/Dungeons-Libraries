@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
+import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageProvider;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMobProvider;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsProvider;
 import com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableProvider;
@@ -20,6 +21,7 @@ import com.infamous.dungeons_libraries.network.UpdateSoulsMessage;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -52,6 +54,9 @@ public class CapabilityEvents {
         }
         if (isEnchantableEntity(event.getObject())) {
             event.addCapability(new ResourceLocation(MODID, "enchantable"), new EnchantableProvider());
+        }
+        if (event.getObject() instanceof PlayerEntity) {
+            event.addCapability(new ResourceLocation(DungeonsLibraries.MODID, "artifact_usage"), new ArtifactUsageProvider());
         }
         if(event.getObject() instanceof ServerPlayerEntity) {
             event.addCapability(new ResourceLocation(MODID, "playerrewards"), new PlayerRewardsProvider());

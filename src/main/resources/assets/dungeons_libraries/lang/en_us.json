@@ -17,5 +17,15 @@
   "commands.souls.add.failed": "Failed to add souls",
   "commands.souls.set.failed": "Failed to set souls",
   "commands.souls.add.success": "Successfully added souls",
-  "commands.souls.set.success": "Successfully set souls"
+  "commands.souls.set.success": "Successfully set souls",
+
+  "artifact.dungeons_libraries.base": "Using the Artifact will move it into a free Artifact Curios Slot.",
+  "artifact.dungeons_libraries.duration": "%d Seconds Duration",
+  "artifact.dungeons_libraries.cooldown": "%d Seconds Cooldown",
+
+  "curios.identifier.artifact": "Artifact",
+  "key.dungeons_libraries.curiosintegration.category": "Dungeons Gear Curios",
+  "key.dungeons_libraries.curiosintegration.description_slot1": "Artifact Slot 1",
+  "key.dungeons_libraries.curiosintegration.description_slot2": "Artifact Slot 2",
+  "key.dungeons_libraries.curiosintegration.description_slot3": "Artifact Slot 3"
 }
