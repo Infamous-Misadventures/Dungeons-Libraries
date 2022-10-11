@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
+import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.setupCuriosKeybindings;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS;
@@ -71,6 +72,8 @@ public class DungeonsLibraries
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
+
+        setupCuriosKeybindings();
     }
 
 }

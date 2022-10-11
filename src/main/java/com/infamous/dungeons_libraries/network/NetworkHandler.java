@@ -1,6 +1,8 @@
 package com.infamous.dungeons_libraries.network;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
+import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
+import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStopMessage;
 import com.infamous.dungeons_libraries.network.gearconfig.ArmorGearConfigSyncPacket;
 import com.infamous.dungeons_libraries.network.gearconfig.BowGearConfigSyncPacket;
 import com.infamous.dungeons_libraries.network.gearconfig.CrossbowGearConfigSyncPacket;
@@ -52,6 +54,14 @@ public class NetworkHandler {
         INSTANCE.messageBuilder(WeaponMaterialSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(WeaponMaterialSyncPacket::encode).decoder(WeaponMaterialSyncPacket::decode)
                 .consumer(WeaponMaterialSyncPacket::onPacketReceived)
+                .add();
+        INSTANCE.messageBuilder(CuriosArtifactStartMessage.class, incrementAndGetPacketCounter())
+                .encoder(CuriosArtifactStartMessage::encode).decoder(CuriosArtifactStartMessage::decode)
+                .consumer(CuriosArtifactStartMessage.CuriosArtifactHandler::handle)
+                .add();
+        INSTANCE.messageBuilder(CuriosArtifactStopMessage.class, incrementAndGetPacketCounter())
+                .encoder(CuriosArtifactStopMessage::encode).decoder(CuriosArtifactStopMessage::decode)
+                .consumer(CuriosArtifactStopMessage.CuriosArtifactHandler::handle)
                 .add();
     }
 

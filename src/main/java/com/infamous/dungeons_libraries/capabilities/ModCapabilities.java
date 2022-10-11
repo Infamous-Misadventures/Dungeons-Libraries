@@ -1,5 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities;
 
+import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
+import com.infamous.dungeons_libraries.capabilities.artifact.AttacherArtifactUsage;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.AttacherBuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.AttacherEnchantedProjectile;
@@ -37,6 +39,7 @@ public class ModCapabilities {
     public static final Capability<EnchantedProjectile> ENCHANTED_PROJECTILE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<PlayerRewards> PLAYER_REWARDS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<BuiltInEnchantments> BUILT_IN_ENCHANTMENTS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<ArtifactUsage> ARTIFACT_USAGE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
 
 
     public static void setupCapabilities() {
@@ -48,6 +51,7 @@ public class ModCapabilities {
         forgeBus.addGenericListener(Entity.class, AttacherEnchantedProjectile::attach);
         forgeBus.addGenericListener(Entity.class, AttacherPlayerRewards::attach);
         forgeBus.addGenericListener(ItemStack.class, AttacherBuiltInEnchantments::attach);
+        forgeBus.addGenericListener(Entity.class, AttacherArtifactUsage::attach);
     }
 
     @SubscribeEvent
@@ -59,5 +63,6 @@ public class ModCapabilities {
         event.register(EnchantedProjectile.class);
         event.register(PlayerRewards.class);
         event.register(BuiltInEnchantments.class);
+        event.register(ArtifactUsage.class);
     }
 }

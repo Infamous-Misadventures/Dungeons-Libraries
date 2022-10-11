@@ -51,40 +51,4 @@ public class DescriptionHelper {
                 "lore."+ registryName.getNamespace() +"." + registryName.getPath())
                 .withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC));
     }
-
-//    public static void addChargeableDescription(List<Component> list, ItemStack itemStack) {
-//        if(itemStack.getItem() instanceof IChargeableItem){
-//            IChargeableItem chargeableItem = (IChargeableItem) itemStack.getItem();
-//            int chargeTimeInSeconds = chargeableItem.getChargeTimeInSeconds();
-//            if(chargeTimeInSeconds > 0) {
-//                list.add(new TranslatableComponent(
-//                        "artifact.dungeons_gear.charge_time", chargeTimeInSeconds)
-//                        .withStyle(ChatFormatting.BLUE));
-//            }
-//        }
-//    }
-
-//    public static voi>d addArtifactInfo(List<Component> list, ItemStack itemStack) {
-//        if (itemStack.getItem() instanceof ArtifactItem) {
-//
-//            list.add(new TranslatableComponent(
-//                    "ability.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
-//                    .withStyle(ChatFormatting.GREEN));
-//
-//            ArtifactItem artifactItem = (ArtifactItem) itemStack.getItem();
-//            int durationInSeconds = artifactItem.getDurationInSeconds();
-//            int cooldownInSeconds = artifactItem.getCooldownInSeconds();
-//
-//            if(durationInSeconds > 0) {
-//                list.add(new TranslatableComponent(
-//                        "artifact.dungeons_gear.duration", durationInSeconds)
-//                        .withStyle(ChatFormatting.BLUE));
-//            }
-//            if(cooldownInSeconds > 0) {
-//                list.add(new TranslatableComponent(
-//                        "artifact.dungeons_gear.cooldown", cooldownInSeconds)
-//                        .withStyle(ChatFormatting.BLUE));
-//            }
-//        }
-//    }
 }
