@@ -5,7 +5,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 
-import static com.infamous.dungeons_gear.capabilities.ModCapabilities.ARTIFACT_USAGE_CAPABILITY;
 import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ARTIFACT_USAGE_CAPABILITY;
 
 

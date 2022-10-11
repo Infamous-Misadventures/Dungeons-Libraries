@@ -1,40 +1,15 @@
 package com.infamous.dungeons_libraries.items.artifacts;
 
-import com.infamous.dungeons_gear.DungeonsGear;
-import com.infamous.dungeons_gear.capabilities.artifact.ArtifactUsage;
-import com.infamous.dungeons_gear.capabilities.artifact.ArtifactUsageHelper;
-import com.infamous.dungeons_gear.capabilities.combo.Combo;
-import com.infamous.dungeons_gear.capabilities.combo.ComboHelper;
-import com.infamous.dungeons_gear.effects.CustomEffects;
-import com.infamous.dungeons_gear.integration.curios.CuriosIntegration;
-import com.infamous.dungeons_gear.utilties.AreaOfEffectHelper;
-import com.infamous.dungeons_gear.utilties.SoundHelper;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Minion;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import com.infamous.dungeons_libraries.integration.curios.CuriosIntegration;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
-import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMinionCapability;
 
 @Mod.EventBusSubscriber(modid = MODID)
 public class ArtifactEvents {

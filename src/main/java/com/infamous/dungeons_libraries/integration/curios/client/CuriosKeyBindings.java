@@ -1,12 +1,12 @@
  package com.infamous.dungeons_libraries.integration.curios.client;
 
- import com.infamous.dungeons_gear.capabilities.artifact.ArtifactUsage;
- import com.infamous.dungeons_gear.capabilities.artifact.ArtifactUsageHelper;
- import com.infamous.dungeons_gear.integration.curios.client.message.CuriosArtifactStartMessage;
- import com.infamous.dungeons_gear.integration.curios.client.message.CuriosArtifactStopMessage;
- import com.infamous.dungeons_gear.items.artifacts.ArtifactItem;
- import com.infamous.dungeons_gear.items.artifacts.ArtifactUseContext;
- import com.infamous.dungeons_gear.network.NetworkHandler;
+ import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
+ import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
+ import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
+ import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStopMessage;
+ import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
+ import com.infamous.dungeons_libraries.items.artifacts.ArtifactUseContext;
+ import com.infamous.dungeons_libraries.network.NetworkHandler;
  import net.minecraft.client.KeyMapping;
  import net.minecraft.client.Minecraft;
  import net.minecraft.client.player.LocalPlayer;
@@ -30,7 +30,6 @@
 
  import java.util.Optional;
 
- import static com.infamous.dungeons_gear.DungeonsGear.MODID;
  import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
  @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)

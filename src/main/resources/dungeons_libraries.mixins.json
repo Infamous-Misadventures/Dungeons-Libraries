@@ -20,6 +20,8 @@
     "TieredItemAccessor"
   ],
   "client": [
+    "GeoEntityRendererMixin",
+    "LivingRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

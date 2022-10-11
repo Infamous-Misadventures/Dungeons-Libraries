@@ -1,6 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.artifact;
 
-import com.infamous.dungeons_gear.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

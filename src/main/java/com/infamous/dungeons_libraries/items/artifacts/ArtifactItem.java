@@ -2,9 +2,9 @@ package com.infamous.dungeons_libraries.items.artifacts;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.infamous.dungeons_gear.mixin.CooldownAccessor;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.event.ArtifactEvent;
+import com.infamous.dungeons_libraries.mixin.CooldownAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;

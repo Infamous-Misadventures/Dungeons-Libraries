@@ -1,9 +1,7 @@
 package com.infamous.dungeons_libraries.integration.curios.client.message;
 
-import com.infamous.dungeons_gear.capabilities.artifact.ArtifactUsage;
-import com.infamous.dungeons_gear.capabilities.artifact.ArtifactUsageHelper;
-import com.infamous.dungeons_gear.items.artifacts.ArtifactItem;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
+import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

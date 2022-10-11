@@ -11,10 +11,10 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CuriosClientIntegration {
 
-    public static ResourceLocation curiosIconTexture = new ResourceLocation(MODID, "icon/empty_artifact_slot");
+    public static final ResourceLocation CURIOS_ICON_TEXTURE = new ResourceLocation(MODID, "icon/empty_artifact_slot");
 
     @SubscribeEvent
     public static void onTextureStitchedPre(TextureStitchEvent.Pre event) {
-        event.addSprite(curiosIconTexture);
+        event.addSprite(CURIOS_ICON_TEXTURE);
     }
 }

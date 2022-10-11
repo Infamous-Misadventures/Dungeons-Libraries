@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.infamous.dungeons_gear.DungeonsGear.MODID;
-import static com.infamous.dungeons_gear.integration.curios.client.CuriosClientIntegration.curiosIconTexture;
+import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+import static com.infamous.dungeons_libraries.integration.curios.client.CuriosClientIntegration.CURIOS_ICON_TEXTURE;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CuriosIntegration {
@@ -28,7 +28,7 @@ public class CuriosIntegration {
 
 	@SubscribeEvent
 	public static void enqueue(InterModEnqueueEvent event) {
-		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder(ARTIFACT_IDENTIFIER).icon(curiosIconTexture).priority(10).size(3).build());
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder(ARTIFACT_IDENTIFIER).icon(CURIOS_ICON_TEXTURE).priority(10).size(3).build());
 	}
 
 	public static List<ItemStack> getArtifacts(LivingEntity livingEntity){
