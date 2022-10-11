@@ -11,6 +11,8 @@ public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_KEEP_SOULS_ON_DEATH;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
     public static ForgeConfigSpec.ConfigValue<Integer> ARTIFACT_DURABILITY;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ELITE_MOBS;
+    public static ForgeConfigSpec.ConfigValue<Double> ELITE_MOBS_BASE_CHANCE;
 
     public static class Common {
 
@@ -68,6 +70,17 @@ public class DungeonsLibrariesConfig {
             ARTIFACT_DURABILITY = builder
                     .comment("Set the durability for artifacts. [0-1024, default: 64")
                     .defineInRange("artifactDurability", 64, 0, 1024);
+            builder.pop();
+
+            builder.comment("Elite Mob Configuration").push("elite_mob_configuration");
+            ENABLE_ELITE_MOBS = builder
+                    .comment("Enables elite mobs, enabled by default. [true / false]")
+                    .define("enableEliteMobs", true);
+            ELITE_MOBS_BASE_CHANCE = builder
+                    .comment("Base chance of an elite mob spawning. [0.0 - 1.0] \n" +
+                            "Calculation: chance * difficulty.getSpecialMultiplier() \n" +
+                            "Base chance for vanilla armor spawning is 0.15. Default is 0.15")
+                    .defineInRange("eliteMobsBaseChance", 0.15, 0.0, 1.0);
             builder.pop();
 
         }

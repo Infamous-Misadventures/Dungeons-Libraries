@@ -4,6 +4,8 @@ import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
 import com.infamous.dungeons_libraries.capabilities.artifact.AttacherArtifactUsage;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.AttacherBuiltInEnchantments;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
+import com.infamous.dungeons_libraries.capabilities.elite.AttacherEliteMob;
+import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.AttacherEnchantedProjectile;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectile;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherMaster;
@@ -40,6 +42,7 @@ public class ModCapabilities {
     public static final Capability<PlayerRewards> PLAYER_REWARDS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<BuiltInEnchantments> BUILT_IN_ENCHANTMENTS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<ArtifactUsage> ARTIFACT_USAGE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<EliteMob> ELITE_MOB_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
 
 
     public static void setupCapabilities() {
@@ -52,6 +55,7 @@ public class ModCapabilities {
         forgeBus.addGenericListener(Entity.class, AttacherPlayerRewards::attach);
         forgeBus.addGenericListener(ItemStack.class, AttacherBuiltInEnchantments::attach);
         forgeBus.addGenericListener(Entity.class, AttacherArtifactUsage::attach);
+        forgeBus.addGenericListener(Entity.class, AttacherEliteMob::attach);
     }
 
     @SubscribeEvent
@@ -64,5 +68,6 @@ public class ModCapabilities {
         event.register(PlayerRewards.class);
         event.register(BuiltInEnchantments.class);
         event.register(ArtifactUsage.class);
+        event.register(EliteMob.class);
     }
 }

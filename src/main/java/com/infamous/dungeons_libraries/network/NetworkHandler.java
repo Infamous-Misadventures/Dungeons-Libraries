@@ -63,6 +63,10 @@ public class NetworkHandler {
                 .encoder(CuriosArtifactStopMessage::encode).decoder(CuriosArtifactStopMessage::decode)
                 .consumer(CuriosArtifactStopMessage.CuriosArtifactHandler::handle)
                 .add();
+        INSTANCE.messageBuilder(EliteMobMessage.class, incrementAndGetPacketCounter())
+                .encoder(EliteMobMessage::encode).decoder(EliteMobMessage::decode)
+                .consumer(EliteMobMessage::onPacketReceived)
+                .add();
     }
 
     public static int incrementAndGetPacketCounter() {
