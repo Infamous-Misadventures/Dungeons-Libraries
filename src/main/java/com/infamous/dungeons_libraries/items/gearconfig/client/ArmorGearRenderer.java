@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.items.gearconfig.client;
 
+import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGear;
 import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterialBaseType;
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterial;
@@ -7,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorMaterial;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -40,7 +42,11 @@ public class ArmorGearRenderer  extends GeoArmorRenderer<ArmorGear> {
             for (GeoCube cube : bone.childCubes) {
                 stack.pushPose();
                 if (!bone.cubesAreHidden()) {
-                    renderCube(cube, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+                    if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet() == this.currentArmorItem.getArmorSet()){
+                        renderCube(cube, stack, bufferIn, packedLightIn, LivingEntityRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
+                    }else {
+                        renderCube(cube, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+                    }
                 }
                 stack.popPose();
             }

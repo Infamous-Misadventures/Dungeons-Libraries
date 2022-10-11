@@ -55,7 +55,9 @@ public class DungeonsLibrariesConfig {
                             "minecraft:turtle",
                             "minecraft:villager",
                             "minecraft:wandering_trader",
-                            "minecraft:wolf"
+                            "minecraft:wolf",
+                            "minecraft:cat",
+                            "minecraft:rabbit"
                             ),
                             (itemRaw) -> itemRaw instanceof String);
             builder.pop();
