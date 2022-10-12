@@ -17,9 +17,13 @@ import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
-public class ArmorGearRenderer  extends GeoArmorRenderer<ArmorGear> {
+public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T> {
     public ArmorGearRenderer() {
-        super(new ArmorGearModel());
+        super(new ArmorGearModel<>());
+    }
+
+    public ArmorGearRenderer(ArmorGearModel<T> model) {
+        super(model);
     }
 
     @Override
