@@ -22,6 +22,6 @@ public class ClientEventBusSubscriber {
 
     @SubscribeEvent
     public static void registerArmorRenderers(final EntityRenderersEvent.AddLayers event) {
-        GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, new ArmorGearRenderer());
+        GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, ArmorGearRenderer::new);
     }
 }

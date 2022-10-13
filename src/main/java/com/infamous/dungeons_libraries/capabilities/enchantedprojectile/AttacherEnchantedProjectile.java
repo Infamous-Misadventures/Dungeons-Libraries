@@ -19,7 +19,7 @@ public class AttacherEnchantedProjectile {
 
     private static class EnchantedProjectileProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "player_rewards");
+        public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "enchanted_projectile");
         private final EnchantedProjectile backend = new EnchantedProjectile();
         private final LazyOptional<EnchantedProjectile> optionalData = LazyOptional.of(() -> backend);
 
