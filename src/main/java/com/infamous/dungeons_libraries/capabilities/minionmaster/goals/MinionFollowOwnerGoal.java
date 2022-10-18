@@ -19,18 +19,18 @@ public class MinionFollowOwnerGoal extends Goal {
     private final double followSpeed;
     private final PathNavigator navigator;
     private int timeToRecalcPath;
-    private final float maxDist;
     private final float minDist;
+    private final float maxDist;
     private float oldWaterCost;
     private final boolean passesThroughLeaves;
 
-    public MinionFollowOwnerGoal(MobEntity mobEntity, double followSpeed, float minDist, float maxDist, boolean passesThroughLeaves) {
+    public MinionFollowOwnerGoal(MobEntity mobEntity, double followSpeed, float maxDist, float minDist, boolean passesThroughLeaves) {
         this.mobEntity = mobEntity;
         this.world = mobEntity.level;
         this.followSpeed = followSpeed;
         this.navigator = mobEntity.getNavigation();
-        this.minDist = minDist;
         this.maxDist = maxDist;
+        this.minDist = minDist;
         this.passesThroughLeaves = passesThroughLeaves;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         if (!(mobEntity.getNavigation() instanceof GroundPathNavigator) && !(mobEntity.getNavigation() instanceof FlyingPathNavigator)) {
@@ -50,7 +50,7 @@ public class MinionFollowOwnerGoal extends Goal {
             return false;
         } else if (this.mobEntity.isLeashed()) {
             return false;
-        } else if (this.mobEntity.distanceToSqr(livingentity) < (double)(this.minDist * this.minDist)) {
+        } else if (this.mobEntity.distanceToSqr(livingentity) < (double)(this.maxDist * this.maxDist)) {
             return false;
         } else {
             this.owner = livingentity;
@@ -67,7 +67,7 @@ public class MinionFollowOwnerGoal extends Goal {
         } else if (this.mobEntity.isLeashed()) {
             return false;
         } else {
-            return !(this.mobEntity.distanceToSqr(this.owner) <= (double)(this.maxDist * this.maxDist));
+            return !(this.mobEntity.distanceToSqr(this.owner) <= (double)(this.minDist * this.minDist));
         }
     }
 
