@@ -92,7 +92,7 @@ public class MinionMasterHelper {
         IMinion minionCap = getMinionCapability(mobEntity);
         if(minionCap == null) return;
         if(minionCap.isMinion()){
-            mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 1.8D, 12.0F, 2.0F, false));
+            mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 1.5D, 12.0F, 3.0F, false));
             clearGoals(mobEntity.targetSelector);
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
