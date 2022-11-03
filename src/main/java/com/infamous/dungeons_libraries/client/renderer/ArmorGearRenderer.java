@@ -30,9 +30,7 @@ public class ArmorGearRenderer<T extends ArmorGear> extends GeoArmorRenderer<T> 
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, MatrixStack stack, IVertexBuilder bufferIn, int packedLightIn,
-                                  int packedOverlayIn, float red, float green, float blue, float alpha) {
-        stack.pushPose();
+    public void preparePositionRotationScale(GeoBone bone, MatrixStack stack) {
         RenderUtils.translate(bone, stack);
         RenderUtils.moveToPivot(bone, stack);
         EntityRenderer<? super LivingEntity> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityLiving);
@@ -45,7 +43,10 @@ public class ArmorGearRenderer<T extends ArmorGear> extends GeoArmorRenderer<T> 
             stack.scale(1.0F, 1.0F, 0.85F);
         }
         RenderUtils.moveBackFromPivot(bone, stack);
+    }
 
+    @Override
+    public void renderCubesOfBone(GeoBone bone, MatrixStack stack, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (!bone.isHidden()) {
             for (GeoCube cube : bone.childCubes) {
                 stack.pushPose();
@@ -59,12 +60,5 @@ public class ArmorGearRenderer<T extends ArmorGear> extends GeoArmorRenderer<T> 
                 stack.popPose();
             }
         }
-        if (!bone.childBonesAreHiddenToo()) {
-            for (GeoBone childBone : bone.childBones) {
-                renderRecursively(childBone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            }
-        }
-
-        stack.popPose();
     }
 }
