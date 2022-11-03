@@ -10,12 +10,16 @@
  import net.minecraft.client.Minecraft;
  import net.minecraft.client.entity.player.ClientPlayerEntity;
  import net.minecraft.client.settings.KeyBinding;
+ import net.minecraft.entity.LivingEntity;
  import net.minecraft.entity.player.PlayerEntity;
+ import net.minecraft.entity.projectile.ProjectileHelper;
  import net.minecraft.item.ItemStack;
  import net.minecraft.util.Direction;
+ import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockRayTraceResult;
  import net.minecraft.util.math.EntityRayTraceResult;
  import net.minecraft.util.math.RayTraceResult;
+ import net.minecraft.util.math.vector.Vector3d;
  import net.minecraftforge.api.distmarker.Dist;
  import net.minecraftforge.client.settings.KeyConflictContext;
  import net.minecraftforge.event.TickEvent;
@@ -34,6 +38,8 @@
 
  @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class CuriosKeyBindings {
+
+     private static final double RAYTRACE_DISTANCE = 30;
 
     public static final KeyBinding activateArtifact1 = new KeyBinding("key.dungeons_libraries.curiosintegration.description_slot1", GLFW.GLFW_KEY_V, "key.dungeons_libraries.curiosintegration.category");
     public static final KeyBinding activateArtifact2 = new KeyBinding("key.dungeons_libraries.curiosintegration.description_slot2", GLFW.GLFW_KEY_B, "key.dungeons_libraries.curiosintegration.category");
@@ -110,37 +116,43 @@ public class CuriosKeyBindings {
     }
 
     private static void sendCuriosStartMessageToServer(int slot) {
-        RayTraceResult hitResult = Minecraft.getInstance().hitResult;
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if(player != null) {
-            if (hitResult == null || hitResult.getType() == RayTraceResult.Type.MISS) {
-                BlockRayTraceResult blockRayTraceResult = new BlockRayTraceResult(player.position(), Direction.UP, player.blockPosition(), false);
-                curiosStartMessage(slot, blockRayTraceResult, player);
-            } else if (hitResult.getType() == RayTraceResult.Type.BLOCK) {
-                curiosStartMessage(slot, (BlockRayTraceResult) hitResult, player);
-            } else if (hitResult.getType() == RayTraceResult.Type.ENTITY) {
-                EntityRayTraceResult entityRayTraceResult = (EntityRayTraceResult) hitResult;
-                BlockRayTraceResult blockRayTraceResult = new BlockRayTraceResult(entityRayTraceResult.getEntity().position(), Direction.UP, entityRayTraceResult.getEntity().blockPosition(), false);
-                curiosStartMessage(slot, blockRayTraceResult, player);
-            }
+            CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
+                Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
+                if (artifactStackHandler.isPresent()) {
+                    ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
+                    if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
+                        BlockRayTraceResult blockRayTraceResult = getBlockRayTraceResult(player);
+                        if(blockRayTraceResult != null) {
+                            NetworkHandler.INSTANCE.sendToServer(new CuriosArtifactStartMessage(slot, blockRayTraceResult));
+                            ArtifactUseContext iuc = new ArtifactUseContext(player.level, player, artifact, blockRayTraceResult);
+                            ((ArtifactItem) artifact.getItem()).activateArtifact(iuc);
+                        }
+                    }
+                }
+            });
         }
     }
 
-    private static void curiosStartMessage(int slot, BlockRayTraceResult blockRayTraceResult, ClientPlayerEntity player) {
-        NetworkHandler.INSTANCE.sendToServer(new CuriosArtifactStartMessage(slot, blockRayTraceResult));
-        CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
-            Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-            if (artifactStackHandler.isPresent()) {
-                ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
-                if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
-                    ArtifactUseContext iuc = new ArtifactUseContext(player.level, player, artifact, blockRayTraceResult);
-                    ((ArtifactItem) artifact.getItem()).activateArtifact(iuc);
-                }
-            }
-        });
-    }
+     private static BlockRayTraceResult getBlockRayTraceResult(ClientPlayerEntity player) {
+         Vector3d eyeVector = player.getEyePosition(1.0F);
+         Vector3d lookVector = player.getViewVector(1.0F);
+         Vector3d rayTraceVector = eyeVector.add(lookVector.x * RAYTRACE_DISTANCE, lookVector.y * RAYTRACE_DISTANCE, lookVector.z * RAYTRACE_DISTANCE);
+         AxisAlignedBB rayTraceBoundingBox = player.getBoundingBox().expandTowards(lookVector.scale(RAYTRACE_DISTANCE)).inflate(1.0D, 1.0D, 1.0D);
+         EntityRayTraceResult entityRTR = ProjectileHelper.getEntityHitResult(player.level, player, eyeVector, rayTraceVector, rayTraceBoundingBox, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
+         if(entityRTR != null) {
+             return new BlockRayTraceResult(entityRTR.getEntity().position(), Direction.UP, entityRTR.getEntity().blockPosition(), false);
+         }else{
+             BlockRayTraceResult blockRTR = (BlockRayTraceResult) player.pick(RAYTRACE_DISTANCE, 1.0f, false);
+             if(blockRTR.getType() != RayTraceResult.Type.MISS){
+                 return blockRTR;
+             }
+         }
+         return null;
+     }
 
-    private static void sendCuriosStopMessageToServer(int slot, PlayerEntity player, IArtifactUsage cap) {
+     private static void sendCuriosStopMessageToServer(int slot, PlayerEntity player, IArtifactUsage cap) {
         if(player != null) {
             CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
                 Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");

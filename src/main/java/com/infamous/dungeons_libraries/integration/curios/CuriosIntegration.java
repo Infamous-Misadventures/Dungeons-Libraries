@@ -34,7 +34,7 @@ public class CuriosIntegration {
 	public static List<ItemStack> getArtifacts(LivingEntity livingEntity){
 		LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(livingEntity);
 		if(curiosHandler.isPresent()){
-			Optional<ICurioStacksHandler> artifactStackHandler = curiosHandler.resolve().get().getStacksHandler("artifact");
+			Optional<ICurioStacksHandler> artifactStackHandler = curiosHandler.resolve().get().getStacksHandler(ARTIFACT_IDENTIFIER);
 			if (artifactStackHandler.isPresent()) {
 				IDynamicStackHandler stacks = artifactStackHandler.get().getStacks();
 				List<ItemStack> artifacts = new ArrayList<>();
