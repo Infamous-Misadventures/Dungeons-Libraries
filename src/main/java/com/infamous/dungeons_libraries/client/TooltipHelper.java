@@ -18,8 +18,9 @@ public class TooltipHelper {
     }
 
     public static void addLoreDescription(List<ITextComponent> list, ItemStack itemStack){
+        ResourceLocation registryName = itemStack.getItem().getRegistryName();
         list.add(new TranslationTextComponent(
-                "lore.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
+                "lore." + registryName.getNamespace() + "." + registryName.getPath())
                 .withStyle(TextFormatting.WHITE, TextFormatting.ITALIC));
     }
 
