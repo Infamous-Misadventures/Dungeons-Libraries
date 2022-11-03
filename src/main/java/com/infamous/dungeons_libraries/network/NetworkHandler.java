@@ -72,6 +72,10 @@ public class NetworkHandler {
                 .encoder(CuriosArtifactStopMessage::encode).decoder(CuriosArtifactStopMessage::decode)
                 .consumer(CuriosArtifactStopMessage.CuriosArtifactHandler::handle)
                 .add();
+        INSTANCE.messageBuilder(BreakItemMessage.class, incrementAndGetPacketCounter())
+                .encoder(BreakItemMessage::encode).decoder(BreakItemMessage::decode)
+                .consumer(BreakItemMessage.BreakItemHandler::handle)
+                .add();
     }
 
     public static int incrementAndGetPacketCounter() {
