@@ -21,6 +21,7 @@ public class Minion implements IMinion {
     private int minionTimer = 0;
     private boolean temporary = false;
     private boolean revertsOnExpiration = false;
+    private boolean goalsAdded = false;
 
     @Override
     public LivingEntity getMaster() {
@@ -103,5 +104,14 @@ public class Minion implements IMinion {
     @Override
     public void setRevertsOnExpiration(boolean revertsOnExpiration) {
         this.revertsOnExpiration = revertsOnExpiration;
+    }
+
+    public boolean isGoalsAdded() {
+        return goalsAdded;
+    }
+
+    @Override
+    public void setGoalsAdded(boolean goalsAdded) {
+        this.goalsAdded = goalsAdded;
     }
 }

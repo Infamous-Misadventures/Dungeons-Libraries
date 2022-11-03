@@ -56,6 +56,34 @@ public class MinionEvents {
         Entity entity = event.getEntity();
         if(!event.getWorld().isClientSide() && entity instanceof MobEntity) {
             MinionMasterHelper.addMinionGoals((MobEntity) entity);
+            IMaster masterCapability = getMasterCapability(entity);
+            if(masterCapability != null){
+                List<Entity> minions = masterCapability.getAllMinions();
+                for(Entity minion : minions){
+                    if(minion instanceof MobEntity){
+                        IMinion minionCapability = getMinionCapability(minion);
+                        if(minionCapability != null) {
+                            minionCapability.setMaster((MobEntity) entity);
+                            MinionMasterHelper.addMinionGoals((MobEntity) minion);
+                        }
+                    }
+                }
+            }
+        }
+        if(!event.getWorld().isClientSide() && entity instanceof PlayerEntity) {
+            IMaster masterCapability = getMasterCapability(entity);
+            if(masterCapability != null){
+                List<Entity> minions = masterCapability.getAllMinions();
+                for(Entity minion : minions){
+                    if(minion instanceof MobEntity){
+                        IMinion minionCapability = getMinionCapability(minion);
+                        if(minionCapability != null) {
+                            minionCapability.setMaster((PlayerEntity) entity);
+                            MinionMasterHelper.addMinionGoals((MobEntity) minion);
+                        }
+                    }
+                }
+            }
         }
     }
 

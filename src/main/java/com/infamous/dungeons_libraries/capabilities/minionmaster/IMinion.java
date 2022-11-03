@@ -32,4 +32,9 @@ public interface IMinion {
     boolean revertsOnExpiration();
 
     void setRevertsOnExpiration(boolean revertsOnExpiration);
+
+    boolean isGoalsAdded();
+
+    void setGoalsAdded(boolean goalsAdded);
+
 }
