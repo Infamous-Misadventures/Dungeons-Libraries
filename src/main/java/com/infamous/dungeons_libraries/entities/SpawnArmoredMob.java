@@ -1,7 +1,7 @@
 package com.infamous.dungeons_libraries.entities;
 
-import net.minecraft.util.ResourceLocation;
+import com.infamous.dungeons_libraries.items.gearconfig.ArmorSet;
 
 public interface SpawnArmoredMob {
-    ResourceLocation getArmorSet();
+    ArmorSet getArmorSet();
 }

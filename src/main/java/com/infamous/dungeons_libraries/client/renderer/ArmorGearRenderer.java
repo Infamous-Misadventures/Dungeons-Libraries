@@ -11,9 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IArmorMaterial;
-import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoCube;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
@@ -51,7 +49,7 @@ public class ArmorGearRenderer<T extends ArmorGear> extends GeoArmorRenderer<T> 
             for (GeoCube cube : bone.childCubes) {
                 stack.pushPose();
                 if (!bone.cubesAreHidden()) {
-                    if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet() == this.currentArmorItem.getArmorSet()){
+                    if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet().getRegistryName() == this.currentArmorItem.getArmorSet()){
                         renderCube(cube, stack, bufferIn, packedLightIn, LivingRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
                     }else {
                         renderCube(cube, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
