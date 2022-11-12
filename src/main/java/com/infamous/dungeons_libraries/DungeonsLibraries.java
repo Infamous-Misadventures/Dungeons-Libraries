@@ -24,6 +24,7 @@ import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterStorage
 import com.infamous.dungeons_libraries.capabilities.timers.ITimers;
 import com.infamous.dungeons_libraries.capabilities.timers.Timers;
 import com.infamous.dungeons_libraries.capabilities.timers.TimersStorage;
+import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.client.renderer.ArmorGearRenderer;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
@@ -33,9 +34,14 @@ import com.infamous.dungeons_libraries.items.gearconfig.*;
 import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -46,7 +52,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
+import top.theillusivec4.curios.client.CuriosClientMod;
 
+import static com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry.GUI_ELEMENT_CONFIGS;
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
 import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.setupCuriosKeybindings;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
@@ -65,6 +73,9 @@ public class DungeonsLibraries
     public static final String MODID = "dungeons_libraries";
 
     public DungeonsLibraries() {
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> {
+            return GuiElementConfigRegistry::initGuiElementConfigs;
+        });
         // Register the setup method for modloading
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -109,6 +120,7 @@ public class DungeonsLibraries
         setupCuriosKeybindings();
 
         GeoArmorRenderer.registerArmorRenderer(ArmorGear.class, ArmorGearRenderer::new);
+
     }
 
 }

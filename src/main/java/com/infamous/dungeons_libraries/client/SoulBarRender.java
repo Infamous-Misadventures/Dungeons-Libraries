@@ -2,6 +2,8 @@ package com.infamous.dungeons_libraries.client;
 
 import com.infamous.dungeons_libraries.capabilities.soulcaster.ISoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
+import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfig;
+import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -52,11 +54,13 @@ public class SoulBarRender {
 
             mc.getProfiler().push("soulBar");
 
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
+            int xPos = guiElementConfig.getXPosition(scaledWidth);
+            int yPos = guiElementConfig.getYPosition(scaledHeight);
+
             if (souls > 0) {
-                int backgroundBarWidth = 122;
-                int foregroundBarWidth = (int) (souls / maxSouls * 122.0F);
-                int xPos = scaledWidth - 123;
-                int yPos = scaledHeight - 7;
+                int backgroundBarWidth = guiElementConfig.getSizeX();
+                int foregroundBarWidth = (int) (souls / maxSouls * guiElementConfig.getSizeX());
                 AbstractGui.blit(matrixStack, xPos, yPos, 0, 0, backgroundBarWidth, 5, 121, 10);
                 AbstractGui.blit(matrixStack, xPos, yPos, 0, 5, foregroundBarWidth, 5, 121, 10);
             }
@@ -65,8 +69,8 @@ public class SoulBarRender {
             if (souls > 0) {
                 mc.getProfiler().push("soulLevel");
                 String soulLevel = "" + souls;
-                int baseXPos = scaledWidth - mc.font.width(soulLevel) - (123 / 2) + 11;
-                int baseYPos = scaledHeight - 7 - 6;
+                int baseXPos = xPos + (guiElementConfig.getSizeX() / 2) - (mc.font.width(soulLevel) / 2) ;
+                int baseYPos = scaledHeight - guiElementConfig.getSizeY() - mc.font.lineHeight;
                 mc.font.draw(matrixStack, soulLevel, (float)(baseXPos + 1), (float)baseYPos, 0);
                 mc.font.draw(matrixStack, soulLevel, (float)(baseXPos - 1), (float)baseYPos, 0);
                 mc.font.draw(matrixStack, soulLevel, (float)baseXPos, (float)(baseYPos + 1), 0);
