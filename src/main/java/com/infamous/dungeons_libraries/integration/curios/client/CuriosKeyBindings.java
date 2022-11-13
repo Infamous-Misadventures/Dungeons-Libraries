@@ -1,9 +1,6 @@
  package com.infamous.dungeons_libraries.integration.curios.client;
 
- import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
- import com.infamous.dungeons_libraries.capabilities.artifact.IArtifactUsage;
  import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
- import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStopMessage;
  import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
  import com.infamous.dungeons_libraries.items.artifacts.ArtifactUseContext;
  import com.infamous.dungeons_libraries.network.NetworkHandler;
@@ -11,21 +8,17 @@
  import net.minecraft.client.entity.player.ClientPlayerEntity;
  import net.minecraft.client.settings.KeyBinding;
  import net.minecraft.entity.LivingEntity;
- import net.minecraft.entity.player.PlayerEntity;
  import net.minecraft.entity.projectile.ProjectileHelper;
  import net.minecraft.item.ItemStack;
  import net.minecraft.util.Direction;
  import net.minecraft.util.math.AxisAlignedBB;
  import net.minecraft.util.math.BlockRayTraceResult;
  import net.minecraft.util.math.EntityRayTraceResult;
- import net.minecraft.util.math.RayTraceResult;
  import net.minecraft.util.math.vector.Vector3d;
  import net.minecraftforge.api.distmarker.Dist;
+ import net.minecraftforge.client.event.InputEvent;
  import net.minecraftforge.client.settings.KeyConflictContext;
- import net.minecraftforge.event.TickEvent;
- import net.minecraftforge.event.entity.player.PlayerEvent;
  import net.minecraftforge.eventbus.api.SubscribeEvent;
- import net.minecraftforge.fml.LogicalSide;
  import net.minecraftforge.fml.client.registry.ClientRegistry;
  import net.minecraftforge.fml.common.Mod;
  import org.lwjgl.glfw.GLFW;
@@ -55,64 +48,16 @@ public class CuriosKeyBindings {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || event.side != LogicalSide.CLIENT) {
-            return;
+    public static void onClientTick(InputEvent.KeyInputEvent event) {
+        if (activateArtifact1.consumeClick()) {
+            sendCuriosStartMessageToServer(0);
         }
-        PlayerEntity player = event.player;
-        IArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
-        if(cap.isUsingArtifact()) {
-            if (!activateArtifact1.isDown()) {
-                sendCuriosStopMessageToServer(0, player, cap);
-            }
-            if (!activateArtifact2.isDown()) {
-                sendCuriosStopMessageToServer(1, player, cap);
-            }
-            if (!activateArtifact3.isDown()) {
-                sendCuriosStopMessageToServer(2, player, cap);
-            }
-        }else{
-            if (activateArtifact1.isDown()) {
-                sendCuriosStartMessageToServer(0);
-            }
-            if (activateArtifact2.isDown()) {
-                sendCuriosStartMessageToServer(1);
-            }
-            if (activateArtifact3.isDown()) {
-                sendCuriosStartMessageToServer(2);
-            }
+        if (activateArtifact2.consumeClick()) {
+            sendCuriosStartMessageToServer(1);
         }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
-        stopUsingAllArtifacts(event.getPlayer());
-    }
-
-    @SubscribeEvent
-    public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event){
-        stopUsingAllArtifacts(event.getPlayer());
-
-    }
-
-    @SubscribeEvent
-    public static void onPlayerRespawnEvent(PlayerEvent.PlayerRespawnEvent event){
-        stopUsingAllArtifacts(event.getPlayer());
-    }
-
-    private static void stopUsingAllArtifacts(PlayerEntity player) {
-        CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
-            Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-            if (artifactStackHandler.isPresent()) {
-                int slots = artifactStackHandler.get().getStacks().getSlots();
-                for(int slot = 0; slot < slots; slot++) {
-                    ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
-                    if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
-                        ((ArtifactItem) artifact.getItem()).stopUsingArtifact(player);
-                    }
-                }
-            }
-        });
+        if (activateArtifact3.consumeClick()) {
+            sendCuriosStartMessageToServer(2);
+        }
     }
 
     private static void sendCuriosStartMessageToServer(int slot) {
@@ -145,26 +90,7 @@ public class CuriosKeyBindings {
              return new BlockRayTraceResult(entityRTR.getEntity().position(), Direction.UP, entityRTR.getEntity().blockPosition(), false);
          }else{
              BlockRayTraceResult blockRTR = (BlockRayTraceResult) player.pick(RAYTRACE_DISTANCE, 1.0f, false);
-             if(blockRTR.getType() != RayTraceResult.Type.MISS){
-                 return blockRTR;
-             }
+             return blockRTR;
          }
-         return null;
      }
-
-     private static void sendCuriosStopMessageToServer(int slot, PlayerEntity player, IArtifactUsage cap) {
-        if(player != null) {
-            CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
-                Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-                if (artifactStackHandler.isPresent()) {
-                    ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
-                    if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem && cap.isSameUsingArtifact(artifact)) {
-                        NetworkHandler.INSTANCE.sendToServer(new CuriosArtifactStopMessage(slot));
-                        IArtifactUsage capability = ArtifactUsageHelper.getArtifactUsageCapability(player);
-                        capability.stopUsingArtifact();
-                    }
-                }
-            });
-        }
-    }
-}
+ }

@@ -41,6 +41,10 @@ public class ArtifactUseContext {
       return this.hitResult.getDirection();
    }
 
+   public boolean isHitMiss() {
+      return this.hitResult.getType() == BlockRayTraceResult.Type.MISS;
+   }
+
    public Vector3d getClickLocation() {
       return this.hitResult.getLocation();
    }

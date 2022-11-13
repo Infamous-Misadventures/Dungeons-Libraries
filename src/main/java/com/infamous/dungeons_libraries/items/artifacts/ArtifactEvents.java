@@ -3,11 +3,17 @@ package com.infamous.dungeons_libraries.items.artifacts;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
 import com.infamous.dungeons_libraries.capabilities.artifact.IArtifactUsage;
 import com.infamous.dungeons_libraries.integration.curios.CuriosIntegration;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+
+import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
@@ -42,5 +48,35 @@ public class ArtifactEvents {
             cap.getUsingArtifact().getItem().onUseTick(event.player.level, event.player, cap.getUsingArtifact(), cap.getUsingArtifactRemaining());
             cap.setUsingArtifactRemaining(cap.getUsingArtifactRemaining() - 1);
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+        stopUsingAllArtifacts(event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event){
+        stopUsingAllArtifacts(event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawnEvent(PlayerEvent.PlayerRespawnEvent event){
+        stopUsingAllArtifacts(event.getPlayer());
+    }
+
+    private static void stopUsingAllArtifacts(PlayerEntity player) {
+        CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
+            Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
+            if (artifactStackHandler.isPresent()) {
+                int slots = artifactStackHandler.get().getStacks().getSlots();
+                for(int slot = 0; slot < slots; slot++) {
+                    ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
+                    if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
+                        ((ArtifactItem) artifact.getItem()).stopUsingArtifact(player);
+                    }
+                }
+            }
+        });
     }
 }

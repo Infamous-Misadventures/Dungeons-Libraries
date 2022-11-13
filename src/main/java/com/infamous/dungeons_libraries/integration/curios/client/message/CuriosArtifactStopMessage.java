@@ -3,29 +3,25 @@ package com.infamous.dungeons_libraries.integration.curios.client.message;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
 import com.infamous.dungeons_libraries.capabilities.artifact.IArtifactUsage;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class CuriosArtifactStopMessage {
-    private final int slot;
 
-    public CuriosArtifactStopMessage(int slot) {
-        this.slot = slot;
+    public CuriosArtifactStopMessage() {
     }
 
     public static void encode(CuriosArtifactStopMessage packet, PacketBuffer buf) {
-        buf.writeInt(packet.slot);
+
     }
 
     public static CuriosArtifactStopMessage decode(PacketBuffer buf) {
-        return new CuriosArtifactStopMessage(buf.readInt());
+        return new CuriosArtifactStopMessage();
     }
 
     public static class CuriosArtifactHandler {
@@ -33,19 +29,17 @@ public class CuriosArtifactStopMessage {
             if (packet != null) {
                 ctx.get().setPacketHandled(true);
                 ctx.get().enqueueWork(() -> {
-                    ServerPlayerEntity player = ctx.get().getSender();
+                    ClientPlayerEntity player = Minecraft.getInstance().player;
                     if (player != null) {
-                        CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
-                            Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-                            if(artifactStackHandler.isPresent()) {
-                                ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(packet.slot);
-                                IArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
-                                if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem && cap.isSameUsingArtifact(artifact)) {
-                                    ((ArtifactItem) cap.getUsingArtifact().getItem()).stopUsingArtifact(player);
-                                    cap.stopUsingArtifact();
-                                }
+                        IArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
+                        if (cap != null) {
+                            ItemStack artifactStack = cap.getUsingArtifact();
+                            if (artifactStack != null && artifactStack.getItem() instanceof ArtifactItem) {
+                                ArtifactItem artifactItem = (ArtifactItem) artifactStack.getItem();
+                                artifactItem.stopUsingArtifact(player);
+                                cap.stopUsingArtifact();
                             }
-                        });
+                        }
                     }
                 });
             }
