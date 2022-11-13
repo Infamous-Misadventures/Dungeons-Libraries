@@ -37,10 +37,13 @@ public class GuiElementConfigRegistry {
 //    }
 
     public static void initGuiElementConfigs() {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if(resourceManager instanceof IReloadableResourceManager){
-            IReloadableResourceManager reloadableResourceManager = (IReloadableResourceManager) resourceManager;
-            reloadableResourceManager.registerReloadListener(GUI_ELEMENT_CONFIGS);
+        Minecraft mc = Minecraft.getInstance();
+        if(mc != null) {
+            IResourceManager resourceManager = mc.getResourceManager();
+            if (resourceManager instanceof IReloadableResourceManager) {
+                IReloadableResourceManager reloadableResourceManager = (IReloadableResourceManager) resourceManager;
+                reloadableResourceManager.registerReloadListener(GUI_ELEMENT_CONFIGS);
+            }
         }
     }
 }

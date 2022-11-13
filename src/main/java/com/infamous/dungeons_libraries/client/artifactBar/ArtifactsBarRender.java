@@ -25,6 +25,7 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+import static com.infamous.dungeons_libraries.items.ItemTagWrappers.CURIOS_ARTIFACTS;
 import static net.minecraft.client.gui.widget.Widget.WIDGETS_LOCATION;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
@@ -40,6 +41,8 @@ public class ArtifactsBarRender {
         int scaledWidth = sr.getGuiScaledWidth();
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
+
+        if(CURIOS_ARTIFACTS.getValues().isEmpty()) return;
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.HOTBAR) && mc.getCameraEntity() instanceof PlayerEntity) {
             PlayerEntity renderPlayer = (PlayerEntity) mc.getCameraEntity();
