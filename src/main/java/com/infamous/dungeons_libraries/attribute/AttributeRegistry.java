@@ -42,7 +42,7 @@ public class AttributeRegistry {
 
     public static final RegistryObject<Attribute> RANGED_DAMAGE_MULTIPLIER = ATTRIBUTES.register("ranged_damage_multiplier", () -> new RangedAttribute(
             "attribute.name.generic.dungeons_libraries.ranged_damage_multiplier",
-            0.0D,
+            1.0D,
             0.0D,
             1024.0D)
             .setSyncable(true));
