@@ -11,9 +11,6 @@ public class EnchantedProjectileHelper {
     public static EnchantedProjectile getEnchantedProjectileCapability(Entity entity)
     {
         LazyOptional<EnchantedProjectile> lazyCap = entity.getCapability(EnchantedProjectileProvider.ENCHANTED_PROJECTILE_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the combo capability from the Entity!"));
-        }
-        return null;
+        return lazyCap.orElse(new EnchantedProjectile());
     }
 }

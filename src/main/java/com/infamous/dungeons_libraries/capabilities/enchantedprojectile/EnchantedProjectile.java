@@ -20,12 +20,10 @@ public class EnchantedProjectile {
 
     public void setEnchantments(ItemStack itemStack){
         Map<Enchantment, Integer> itemStackEnchantmentData = EnchantmentHelper.getEnchantments(itemStack);
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
-        if(lazyCap.isPresent()){
-            Map<Enchantment, Integer> builtInEnchantments = lazyCap.resolve().get().getAllBuiltInEnchantmentDatas().stream()
+        IBuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStack);
+            Map<Enchantment, Integer> builtInEnchantments = cap.getAllBuiltInEnchantmentDatas().stream()
                 .collect(Collectors.groupingBy(enchantmentData -> enchantmentData.enchantment, Collectors.summingInt(value -> value.level)));
             builtInEnchantments.forEach((enchantment, integer) -> itemStackEnchantmentData.compute(enchantment, (enchantment1, integer1) -> integer1 == null ? integer : integer1 + integer));
-        }
         enchantmentDataList = itemStackEnchantmentData.entrySet().stream()
             .map(entry -> new EnchantmentData(entry.getKey(), entry.getValue()))
             .collect(Collectors.toList());

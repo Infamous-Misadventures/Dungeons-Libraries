@@ -14,11 +14,11 @@ public class EnchantmentHelperMixinHandler {
     public static void handler(EnchantmentHelper.IEnchantmentVisitor visitor, ItemStack itemStack) {
         if (!itemStack.isEmpty()) {
             List<String> itemStackEnchantments = itemStack.getEnchantmentTags().stream().map(inbt -> ((CompoundNBT) inbt).getString("id")).collect(Collectors.toList());
-            LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
-            lazyCap.ifPresent(cap -> cap.getAllBuiltInEnchantmentDatas().stream()
+            IBuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStack);
+            cap.getAllBuiltInEnchantmentDatas().stream()
                     .filter(enchantmentData -> !itemStackEnchantments.contains(enchantmentData.enchantment.getRegistryName().toString()))
                     .collect(Collectors.groupingBy(enchantmentData -> enchantmentData.enchantment, Collectors.summingInt(value -> value.level)))
-                    .forEach(visitor::accept));
+                    .forEach(visitor::accept);
         }
     }
 }

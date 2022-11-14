@@ -34,35 +34,24 @@ public abstract class EnchantmentHelperMixin {
             at = @At(value = "RETURN", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir, ResourceLocation enchantmentRL, ListNBT listNbt, int i, CompoundNBT compoundnbt, ResourceLocation found) {
         int currentLvl = MathHelper.clamp(compoundnbt.getInt("lvl"), 0, 255);
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
-        if (lazyCap.isPresent()) {
-            IBuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
-            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
-                    .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
-                    .map(enchantmentData -> enchantmentData.level)
-                    .reduce(0, Integer::sum);
-            cir.setReturnValue(currentLvl + reduce);
-            return;
-        }
-
-        cir.setReturnValue(currentLvl);
+        IBuiltInEnchantments iBuiltInEnchantments = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStack);
+        Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
+                .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
+                .map(enchantmentData -> enchantmentData.level)
+                .reduce(0, Integer::sum);
+        cir.setReturnValue(currentLvl + reduce);
     }
 
     @Inject(method = "getItemEnchantmentLevel(Lnet/minecraft/enchantment/Enchantment;Lnet/minecraft/item/ItemStack;)I",
             at = @At(value = "RETURN", ordinal = 2), cancellable = true)
     private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentNotFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir) {
         int currentLvl = 0;
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStack);
-        if(lazyCap.isPresent()) {
-            IBuiltInEnchantments iBuiltInEnchantments = lazyCap.orElse(new BuiltInEnchantments());
-            Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
-                    .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
-                    .map(enchantmentData -> enchantmentData.level)
-                    .reduce(0, Integer::sum);
-            cir.setReturnValue(currentLvl+reduce);
-            return;
-        }
-        cir.setReturnValue(currentLvl);
+        IBuiltInEnchantments iBuiltInEnchantments = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStack);
+        Integer reduce = iBuiltInEnchantments.getAllBuiltInEnchantmentDatas().stream()
+                .filter(enchantmentData -> enchantmentData.enchantment == enchantment)
+                .map(enchantmentData -> enchantmentData.level)
+                .reduce(0, Integer::sum);
+        cir.setReturnValue(currentLvl+reduce);
     }
 
     @Inject(method = "runIterationOnItem(Lnet/minecraft/enchantment/EnchantmentHelper$IEnchantmentVisitor;Lnet/minecraft/item/ItemStack;)V",
@@ -76,8 +65,7 @@ public abstract class EnchantmentHelperMixin {
             method = "runIterationOnItem(Lnet/minecraft/enchantment/EnchantmentHelper$IEnchantmentVisitor;Lnet/minecraft/item/ItemStack;)V",
             at = @At(value = "STORE"), ordinal = 1)
     private static int dungeonslibraries_runIterationOnItem(int j) {
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(itemStackOnIteration);
-        if(enchantmentOnIteration.isPresent() && lazyCap.isPresent()){
+        if(enchantmentOnIteration.isPresent()){
             IBuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStackOnIteration);
             Integer reduce = cap.getAllBuiltInEnchantmentDatas().stream()
                     .filter(enchantmentData -> enchantmentData.enchantment == enchantmentOnIteration.get())

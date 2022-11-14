@@ -23,12 +23,10 @@ public class DescriptionHelper {
     // Rewrite to a mixin inside ItemStack::getTooltipLines. Figure out a way to have all styles available.
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event){
-        LazyOptional<IBuiltInEnchantments> lazyCap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapabilityLazy(event.getItemStack());
-        lazyCap.ifPresent(cap -> {
-            List<EnchantmentData> builtInEnchantments = cap.getBuiltInEnchantments(GEAR_CONFIG_BUILTIN_RESOURCELOCATION);
-            builtInEnchantments.forEach(enchantmentData -> {
-                event.getToolTip().add(enchantmentData.enchantment.getFullname(enchantmentData.level).copy().withStyle(Style.EMPTY.withColor(Color.parseColor("#FF8100"))));
-            });
+        IBuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(event.getItemStack());
+        List<EnchantmentData> builtInEnchantments = cap.getBuiltInEnchantments(GEAR_CONFIG_BUILTIN_RESOURCELOCATION);
+        builtInEnchantments.forEach(enchantmentData -> {
+            event.getToolTip().add(enchantmentData.enchantment.getFullname(enchantmentData.level).copy().withStyle(Style.EMPTY.withColor(Color.parseColor("#FF8100"))));
         });
     }
 

@@ -70,9 +70,6 @@ public class SoulCasterHelper {
     public static ISoulCaster getSoulCasterCapability(Entity entity)
     {
         LazyOptional<ISoulCaster> lazyCap = entity.getCapability(SoulCasterProvider.SOUL_CASTER_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the combo capability from the Entity!"));
-        }
-        return null;
+        return lazyCap.orElse(new SoulCaster());
     }
 }

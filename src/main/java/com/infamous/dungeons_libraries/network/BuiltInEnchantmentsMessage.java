@@ -1,19 +1,14 @@
 package com.infamous.dungeons_libraries.network;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.infamous.dungeons_libraries.capabilities.enchantable.EnchantableHelper.getEnchantableCapabilityLazy;
 import static net.minecraftforge.registries.ForgeRegistries.ENCHANTMENTS;
 
 public class BuiltInEnchantmentsMessage {

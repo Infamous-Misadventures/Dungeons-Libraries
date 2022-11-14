@@ -72,20 +72,14 @@ public class MinionMasterHelper {
     public static IMaster getMasterCapability(Entity entity)
     {
         LazyOptional<IMaster> lazyCap = entity.getCapability(MasterProvider.MASTER_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summoner capability from the Entity!"));
-        }
-        return null;
+        return lazyCap.orElse(new Master());
     }
 
     @Nullable
     public static IMinion getMinionCapability(Entity entity)
     {
         LazyOptional<IMinion> lazyCap = entity.getCapability(MinionProvider.MINION_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summonable capability from the Entity!"));
-        }
-        return null;
+        return lazyCap.orElse(new Minion());
     }
 
     public static void addMinionGoals(MobEntity mobEntity) {

@@ -20,7 +20,9 @@ public class EnchantableHelper {
     {
         LazyOptional<IEnchantable> lazyCap = entity.getCapability(EnchantableProvider.ENCHANTABLE_CAPABILITY);
         if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the Enchantable capability from the Entity!"));
+            Enchantable enchantable = new Enchantable();
+            enchantable.setSpawned(true);
+            return lazyCap.orElse(enchantable);
         }
         return null;
     }
