@@ -67,6 +67,10 @@ public class NetworkHandler {
                 .encoder(EliteMobMessage::encode).decoder(EliteMobMessage::decode)
                 .consumer(EliteMobMessage::onPacketReceived)
                 .add();
+        INSTANCE.messageBuilder(BreakItemMessage.class, incrementAndGetPacketCounter())
+                .encoder(BreakItemMessage::encode).decoder(BreakItemMessage::decode)
+                .consumer(BreakItemMessage.BreakItemHandler::handle)
+                .add();
     }
 
     public static int incrementAndGetPacketCounter() {
