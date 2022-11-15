@@ -43,26 +43,20 @@ public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T>
     }
 
     @Override
-    public void renderCubesOfBone(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (!bone.isHidden()) {
-            for (GeoCube cube : bone.childCubes) {
-                stack.pushPose();
-                if (!bone.cubesAreHidden()) {
-                    if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet().getRegistryName() == this.currentArmorItem.getArmorSet()){
-                        renderCube(cube, stack, bufferIn, packedLightIn, LivingEntityRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
-                    }else {
-                        renderCube(cube, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-                    }
-                }
-                stack.popPose();
-            }
-        }
-        if (!bone.childBonesAreHiddenToo()) {
-            for (GeoBone childBone : bone.childBones) {
-                renderRecursively(childBone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            }
-        }
+    public void renderCubesOfBone(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (bone.isHidden())
+            return;
 
-        stack.popPose();
+        for (GeoCube cube : bone.childCubes) {
+            if (!bone.cubesAreHidden()) {
+                poseStack.pushPose();
+                if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet().getRegistryName() == this.currentArmorItem.getArmorSet()){
+                renderCube(cube, poseStack, buffer, packedLight, LivingEntityRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
+                }else {
+                    renderCube(cube, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                }
+                poseStack.popPose();
+            }
+        }
     }
 }
