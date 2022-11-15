@@ -21,11 +21,13 @@ public class ArtifactUsage implements INBTSerializable<CompoundTag> {
     public boolean startUsingArtifact(ItemStack itemStack) {
         if(usingArtifact != null || !(itemStack.getItem() instanceof ArtifactItem)) return false;
         usingArtifact = itemStack;
+        usingArtifactRemaining = itemStack.getItem().getUseDuration(itemStack);
         return true;
     }
 
     public boolean stopUsingArtifact() {
         usingArtifact = null;
+        usingArtifactRemaining = 0;
         return true;
     }
 

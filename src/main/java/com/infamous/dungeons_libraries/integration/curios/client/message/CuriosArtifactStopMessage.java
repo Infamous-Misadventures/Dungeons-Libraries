@@ -3,6 +3,8 @@ package com.infamous.dungeons_libraries.integration.curios.client.message;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsage;
 import com.infamous.dungeons_libraries.capabilities.artifact.ArtifactUsageHelper;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -33,19 +35,16 @@ public class CuriosArtifactStopMessage {
             if (packet != null) {
                 ctx.get().setPacketHandled(true);
                 ctx.get().enqueueWork(() -> {
-                    ServerPlayer player = ctx.get().getSender();
+                    AbstractClientPlayer player = Minecraft.getInstance().player;
                     if (player != null) {
-                        CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
-                            Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-                            if(artifactStackHandler.isPresent()) {
-                                ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(packet.slot);
-                                ArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
-                                if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem && cap.isSameUsingArtifact(artifact)) {
-                                    ((ArtifactItem) cap.getUsingArtifact().getItem()).stopUsingArtifact(player);
-                                    cap.stopUsingArtifact();
-                                }
+                        ArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
+                        if (cap != null) {
+                            ItemStack artifactStack = cap.getUsingArtifact();
+                            if (artifactStack != null && artifactStack.getItem() instanceof ArtifactItem artifactItem) {
+                                artifactItem.stopUsingArtifact(player);
+                                cap.stopUsingArtifact();
                             }
-                        });
+                        }
                     }
                 });
             }

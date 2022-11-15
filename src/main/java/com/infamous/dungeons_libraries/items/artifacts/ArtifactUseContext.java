@@ -33,6 +33,10 @@ public class ArtifactUseContext {
       return this.hitResult;
    }
 
+   public boolean isHitMiss() {
+      return this.hitResult.getType() == BlockHitResult.Type.MISS;
+   }
+
    public BlockPos getClickedPos() {
       return this.hitResult.getBlockPos();
    }
