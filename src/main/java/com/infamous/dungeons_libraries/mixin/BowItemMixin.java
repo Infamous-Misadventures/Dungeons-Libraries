@@ -43,7 +43,7 @@ public class BowItemMixin {
     public void libraries_releaseUsing_setArrowDamage(ItemStack pStack, World j, LivingEntity k, int pTimeLeft, CallbackInfo ci, PlayerEntity playerentity, boolean flag, ItemStack itemstack, int i, float f, boolean flag1, ArrowItem arrowitem, AbstractArrowEntity abstractArrowEntity) {
         ModifiableAttributeInstance attribute = playerentity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
         if(attribute != null) {
-            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue() + 1));
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue()));
         }
     }
 }
