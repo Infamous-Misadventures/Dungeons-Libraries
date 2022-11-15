@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.event.ArtifactEvent;
 import com.infamous.dungeons_libraries.mixin.CooldownAccessor;
+import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.ARTIFACT_COOLDOWN_MULTIPLIER;
-import static com.infamous.dungeons_libraries.client.TooltipHelper.addFullDescription;
 import static com.infamous.dungeons_libraries.tags.ItemTags.ARTIFACT_REPAIR_ITEMS;
 
 public abstract class ArtifactItem extends Item implements ICurioItem {
@@ -115,6 +115,6 @@ public abstract class ArtifactItem extends Item implements ICurioItem {
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
-        addFullDescription(list, stack);
+        DescriptionHelper.addArtifactDescription(list, stack);
     }
 }
