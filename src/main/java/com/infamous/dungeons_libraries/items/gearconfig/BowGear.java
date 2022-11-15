@@ -129,7 +129,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
         abstractArrowEntity = this.customArrow(abstractArrowEntity);
         AttributeInstance attribute = playerentity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
         if(attribute != null) {
-            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue() + 1));
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue()));
         }
         this.setArrowTrajectory(playerentity, arrowVelocity, i, abstractArrowEntity);
         if (arrowVelocity == 1.0F) {

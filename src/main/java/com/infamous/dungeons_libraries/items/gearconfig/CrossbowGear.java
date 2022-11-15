@@ -228,7 +228,7 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         AbstractArrow abstractArrowEntity = arrowItem.createArrow(world, stack1, livingEntity);
         AttributeInstance attribute = livingEntity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
         if(attribute != null) {
-            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue() + 1));
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue()));
         }
         if (livingEntity instanceof Player) {
             abstractArrowEntity.setCritArrow(true);
