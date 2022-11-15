@@ -26,6 +26,7 @@ public class Minion implements INBTSerializable<CompoundTag> {
     private int minionTimer = 0;
     private boolean temporary = false;
     private boolean revertsOnExpiration = false;
+    private boolean goalsAdded = false;
 
     public LivingEntity getMaster() {
         if(this.master == null && this.masterUUID != null && this.levelOnLoad != null){
@@ -95,6 +96,14 @@ public class Minion implements INBTSerializable<CompoundTag> {
 
     public void setRevertsOnExpiration(boolean revertsOnExpiration) {
         this.revertsOnExpiration = revertsOnExpiration;
+    }
+
+    public boolean isGoalsAdded() {
+        return goalsAdded;
+    }
+
+    public void setGoalsAdded(boolean goalsAdded) {
+        this.goalsAdded = goalsAdded;
     }
 
     public static final String MASTER_KEY = "summoner";

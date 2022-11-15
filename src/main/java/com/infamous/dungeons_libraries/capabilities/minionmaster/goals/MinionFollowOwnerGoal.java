@@ -54,7 +54,7 @@ public class MinionFollowOwnerGoal extends Goal {
             return false;
         } else if (this.mobEntity.isLeashed()) {
             return false;
-        } else if (this.mobEntity.distanceToSqr(livingentity) < (double)(this.maxDist * this.maxDist)) {
+        } else if (this.mobEntity.distanceTo(livingentity) < (double)(this.maxDist)) {
             return false;
         } else {
             this.owner = livingentity;
@@ -71,7 +71,7 @@ public class MinionFollowOwnerGoal extends Goal {
         } else if (this.mobEntity.isLeashed()) {
             return false;
         } else {
-            return !(this.mobEntity.distanceToSqr(this.owner) <= (double)(this.minDist * this.minDist));
+            return !(this.mobEntity.distanceTo(this.owner) <= (double)(this.minDist));
         }
     }
 
@@ -101,7 +101,7 @@ public class MinionFollowOwnerGoal extends Goal {
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
             if (!this.mobEntity.isLeashed() && !this.mobEntity.isPassenger()) {
-                if (this.mobEntity.distanceToSqr(this.owner) >= 144.0D) {
+                if (this.mobEntity.distanceTo(this.owner) >= maxDist*2) {
                     this.teleportToOwner();
                 } else {
                     this.navigator.moveTo(this.owner, this.followSpeed);

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
+import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtByTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MasterHurtTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.MinionFollowOwnerGoal;
@@ -92,18 +93,24 @@ public class MinionMasterHelper {
     public static void addMinionGoals(Mob mobEntity) {
         Minion minionCap = getMinionCapability(mobEntity);
         if(minionCap == null) return;
+        if(minionCap.isGoalsAdded()) return;
         if(minionCap.isMinion()){
-            mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 1.5D, 12.0F, 3.0F, false));
+            mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 1.5D, 24.0F, 3.0F, false));
             clearGoals(mobEntity.targetSelector);
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
                     (entityIterator) -> canPetAttackEntity(mobEntity, entityIterator)));
-        }
-        if(minionCap.isSummon()){
-            SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
-            if(config.shouldAddAttackGoal()){
-                mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
+
+            minionCap.getMaster().getCapability(ModCapabilities.MASTER_CAPABILITY).ifPresent(master -> {
+                master.addMinion(mobEntity);
+            });
+            minionCap.setGoalsAdded(true);
+            if(minionCap.isSummon()){
+                SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
+                if(config.shouldAddAttackGoal()){
+                    mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
+                }
             }
         }
     }
@@ -119,6 +126,7 @@ public class MinionMasterHelper {
             Mob mobEntity = (Mob) entityLiving;
             clearGoals(mobEntity.goalSelector);
             clearGoals(mobEntity.targetSelector);
+            cap.setGoalsAdded(false);
             ((MobInvoker) entityLiving).invokeRegisterGoals();
         }
     }

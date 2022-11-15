@@ -14,18 +14,15 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Master implements INBTSerializable<CompoundTag> {
 
-    private List<Entity> summonedMobs;
+    private Set<Entity> summonedMobs;
     private List<UUID> summonedMobsUUID = new ArrayList<>();
     private ResourceLocation levelOnLoad;
-    private List<Entity> otherMinions;
+    private Set<Entity> otherMinions;
     private List<UUID> otherMinionsUUID = new ArrayList<>();
 
     public void copyFrom(Master summoner) {
@@ -52,7 +49,7 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public void setSummonedMobs(List<Entity> summonedMobs) {
-        this.summonedMobs = new ArrayList<>(summonedMobs);
+        this.summonedMobs = new HashSet<>(summonedMobs);
     }
 
     public void setSummonedMobsUUID(List<UUID> summonedMobsUUID) {
@@ -72,23 +69,23 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public void setOtherMinions(List<Entity> otherMinions) {
-        this.otherMinions = new ArrayList<>(otherMinions);
+        this.otherMinions = new HashSet<>(otherMinions);
     }
 
-    private List<Entity> getEntities(List<Entity> entities, List<UUID> entityUUIDs) {
-        if(entities != null) return entities;
+    private List<Entity> getEntities(Set<Entity> entities, List<UUID> entityUUIDs) {
+        if(entities != null) return new ArrayList<>(entities);
         if(entityUUIDs != null && this.levelOnLoad != null){
             if(entityUUIDs.isEmpty()) return new ArrayList<>();
             ResourceKey<Level> registrykey1 = ResourceKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             ServerLevel world = server.getLevel(registrykey1);
             if (world != null) {
-                entities = entityUUIDs.stream().map(world::getEntity).filter(Objects::nonNull).collect(Collectors.toList());
+                entities = entityUUIDs.stream().map(world::getEntity).filter(Objects::nonNull).collect(Collectors.toSet());
             }
         }else{
-            entities = new ArrayList<>();
+            return new ArrayList<>();
         }
-        return entities;
+        return new ArrayList<>(entities);
     }
 
     public void removeMinion(LivingEntity entityLiving) {
