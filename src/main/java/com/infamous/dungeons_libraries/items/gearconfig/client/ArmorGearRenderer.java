@@ -48,7 +48,7 @@ public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T>
             for (GeoCube cube : bone.childCubes) {
                 stack.pushPose();
                 if (!bone.cubesAreHidden()) {
-                    if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet() == this.currentArmorItem.getArmorSet()){
+                    if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet().getRegistryName() == this.currentArmorItem.getArmorSet()){
                         renderCube(cube, stack, bufferIn, packedLightIn, LivingEntityRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
                     }else {
                         renderCube(cube, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
