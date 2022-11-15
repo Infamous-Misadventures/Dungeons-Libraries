@@ -44,7 +44,13 @@ public class Minion implements INBTSerializable<CompoundTag> {
 
     public void setMaster(LivingEntity master) {
         this.master = master;
-        this.masterUUID = master.getUUID();
+        if(master != null){
+            this.masterUUID = master.getUUID();
+            this.levelOnLoad = master.level.dimension().location();
+        }else{
+            this.masterUUID = null;
+            this.levelOnLoad = null;
+        }
     }
 
     public void setMasterUUID(UUID masterUUID) {
