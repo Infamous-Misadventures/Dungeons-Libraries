@@ -2,9 +2,8 @@ package com.infamous.dungeons_libraries;
 
 import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
-import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
+import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
-import com.infamous.dungeons_libraries.entities.ModEntityTypes;
 import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry;
@@ -13,8 +12,10 @@ import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.materials.armor.DungeonsArmorMaterials;
 import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -42,6 +43,9 @@ public class DungeonsLibraries
     public static final String MODID = "dungeons_libraries";
 
     public DungeonsLibraries() {
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> {
+            return GuiElementConfigRegistry::initGuiElementConfigs;
+        });
         // Register the setup method for modloading
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, DungeonsLibrariesConfig.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
