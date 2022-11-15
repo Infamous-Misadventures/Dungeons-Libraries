@@ -34,6 +34,12 @@ authors="the_infamous_1, Patrigan" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''Library mod for the Dungeons Suite. Brings a lot of tools for modmakers to spice up their combat.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.dungeons_libraries]]
+    modId="curios"
+    mandatory=true
+    versionRange="[1.18.2-5.0.7.1,)"
+    ordering="NONE"
+    side="BOTH"
 [[dependencies.dungeons_libraries]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
