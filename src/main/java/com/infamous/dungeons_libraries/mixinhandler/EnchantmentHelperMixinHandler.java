@@ -15,10 +15,10 @@ public class EnchantmentHelperMixinHandler {
         if (!itemStack.isEmpty()) {
             List<String> itemStackEnchantments = itemStack.getEnchantmentTags().stream().map(inbt -> ((CompoundTag) inbt).getString("id")).collect(Collectors.toList());
             BuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStack);
-            lazyCap.ifPresent(cap -> cap.getAllBuiltInEnchantmentInstances().stream()
+            cap.getAllBuiltInEnchantmentInstances().stream()
                     .filter(enchantmentInstance -> !itemStackEnchantments.contains(enchantmentInstance.enchantment.getRegistryName().toString()))
                     .collect(Collectors.groupingBy(enchantmentInstance -> enchantmentInstance.enchantment, Collectors.summingInt(value -> value.level)))
-                    .forEach(visitor::accept));
+                    .forEach(visitor::accept);
         }
     }
 }
