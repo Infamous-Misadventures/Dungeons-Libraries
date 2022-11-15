@@ -48,7 +48,8 @@ public class Master implements IMaster {
 
     @Override
     public boolean addSummonedMob(Entity entity) {
-        return this.getSummonedMobs().add(entity);
+        this.getSummonedMobs();
+        return summonedMobs.add(entity);
     }
 
     @Override
@@ -68,7 +69,8 @@ public class Master implements IMaster {
 
     @Override
     public boolean addMinion(Entity entity) {
-        return this.getOtherMinions().add(entity);
+        this.getOtherMinions();
+        return otherMinions.add(entity);
     }
 
     @Override

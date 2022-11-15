@@ -8,9 +8,11 @@ import net.minecraft.entity.ai.goal.TargetGoal;
 
 import java.util.EnumSet;
 
+import static com.infamous.dungeons_libraries.utils.AbilityHelper.isAlly;
 import static com.infamous.dungeons_libraries.utils.GoalUtils.shouldAttackEntity;
 
 public class MasterHurtByTargetGoal extends TargetGoal {
+    public static final EntityPredicate PREDICATE = new EntityPredicate().allowSameTeam();
     private final MobEntity mobEntity;
     private LivingEntity attacker;
     private int timestamp;
@@ -29,7 +31,7 @@ public class MasterHurtByTargetGoal extends TargetGoal {
             } else {
                 this.attacker = owner.getLastHurtByMob();
                 int revengeTimer = owner.getLastHurtByMobTimestamp();
-                return revengeTimer != this.timestamp && this.canAttack(this.attacker, EntityPredicate.DEFAULT) && shouldAttackEntity(this.attacker, owner);
+                return revengeTimer != this.timestamp && this.canAttack(this.attacker, PREDICATE) && !isAlly(this.mobEntity, this. attacker) && shouldAttackEntity(this.attacker, owner);
             }
 //        } else {
 //            return false;
