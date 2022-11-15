@@ -12,15 +12,13 @@ public class TimerEvents {
     @SubscribeEvent
     public static void onLivingUpdate(LivingEvent.LivingUpdateEvent event){
         Timers timersCapability = TimersHelper.getTimersCapability(event.getEntityLiving());
-        if(timersCapability != null){
-            timersCapability.tickTimers();
-        }
+        timersCapability.tickTimers();
     }
 
     @SubscribeEvent
     public static void onPlayerUpdate(TickEvent.PlayerTickEvent event){
         Timers timersCapability = TimersHelper.getTimersCapability(event.player);
-        if(timersCapability != null && event.phase == TickEvent.Phase.START && !event.player.isSpectator() && !event.player.level.isClientSide()){
+        if(event.phase == TickEvent.Phase.START && !event.player.isSpectator() && !event.player.level.isClientSide()){
             timersCapability.tickTimers();
         }
     }

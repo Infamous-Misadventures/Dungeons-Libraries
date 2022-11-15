@@ -23,9 +23,7 @@ public class SummonEvents {
     public static void reAddSummonableGoals(EntityJoinWorldEvent event){
         if(MinionMasterHelper.isMinionEntity(event.getEntity())){
             Minion minionCapability = getMinionCapability(event.getEntity());
-            if(minionCapability == null) return;
-            if(event.getEntity() instanceof Bee){
-                Bee beeEntity = (Bee) event.getEntity();
+            if(event.getEntity() instanceof Bee beeEntity){
                 if(minionCapability.getMaster() != null){
                     beeEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(beeEntity, LivingEntity.class, 5, false, false,
                             (entityIterator) -> entityIterator instanceof Mob && !(entityIterator instanceof Creeper)));
@@ -40,13 +38,11 @@ public class SummonEvents {
         if(MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
             LivingEntity minionAttacker = event.getEntityLiving();
             Minion attackerMinionCap = getMinionCapability(minionAttacker);
-            if(attackerMinionCap == null) return;
             if(attackerMinionCap.getMaster() != null){
                 LivingEntity attackersOwner = attackerMinionCap.getMaster();
                 if(MinionMasterHelper.isMinionEntity(event.getTarget())){
                     LivingEntity summonableTarget = event.getTarget();
                     Minion targetSummonableCap = getMinionCapability(summonableTarget);
-                    if(targetSummonableCap == null) return;
                     if(targetSummonableCap.getMaster() != null){
                         LivingEntity targetsOwner = targetSummonableCap.getMaster();
                         if(targetsOwner.equals(attackersOwner)){

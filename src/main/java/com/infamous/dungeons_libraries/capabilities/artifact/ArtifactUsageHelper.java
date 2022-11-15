@@ -10,22 +10,9 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ARTIF
 
 public class ArtifactUsageHelper {
 
-    public static LazyOptional<ArtifactUsage> getArtifactUsageCapabilityLazy(Entity entity)
-    {
-        if(ARTIFACT_USAGE_CAPABILITY == null) {
-            return LazyOptional.empty();
-        }
-        LazyOptional<ArtifactUsage> lazyCap = entity.getCapability(ARTIFACT_USAGE_CAPABILITY);
-        return lazyCap;
-    }
-
     public static ArtifactUsage getArtifactUsageCapability(Entity entity)
     {
-        LazyOptional<ArtifactUsage> lazyCap = entity.getCapability(ARTIFACT_USAGE_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the Artifact Usage capability from the Entity!"));
-        }
-        return null;
+        return entity.getCapability(ARTIFACT_USAGE_CAPABILITY).orElse(new ArtifactUsage());
     }
 
     public static boolean startUsingArtifact(Player playerIn, ArtifactUsage cap, ItemStack itemstack){

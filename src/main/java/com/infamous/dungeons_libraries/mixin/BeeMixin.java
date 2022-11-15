@@ -27,7 +27,7 @@ public abstract class BeeMixin extends Animal {
             at = @At(value = "TAIL"))
     private void dungeonslibraries_canReplaceCurrentItem(boolean p_226449_1_, CallbackInfo ci) {
         Minion minionCapability = getMinionCapability(this);
-        if(minionCapability != null && minionCapability.isMinion()){
+        if(minionCapability.isMinion()){
             this.setFlag(4, false);
         }
     }

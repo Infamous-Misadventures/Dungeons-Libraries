@@ -44,7 +44,6 @@ public class EliteMobMessage {
                 Entity entity = Minecraft.getInstance().player.level.getEntity(message.entityId);
                 if (entity instanceof LivingEntity) {
                     EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-                    if(cap == null) return;
                     cap.setElite(message.isElite);
                     cap.setTexture(message.texture);
                     if(cap.isElite()) {

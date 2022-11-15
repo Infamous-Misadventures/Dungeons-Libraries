@@ -26,7 +26,7 @@ public class MinionEvents {
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event){
         Minion cap = MinionMasterHelper.getMinionCapability(event.getEntityLiving());
-        if (cap != null && cap.isMinion()) {
+        if (cap.isMinion()) {
             event.setCanceled(true);
         }
     }
@@ -36,7 +36,7 @@ public class MinionEvents {
         LivingEntity entityLiving = event.getEntityLiving();
         if(entityLiving.level.isClientSide) return;
         Minion cap = MinionMasterHelper.getMinionCapability(entityLiving);
-        if (cap != null && cap.isMinion()) {
+        if (cap.isMinion()) {
             if (cap.isTemporary()) {
                 if (cap.getMinionTimer() > 0) {
                     cap.setMinionTimer(cap.getMinionTimer() - 1);
@@ -57,31 +57,23 @@ public class MinionEvents {
         if(!event.getWorld().isClientSide() && entity instanceof Mob) {
             MinionMasterHelper.addMinionGoals((Mob) entity);
             Master masterCapability = getMasterCapability(entity);
-            if(masterCapability != null){
-                List<Entity> minions = masterCapability.getAllMinions();
-                for(Entity minion : minions){
-                    if(minion instanceof Mob){
-                        Minion minionCapability = getMinionCapability(minion);
-                        if(minionCapability != null) {
-                            minionCapability.setMaster((Mob) entity);
-                            MinionMasterHelper.addMinionGoals((Mob) minion);
-                        }
-                    }
+            List<Entity> minions = masterCapability.getAllMinions();
+            for(Entity minion : minions){
+                if(minion instanceof Mob){
+                    Minion minionCapability = getMinionCapability(minion);
+                    minionCapability.setMaster((Mob) entity);
+                    MinionMasterHelper.addMinionGoals((Mob) minion);
                 }
             }
         }
         if(!event.getWorld().isClientSide() && entity instanceof Player) {
             Master masterCapability = getMasterCapability(entity);
-            if(masterCapability != null){
-                List<Entity> minions = masterCapability.getAllMinions();
-                for(Entity minion : minions){
-                    if(minion instanceof Mob){
-                        Minion minionCapability = getMinionCapability(minion);
-                        if(minionCapability != null) {
-                            minionCapability.setMaster((Player) entity);
-                            MinionMasterHelper.addMinionGoals((Mob) minion);
-                        }
-                    }
+            List<Entity> minions = masterCapability.getAllMinions();
+            for(Entity minion : minions){
+                if(minion instanceof Mob){
+                    Minion minionCapability = getMinionCapability(minion);
+                    minionCapability.setMaster((Player) entity);
+                    MinionMasterHelper.addMinionGoals((Mob) minion);
                 }
             }
         }
@@ -95,7 +87,6 @@ public class MinionEvents {
         if(event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
         if(!master.isAlive()) return;
         Master masterCap = getMasterCapability(event.player);
-        if(masterCap == null) return;
         updateAliveList(masterCap);
     }
 
@@ -104,11 +95,9 @@ public class MinionEvents {
         if(!event.getEntityLiving().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
             LivingEntity livingEntity = event.getEntityLiving();
             Minion minionCapability = getMinionCapability(livingEntity);
-            if(minionCapability == null) return;
             LivingEntity summoner = minionCapability.getMaster();
             if(summoner != null){
                 Master masterCap = getMasterCapability(summoner);
-                if(masterCap == null) return;
                 updateAliveList(masterCap);
             }
         }

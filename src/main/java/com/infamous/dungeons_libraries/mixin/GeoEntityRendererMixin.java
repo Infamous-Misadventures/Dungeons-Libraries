@@ -28,7 +28,7 @@ public abstract class GeoEntityRendererMixin<T extends LivingEntity & IAnimatabl
             at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true, remap = false)
     private void dungeonsLibraries_bindEliteTexture(T instance, CallbackInfoReturnable<ResourceLocation> cir) {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(instance);
-        if(cap != null && cap.isElite() && !cap.getTexture().equals(EMPTY_TEXTURE)) {
+        if(cap.isElite() && !cap.getTexture().equals(EMPTY_TEXTURE)) {
             cir.setReturnValue(cap.getTexture());
         }
     }

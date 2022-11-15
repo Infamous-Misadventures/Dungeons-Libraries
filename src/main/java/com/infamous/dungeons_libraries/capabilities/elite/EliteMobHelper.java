@@ -9,13 +9,8 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.ELITE
 
 public class EliteMobHelper {
 
-    @Nullable
     public static EliteMob getEliteMobCapability(Entity entity)
     {
-        LazyOptional<EliteMob> lazyCap = entity.getCapability(ELITE_MOB_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the combo capability from the Entity!"));
-        }
-        return null;
+        return entity.getCapability(ELITE_MOB_CAPABILITY).orElse(new EliteMob());
     }
 }

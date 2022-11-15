@@ -42,57 +42,33 @@ public class MinionMasterHelper {
 
     public static boolean isMinionEntity(Entity target) {
         Minion targetSummonableCap = getMinionCapability(target);
-        if(targetSummonableCap == null){
-            return false;
-        }else {
-            return targetSummonableCap.getMaster() != null;
-        }
+        return targetSummonableCap.getMaster() != null;
     }
 
     public static boolean isMinionOf(LivingEntity target, LivingEntity owner) {
         Minion targetSummonableCap = getMinionCapability(target);
-        if(targetSummonableCap == null){
-            return false;
-        } else{
-            return targetSummonableCap.getMaster() != null
-                    && targetSummonableCap.getMaster() == owner;
-        }
+        return targetSummonableCap.getMaster() != null
+                && targetSummonableCap.getMaster() == owner;
     }
 
     @Nullable
     public static LivingEntity getMaster(LivingEntity minionMob) {
-        try {
-            Minion minion = getMinionCapability(minionMob);
-            if(minion == null) return null;
-            return minion.getMaster();
-        } catch (IllegalArgumentException var2) {
-            return null;
-        }
+        Minion minion = getMinionCapability(minionMob);
+        return minion.getMaster();
     }
 
-    @Nullable
     public static Master getMasterCapability(Entity entity)
     {
-        LazyOptional<Master> lazyCap = entity.getCapability(MASTER_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summoner capability from the Entity!"));
-        }
-        return null;
+        return entity.getCapability(MASTER_CAPABILITY).orElse(new Master());
     }
 
-    @Nullable
     public static Minion getMinionCapability(Entity entity)
     {
-        LazyOptional<Minion> lazyCap = entity.getCapability(MINION_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the summonable capability from the Entity!"));
-        }
-        return null;
+        return entity.getCapability(MINION_CAPABILITY).orElse(new Minion());
     }
 
     public static void addMinionGoals(Mob mobEntity) {
         Minion minionCap = getMinionCapability(mobEntity);
-        if(minionCap == null) return;
         if(minionCap.isGoalsAdded()) return;
         if(minionCap.isMinion()){
             mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 1.5D, 24.0F, 3.0F, false));
@@ -118,9 +94,7 @@ public class MinionMasterHelper {
     static void removeMinion(LivingEntity entityLiving, Minion cap) {
         LivingEntity master = cap.getMaster();
         Master masterCapability = getMasterCapability(master);
-        if(masterCapability != null){
-            masterCapability.removeMinion(entityLiving);
-        }
+        masterCapability.removeMinion(entityLiving);
         cap.setMaster(null);
         if(entityLiving instanceof Mob){
             Mob mobEntity = (Mob) entityLiving;

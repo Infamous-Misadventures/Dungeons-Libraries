@@ -43,7 +43,7 @@ public class ArtifactEvents {
             return;
         }
         ArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(event.player);
-        if(cap != null && cap.isUsingArtifact() && cap.getUsingArtifact().getItem() instanceof ArtifactItem){
+        if(cap.isUsingArtifact() && cap.getUsingArtifact().getItem() instanceof ArtifactItem){
             cap.getUsingArtifact().getItem().onUseTick(event.player.level, event.player, cap.getUsingArtifact(), cap.getUsingArtifactRemaining());
             cap.setUsingArtifactRemaining(cap.getUsingArtifactRemaining() - 1);
         }

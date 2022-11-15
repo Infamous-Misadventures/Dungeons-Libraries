@@ -8,13 +8,8 @@ import javax.annotation.Nullable;
 
 public class EnchantedProjectileHelper {
 
-    @Nullable
     public static EnchantedProjectile getEnchantedProjectileCapability(Entity entity)
     {
-        LazyOptional<EnchantedProjectile> lazyCap = entity.getCapability(ModCapabilities.ENCHANTED_PROJECTILE_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the combo capability from the Entity!"));
-        }
-        return null;
+        return entity.getCapability(ModCapabilities.ENCHANTED_PROJECTILE_CAPABILITY).orElse(new EnchantedProjectile());
     }
 }

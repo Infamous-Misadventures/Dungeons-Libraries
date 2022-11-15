@@ -20,8 +20,6 @@ public class SoulCasterHelper {
 
     public static void addSouls(LivingEntity le, float amount) {
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
-        if (soulCasterCapability == null) return;
-
         float newAmount = soulCasterCapability.getSouls() + amount + 1;
         soulCasterCapability.setSouls(newAmount, le);
         if (le instanceof ServerPlayer) {
@@ -31,8 +29,6 @@ public class SoulCasterHelper {
 
     public static void setSouls(LivingEntity le, float amount) {
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
-        if (soulCasterCapability == null) return;
-
         float newAmount = amount;
         soulCasterCapability.setSouls(newAmount, le);
         if (le instanceof ServerPlayer) {
@@ -43,7 +39,6 @@ public class SoulCasterHelper {
     public static boolean consumeSouls(LivingEntity le, float amount) {
         if(le instanceof Player && ((Player) le).isCreative()) return true;
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
-        if (soulCasterCapability == null) return false;
 
         if(soulCasterCapability.getSouls() < amount) return false;
         float newAmount = soulCasterCapability.getSouls() - amount;
@@ -57,7 +52,6 @@ public class SoulCasterHelper {
     public static boolean canConsumeSouls(LivingEntity le, ItemStack itemStack) {
         if(le instanceof Player && ((Player) le).isCreative()) return true;
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
-        if (soulCasterCapability == null) return false;
 
         Item item = itemStack.getItem();
         if(item instanceof ISoulConsumer) {
@@ -67,13 +61,8 @@ public class SoulCasterHelper {
         return false;
     }
 
-    @Nullable
     public static SoulCaster getSoulCasterCapability(Entity entity)
     {
-        LazyOptional<SoulCaster> lazyCap = entity.getCapability(SOUL_CASTER_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the combo capability from the Entity!"));
-        }
-        return null;
+        return entity.getCapability(SOUL_CASTER_CAPABILITY).orElse(new SoulCaster());
     }
 }

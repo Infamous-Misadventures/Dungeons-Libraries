@@ -143,10 +143,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
             if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new PlayerSoulEvent.PickupSoul(player, this))) return;
 
             if (this.value > 0) {
-               SoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(player);
-               if(soulCasterCapability != null){
-                  SoulCasterHelper.addSouls(player, this.value);
-               }
+               SoulCasterHelper.addSouls(player, this.value);
             }
 
             this.discard();

@@ -49,7 +49,6 @@ public class ArrowHelper {
 //        if (hasFuseShotBuiltIn(stack)) fuseShotLevel++;
 //        if (fuseShotLevel > 0) {
 //            IBow weaponCap = CapabilityHelper.getWeaponCapability(stack);
-//            if (weaponCap == null) return;
 //            int fuseShotCounter = weaponCap.getFuseShotCounter();
 //            // 6 - 1, 6 - 2, 6 - 3
 //            // zero indexing, so subtract 1 as well
@@ -98,13 +97,8 @@ public class ArrowHelper {
     }
 
     public static boolean arrowHitMob(HitResult hitResult) {
-        if(hitResult instanceof EntityHitResult){
-            EntityHitResult entityHitResult = (EntityHitResult)hitResult;
-            if(entityHitResult.getEntity() instanceof Mob){
-                return true;
-            } else{
-                return false;
-            }
+        if(hitResult instanceof EntityHitResult entityHitResult){
+            return entityHitResult.getEntity() instanceof Mob;
         } else{
             return false;
         }
@@ -112,17 +106,11 @@ public class ArrowHelper {
 
     public static void addEnchantmentTagsToArrow(ItemStack itemStack, Projectile projectileEntity){
         EnchantedProjectile cap = EnchantedProjectileHelper.getEnchantedProjectileCapability(projectileEntity);
-        if(cap != null){
-            cap.setEnchantments(itemStack);
-        }
+        cap.setEnchantments(itemStack);
     }
 
     public static int enchantmentTagToLevel(Projectile projectileEntity, Enchantment enchantment){
         EnchantedProjectile cap = EnchantedProjectileHelper.getEnchantedProjectileCapability(projectileEntity);
-        if(cap != null){
-            return cap.getEnchantmentLevel(enchantment);
-        }else {
-            return 0;
-        }
+        return cap.getEnchantmentLevel(enchantment);
     }
 }

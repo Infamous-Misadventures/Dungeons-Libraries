@@ -40,9 +40,7 @@ public class UpdateSoulsMessage {
                         LocalPlayer player = Minecraft.getInstance().player;
                         if (player != null) {
                             SoulCaster soulCasterCap = SoulCasterHelper.getSoulCasterCapability(player);
-                            if (soulCasterCap != null) {
-                                soulCasterCap.setSouls(packet.newAmount, player);
-                            }
+                            soulCasterCap.setSouls(packet.newAmount, player);
                         }
                     }
                 }));

@@ -19,7 +19,6 @@ public class PetHelper {
         if (isPetOf(target, owner) || isPetOf(owner, target))
             return;//don't kill your pets or master!
         Master masterCapability = MinionMasterHelper.getMasterCapability(owner);
-        if(masterCapability == null) return;
         List<LivingEntity> nearbyEntities = owner.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(12), nearbyEntity -> isPetOf(owner, nearbyEntity));
         HashSet<Entity> pets = new HashSet<>();
         pets.addAll(masterCapability.getAllMinions());

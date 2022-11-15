@@ -16,9 +16,6 @@ public class SummonHelper {
 
     private static boolean addSummonedMob(LivingEntity master, Entity entity) {
         Master masterCap = MinionMasterHelper.getMasterCapability(master);
-        if(masterCap == null){
-            return false;
-        }
         if(canSummonMob(master, entity, masterCap)) {
             return masterCap.addSummonedMob(entity);
         }
@@ -26,22 +23,22 @@ public class SummonHelper {
     }
 
     private static boolean canSummonMob(LivingEntity master, Entity beeEntity, Master masterCap) {
-        AttributeInstance summonCap = master.getAttribute(SUMMON_CAP.get());
-        if(summonCap == null) return false;
-        return masterCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(beeEntity.getType().getRegistryName()).getCost() <= summonCap.getValue();
+        AttributeInstance summonCapAttribute = master.getAttribute(SUMMON_CAP.get());
+        if(summonCapAttribute == null) return false;
+        return masterCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(beeEntity.getType().getRegistryName()).getCost() <= summonCapAttribute.getValue();
     }
 
     public static boolean canSummonMob(LivingEntity master, Master masterCap) {
-        AttributeInstance summonCap = master.getAttribute(SUMMON_CAP.get());
-        if(summonCap == null) return false;
-        return masterCap.getSummonedMobsCost() < summonCap.getValue();
+        AttributeInstance summonCapAttribute = master.getAttribute(SUMMON_CAP.get());
+        if(summonCapAttribute == null) return false;
+        return masterCap.getSummonedMobsCost() < summonCapAttribute.getValue();
     }
 
     public static Entity summonEntity(LivingEntity master, BlockPos position, EntityType<?> entityType) {
         Entity entity = entityType.create(master.level);
         if(entity != null){
             Minion summonable = MinionMasterHelper.getMinionCapability(entity);
-            if(summonable != null && addSummonedMob(master, entity)){
+            if(addSummonedMob(master, entity)){
                 summonable.setMaster(master);
                 createSummon(master, entity, position);
                 return entity;

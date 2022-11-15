@@ -40,7 +40,6 @@ public class SoulBarRender {
             Player renderPlayer = (Player) mc.getCameraEntity();
             if(renderPlayer == null) return;
             SoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(renderPlayer);
-            if(soulCasterCapability == null) return;
 
             float souls = soulCasterCapability.getSouls();
             double maxSouls = renderPlayer.getAttributeValue(SOUL_CAP.get());

@@ -38,12 +38,10 @@ public class CuriosArtifactStopMessage {
                     AbstractClientPlayer player = Minecraft.getInstance().player;
                     if (player != null) {
                         ArtifactUsage cap = ArtifactUsageHelper.getArtifactUsageCapability(player);
-                        if (cap != null) {
-                            ItemStack artifactStack = cap.getUsingArtifact();
-                            if (artifactStack != null && artifactStack.getItem() instanceof ArtifactItem artifactItem) {
-                                artifactItem.stopUsingArtifact(player);
-                                cap.stopUsingArtifact();
-                            }
+                        ItemStack artifactStack = cap.getUsingArtifact();
+                        if (artifactStack != null && artifactStack.getItem() instanceof ArtifactItem artifactItem) {
+                            artifactItem.stopUsingArtifact(player);
+                            cap.stopUsingArtifact();
                         }
                     }
                 });

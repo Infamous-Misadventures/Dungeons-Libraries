@@ -8,21 +8,8 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.BUILT
 
 public class BuiltInEnchantmentsHelper {
 
-    public static LazyOptional<BuiltInEnchantments> getBuiltInEnchantmentsCapabilityLazy(ItemStack itemStack)
-    {
-        if(BUILT_IN_ENCHANTMENTS_CAPABILITY == null) {
-            return LazyOptional.empty();
-        }
-        LazyOptional<BuiltInEnchantments> lazyCap = itemStack.getCapability(BUILT_IN_ENCHANTMENTS_CAPABILITY);
-        return lazyCap;
-    }
-
     public static BuiltInEnchantments getBuiltInEnchantmentsCapability(ItemStack itemStack)
     {
-        LazyOptional<BuiltInEnchantments> lazyCap = itemStack.getCapability(BUILT_IN_ENCHANTMENTS_CAPABILITY);
-        if (lazyCap.isPresent()) {
-            return lazyCap.orElseThrow(() -> new IllegalStateException("Couldn't get the BuiltInEnchantments capability from the ItemStack!"));
-        }
-        return null;
+        return itemStack.getCapability(BUILT_IN_ENCHANTMENTS_CAPABILITY).orElse(new BuiltInEnchantments(itemStack));
     }
 }

@@ -40,7 +40,6 @@ public class EliteMobEvents {
         if (!event.getWorld().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ELITE_MOBS.get()) {
             LivingEntity entity = (LivingEntity) event.getEntity();
             EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-            if(cap == null) return;
             EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
             if (!cap.hasSpawned() && config != null && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
                 setItemSlot(entity, EquipmentSlot.HEAD, config.getHeadItem());
@@ -75,7 +74,6 @@ public class EliteMobEvents {
         Entity entity = event.getEntity();
 
         EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-        if(cap == null) return;
         if (cap.isElite()) {
             float totalWidth = event.getNewSize().width * SIZE_ADJUSTMENT;
             float totalHeight = event.getNewSize().height * SIZE_ADJUSTMENT;
@@ -89,7 +87,6 @@ public class EliteMobEvents {
     public static void onRenderLivingEventPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
         final LivingEntity entity = event.getEntity();
         EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-        if(cap == null) return;
         if (cap.isElite()) {
             event.getPoseStack().pushPose();
             event.getPoseStack().scale(SIZE_ADJUSTMENT, SIZE_ADJUSTMENT, SIZE_ADJUSTMENT);
@@ -102,7 +99,6 @@ public class EliteMobEvents {
     public static void onRenderLivingEventPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
         final LivingEntity entity = event.getEntity();
         EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-        if(cap == null) return;
         if (cap.isElite()) {
             event.getPoseStack().popPose();
         }
@@ -114,7 +110,6 @@ public class EliteMobEvents {
         Entity target = event.getTarget();
         if (player instanceof ServerPlayer && target instanceof LivingEntity) {
             EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getTarget());
-            if(cap == null) return;
             if (cap.isElite()) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new EliteMobMessage(target.getId(), cap.isElite(), cap.getTexture()));
             }
@@ -126,7 +121,6 @@ public class EliteMobEvents {
     {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getEntity());
         EliteMob outcomeCap = EliteMobHelper.getEliteMobCapability(event.getOutcome());
-        if(cap == null || outcomeCap == null) return;
         outcomeCap.setHasSpawned(true);
         if(cap.isElite()) {
             outcomeCap.setElite(true);

@@ -32,20 +32,14 @@ public class CapabilityEvents {
     public static void clonePlayerCaps(PlayerEvent.Clone event){
         Master oldMasterCap = getMasterCapability(event.getOriginal());
         Master newMasterCap = getMasterCapability(event.getPlayer());
-        if (oldMasterCap != null && newMasterCap != null) {
-            newMasterCap.copyFrom(oldMasterCap);
-        }
+        newMasterCap.copyFrom(oldMasterCap);
         if(!event.isWasDeath() || DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
             SoulCaster oldSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getOriginal());
             SoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getPlayer());
-            if (oldSoulsCap != null && newSoulsCap != null) {
-                newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getPlayer());
-            }
+            newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getPlayer());
         }
         PlayerRewards oldPlayerRewardsCap = getPlayerRewardsCapability(event.getOriginal());
         PlayerRewards newPlayerRewardsCap = getPlayerRewardsCapability(event.getPlayer());
-        if (oldPlayerRewardsCap != null && newPlayerRewardsCap != null) {
-            newPlayerRewardsCap.setPlayerRewards(oldPlayerRewardsCap.getAllPlayerRewards());
-        }
+        newPlayerRewardsCap.setPlayerRewards(oldPlayerRewardsCap.getAllPlayerRewards());
     }
 }
