@@ -45,7 +45,8 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public boolean addSummonedMob(Entity entity) {
-        return this.getSummonedMobs().add(entity);
+        this.getSummonedMobs();
+        return summonedMobs.add(entity);
     }
 
     public void setSummonedMobs(List<Entity> summonedMobs) {
@@ -61,7 +62,8 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public boolean addMinion(Entity entity) {
-        return this.getOtherMinions().add(entity);
+        this.getOtherMinions();
+        return otherMinions.add(entity);
     }
 
     public List<Entity> getOtherMinions() {
