@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -17,8 +18,9 @@ public class TooltipHelper {
     }
 
     public static void addLoreDescription(List<Component> list, ItemStack itemStack){
+        ResourceLocation registryName = itemStack.getItem().getRegistryName();
         list.add(new TranslatableComponent(
-                "lore.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
+                "lore." + registryName.getNamespace() + "." + registryName.getPath())
                 .withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC));
     }
 
@@ -41,8 +43,9 @@ public class TooltipHelper {
                     "artifact.dungeons_libraries.base")
                     .withStyle(ChatFormatting.DARK_AQUA));
 
+            ResourceLocation registryName = itemStack.getItem().getRegistryName();
             list.add(new TranslatableComponent(
-                    "ability.dungeons_gear." + itemStack.getItem().getRegistryName().getPath())
+                    "ability." + registryName.getNamespace() + "." + registryName.getPath())
                     .withStyle(ChatFormatting.GREEN));
 
             ArtifactItem artifactItem = (ArtifactItem) itemStack.getItem();
