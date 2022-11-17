@@ -2,10 +2,13 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 
 import java.util.Set;
+
+import static net.minecraft.enchantment.EnchantmentType.DIGGER;
 
 public class ToolGear extends MeleeGear {
     /** Hardcoded set of blocks this tool can properly dig at full speed. Modders see instead. */
@@ -20,6 +23,11 @@ public class ToolGear extends MeleeGear {
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
         if (getToolTypes(pStack).stream().anyMatch(e -> pState.isToolEffective(e))) return this.getTier().getSpeed();
         return this.diggableBlocks.contains(pState.getBlock()) ? this.getTier().getSpeed() : 1.0F;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment.category == DIGGER;
     }
 
 }

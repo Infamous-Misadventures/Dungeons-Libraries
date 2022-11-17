@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
+import static net.minecraft.enchantment.EnchantmentType.WEAPON;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
@@ -150,5 +151,10 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     @Override
     public Rarity getRarity(ItemStack pStack) {
         return getGearConfig().getRarity();
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment.category == WEAPON;
     }
 }
