@@ -38,7 +38,7 @@ public class ArmorGearRenderer<T extends ArmorGear> extends GeoArmorRenderer<T> 
         RenderUtils.scale(bone, stack);
         IArmorMaterial material = this.currentArmorItem.getMaterial();
         if(bone.getName().contains("Body") && material instanceof DungeonsArmorMaterial && ((DungeonsArmorMaterial) material).getBaseType() == ArmorMaterialBaseType.CLOTH){
-            stack.scale(1.0F, 1.0F, 0.85F);
+            stack.scale(1.0F, 1.0F, 0.93F);
         }
         RenderUtils.moveBackFromPivot(bone, stack);
     }
