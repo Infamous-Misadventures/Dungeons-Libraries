@@ -42,7 +42,7 @@ public class ArtifactsBarRender {
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
 
-        if(CURIOS_ARTIFACTS.getValues().isEmpty()) return;
+        if(Minecraft.getInstance() != null && CURIOS_ARTIFACTS.getValues().isEmpty()) return;
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.HOTBAR) && mc.getCameraEntity() instanceof PlayerEntity) {
             PlayerEntity renderPlayer = (PlayerEntity) mc.getCameraEntity();

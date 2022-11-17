@@ -29,6 +29,7 @@ import com.infamous.dungeons_libraries.client.renderer.ArmorGearRenderer;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
+import com.infamous.dungeons_libraries.items.ItemTagWrappers;
 import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
 import com.infamous.dungeons_libraries.items.gearconfig.*;
 import com.infamous.dungeons_libraries.items.materials.armor.ArmorMaterials;
@@ -85,6 +86,7 @@ public class DungeonsLibraries
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ItemTagWrappers.init();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
         ArmorMaterials.setupVanillaMaterials();

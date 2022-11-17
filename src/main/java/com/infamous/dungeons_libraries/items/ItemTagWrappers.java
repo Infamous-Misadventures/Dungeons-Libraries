@@ -8,4 +8,6 @@ import net.minecraftforge.common.Tags;
 public class ItemTagWrappers {
 
     public static final Tags.IOptionalNamedTag<Item> CURIOS_ARTIFACTS = ItemTags.createOptional(new ResourceLocation("curios", "artifact"));
+
+    public static void init(){}
 }
