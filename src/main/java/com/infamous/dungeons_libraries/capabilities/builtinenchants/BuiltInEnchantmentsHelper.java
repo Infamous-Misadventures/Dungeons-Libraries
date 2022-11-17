@@ -7,6 +7,7 @@ public class BuiltInEnchantmentsHelper {
 
     public static IBuiltInEnchantments getBuiltInEnchantmentsCapability(ItemStack itemStack)
     {
+        if(BuiltInEnchantmentsProvider.BUILT_IN_ENCHANTMENTS_CAPABILITY == null) return new BuiltInEnchantments(itemStack);
         LazyOptional<IBuiltInEnchantments> lazyCap = itemStack.getCapability(BuiltInEnchantmentsProvider.BUILT_IN_ENCHANTMENTS_CAPABILITY);
         return lazyCap.orElse(new BuiltInEnchantments(itemStack));
     }
