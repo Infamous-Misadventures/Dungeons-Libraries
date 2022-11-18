@@ -11,6 +11,7 @@ import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -76,7 +77,7 @@ public class MinionMasterHelper {
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
-                    (entityIterator) -> canPetAttackEntity(mobEntity, entityIterator)));
+                    (entityIterator) -> entityIterator.getClassification(false).equals(MobCategory.MONSTER) &&  canPetAttackEntity(mobEntity, entityIterator)));
 
             minionCap.getMaster().getCapability(ModCapabilities.MASTER_CAPABILITY).ifPresent(master -> {
                 master.addMinion(mobEntity);
