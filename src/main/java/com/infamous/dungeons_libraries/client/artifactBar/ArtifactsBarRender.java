@@ -41,7 +41,7 @@ public class ArtifactsBarRender {
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
 
-        if(ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
+        if(Minecraft.getInstance() != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.LAYER) && mc.getCameraEntity() instanceof Player renderPlayer) {
             if(renderPlayer == null) return;

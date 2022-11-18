@@ -17,4 +17,6 @@ public class ItemTagWrappers {
     private static TagKey<Item> tag(ResourceLocation resourceLocation) {
         return TagKey.create(Registry.ITEM_REGISTRY, resourceLocation);
     }
+
+    public static void init(){}
 }

@@ -4,6 +4,7 @@ import com.infamous.dungeons_libraries.attribute.AttributeRegistry;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfigRegistry;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import com.infamous.dungeons_libraries.items.ItemTagWrappers;
 import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry;
@@ -55,6 +56,7 @@ public class DungeonsLibraries
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ItemTagWrappers.init();
         AttributeRegistry.ATTRIBUTES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
         DungeonsArmorMaterials.setupVanillaMaterials();
