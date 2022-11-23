@@ -9,6 +9,8 @@ import java.util.List;
 public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_KEEP_SOULS_ON_DEATH;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_DUAL_WIELDING;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_TWO_HANDED_WEAPON;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
     public static ForgeConfigSpec.ConfigValue<Integer> ARTIFACT_DURABILITY;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ELITE_MOBS;
@@ -62,6 +64,17 @@ public class DungeonsLibrariesConfig {
                             ),
                             (itemRaw) -> itemRaw instanceof String);
             builder.pop();
+
+            //combat configuration
+            builder.comment("Combat Configuration").push("combat_configuration");
+            ENABLE_DUAL_WIELDING = builder
+                    .comment("Enable dual wielding. \n" +
+                            "If you do not want dual wielding, disable this feature. [true / false]")
+                    .define("enableDualWielding", true);
+            ENABLE_TWO_HANDED_WEAPON = builder
+                    .comment("Enable two handed weapon. \n" +
+                            "If you do not want two handed weapon, disable this feature. [true / false]")
+                    .define("enableTwoHandedWeapon", true);
 
             builder.comment("Souls Configuration").push("souls_configuration");
             ENABLE_KEEP_SOULS_ON_DEATH = builder
