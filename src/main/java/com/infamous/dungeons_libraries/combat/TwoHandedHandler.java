@@ -1,6 +1,7 @@
 package com.infamous.dungeons_libraries.combat;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
+import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfig;
 import com.infamous.dungeons_libraries.items.gearconfig.MeleeGearConfigRegistry;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -15,6 +16,7 @@ public class TwoHandedHandler {
 
     @SubscribeEvent
     public static void onEquipmentChange(LivingEquipmentChangeEvent event){
+        if(!DungeonsLibrariesConfig.ENABLE_TWO_HANDED_WEAPON.get()) return;
         MeleeGearConfig configTo = MeleeGearConfigRegistry.getConfig(event.getTo().getItem().getRegistryName());
         if(configTo.isTwoHanded()){
             if(event.getSlot().equals(EquipmentSlotType.MAINHAND)){
