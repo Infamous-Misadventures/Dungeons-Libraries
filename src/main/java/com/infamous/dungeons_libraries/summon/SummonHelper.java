@@ -43,6 +43,7 @@ public class SummonHelper {
             IMinion summonable = MinionMasterHelper.getMinionCapability(entity);
             if(summonable != null && addSummonedMob(master, entity)){
                 summonable.setMaster(master);
+                summonable.setSummon(true);
                 createSummon(master, entity, position);
                 return entity;
             } else {
