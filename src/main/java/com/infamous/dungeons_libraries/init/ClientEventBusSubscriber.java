@@ -3,7 +3,7 @@ package com.infamous.dungeons_libraries.init;
 import com.infamous.dungeons_libraries.client.renderer.SoulOrbRenderer;
 import com.infamous.dungeons_libraries.entities.ModEntityTypes;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGear;
-import com.infamous.dungeons_libraries.items.gearconfig.client.ArmorGearRenderer;
+import com.infamous.dungeons_libraries.client.renderer.gearconfig.ArmorGearRenderer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

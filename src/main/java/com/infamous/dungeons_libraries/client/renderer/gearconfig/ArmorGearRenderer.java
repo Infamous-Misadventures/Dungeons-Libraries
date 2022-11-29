@@ -1,4 +1,4 @@
-package com.infamous.dungeons_libraries.items.gearconfig.client;
+package com.infamous.dungeons_libraries.client.renderer.gearconfig;
 
 import com.infamous.dungeons_libraries.entities.SpawnArmoredMob;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGear;
