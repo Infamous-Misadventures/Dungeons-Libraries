@@ -1,6 +1,6 @@
 {
   "type": "dungeons_libraries:dungeons_armor_material",
-  "name": "dungeons_libraries:cosmetic",
+  "name": "dungeons_libraries:cosmetic_cloth",
   "durability": 99,
   "damage_reduction_amounts":  [0, 0, 0, 0],
   "enchantability": 0,

@@ -37,7 +37,8 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public List<Entity> getSummonedMobs() {
-        return getEntities(this.summonedMobs, this.summonedMobsUUID);
+        summonedMobs = initEntities(this.summonedMobs, this.summonedMobsUUID);
+        return new ArrayList<>(this.summonedMobs);
     }
 
     public int getSummonedMobsCost(){
@@ -45,8 +46,8 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public boolean addSummonedMob(Entity entity) {
-        this.getSummonedMobs();
-        return summonedMobs.add(entity);
+        summonedMobs = initEntities(this.summonedMobs, this.summonedMobsUUID);
+        return this.summonedMobs.add(entity);
     }
 
     public void setSummonedMobs(List<Entity> summonedMobs) {
@@ -62,22 +63,23 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public boolean addMinion(Entity entity) {
-        this.getOtherMinions();
+        otherMinions = initEntities(this.otherMinions, this.otherMinionsUUID);
         return otherMinions.add(entity);
     }
 
     public List<Entity> getOtherMinions() {
-        return getEntities(this.otherMinions, this.otherMinionsUUID);
+        otherMinions = initEntities(this.otherMinions, this.otherMinionsUUID);
+        return new ArrayList<>(this.otherMinions);
     }
 
     public void setOtherMinions(List<Entity> otherMinions) {
         this.otherMinions = new HashSet<>(otherMinions);
     }
 
-    private List<Entity> getEntities(Set<Entity> entities, List<UUID> entityUUIDs) {
-        if(entities != null) return new ArrayList<>(entities);
+    private Set<Entity> initEntities(Set<Entity> entities, List<UUID> entityUUIDs) {
+        if(entities != null) return entities;
         if(entityUUIDs != null && this.levelOnLoad != null){
-            if(entityUUIDs.isEmpty()) return new ArrayList<>();
+            if(entityUUIDs.isEmpty()) return new HashSet<>();
             ResourceKey<Level> registrykey1 = ResourceKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             ServerLevel world = server.getLevel(registrykey1);
@@ -85,9 +87,9 @@ public class Master implements INBTSerializable<CompoundTag> {
                 entities = entityUUIDs.stream().map(world::getEntity).filter(Objects::nonNull).collect(Collectors.toSet());
             }
         }else{
-            return new ArrayList<>();
+            return new HashSet<>();
         }
-        return new ArrayList<>(entities);
+        return new HashSet<>(entities);
     }
 
     public void removeMinion(LivingEntity entityLiving) {

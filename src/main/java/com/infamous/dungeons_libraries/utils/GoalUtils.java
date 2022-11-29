@@ -2,12 +2,15 @@ package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+
+import java.util.stream.Collectors;
 
 
 public class GoalUtils {
@@ -33,5 +36,12 @@ public class GoalUtils {
         } else {
             return false;
         }
+    }
+
+    public static void removeGoal(GoalSelector goalSelector, Class<?> goalClass) {
+        goalSelector.getAvailableGoals().stream()
+                .filter(goal -> goalClass.isInstance(goal.getGoal()))
+                .toList()
+                .forEach(goal -> goalSelector.removeGoal(goal.getGoal()));
     }
 }
