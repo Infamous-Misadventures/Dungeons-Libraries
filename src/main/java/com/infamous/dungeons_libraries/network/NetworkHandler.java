@@ -71,6 +71,10 @@ public class NetworkHandler {
                 .encoder(BreakItemMessage::encode).decoder(BreakItemMessage::decode)
                 .consumer(BreakItemMessage.BreakItemHandler::handle)
                 .add();
+        INSTANCE.messageBuilder(SwitchHandMessage.class, incrementAndGetPacketCounter())
+                .encoder(SwitchHandMessage::encode).decoder(SwitchHandMessage::decode)
+                .consumer(SwitchHandMessage.SwitchHandHandler::handle)
+                .add();
     }
 
     public static int incrementAndGetPacketCounter() {
