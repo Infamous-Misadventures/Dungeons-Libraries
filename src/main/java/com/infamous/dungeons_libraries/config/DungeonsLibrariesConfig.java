@@ -75,6 +75,7 @@ public class DungeonsLibrariesConfig {
                     .comment("Enable two handed weapon. \n" +
                             "If you do not want two handed weapon, disable this feature. [true / false]")
                     .define("enableTwoHandedWeapon", true);
+            builder.pop();
 
             builder.comment("Souls Configuration").push("souls_configuration");
             ENABLE_KEEP_SOULS_ON_DEATH = builder

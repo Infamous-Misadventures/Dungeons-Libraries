@@ -21,21 +21,6 @@ import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMa
 public class SummonEvents {
 
     @SubscribeEvent
-    public static void reAddSummonableGoals(EntityJoinWorldEvent event){
-        if(MinionMasterHelper.isMinionEntity(event.getEntity())){
-            IMinion minionCapability = getMinionCapability(event.getEntity());
-            if(minionCapability == null) return;
-            if(event.getEntity() instanceof BeeEntity){
-                BeeEntity beeEntity = (BeeEntity) event.getEntity();
-                if(minionCapability.getMaster() != null){
-                    beeEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(beeEntity, LivingEntity.class, 5, false, false,
-                            (entityIterator) -> entityIterator instanceof IMob && !(entityIterator instanceof CreeperEntity)));
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void onSummonedMobAttemptsToAttack(LivingSetAttackTargetEvent event){
         if(event.getTarget() == null) return;
         if(MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
