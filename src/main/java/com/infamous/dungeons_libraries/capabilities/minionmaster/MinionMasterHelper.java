@@ -76,7 +76,7 @@ public class MinionMasterHelper {
             clearGoals(mobEntity.targetSelector);
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
-            mobEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
+            mobEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
                     (entityIterator) -> entityIterator.getClassification(false).equals(MobCategory.MONSTER) &&  canPetAttackEntity(mobEntity, entityIterator)));
 
             minionCap.getMaster().getCapability(ModCapabilities.MASTER_CAPABILITY).ifPresent(master -> {

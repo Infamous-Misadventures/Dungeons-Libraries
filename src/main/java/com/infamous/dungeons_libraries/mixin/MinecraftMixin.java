@@ -33,7 +33,4 @@ public class MinecraftMixin {
             SHOULD_SWITCH_HAND = false;
         }
     }
-
-
-
 }

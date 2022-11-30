@@ -19,8 +19,13 @@ public class AttacherBuiltInEnchantments {
     private static class BuiltInEnchantmentsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
         public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "built_in_enchantments");
-        private final BuiltInEnchantments backend = new BuiltInEnchantments();
-        private final LazyOptional<BuiltInEnchantments> optionalData = LazyOptional.of(() -> backend);
+        private final BuiltInEnchantments backend;
+        private final LazyOptional<BuiltInEnchantments> optionalData;
+
+        public BuiltInEnchantmentsProvider(ItemStack itemStack) {
+            backend = new BuiltInEnchantments(itemStack);
+            optionalData = LazyOptional.of(() -> backend);
+        }
 
         @Override
         public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
@@ -39,7 +44,7 @@ public class AttacherBuiltInEnchantments {
     }
 
     public static void attach(final AttachCapabilitiesEvent<ItemStack> event) {
-        final AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider provider = new AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider();
+        final AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider provider = new AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider(event.getObject());
         event.addCapability(AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider.IDENTIFIER, provider);
     }
 }
