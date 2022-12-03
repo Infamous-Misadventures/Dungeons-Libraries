@@ -1,21 +1,20 @@
 package com.infamous.dungeons_libraries.utils;
 
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
+import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class DescriptionHelper {
     }
 
     public static void addArtifactDescription(List<Component> list, ItemStack itemStack){
-        ResourceLocation registryName = itemStack.getItem().getRegistryName();
+        ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
         if(registryName == null) return;
         addLoreDescription(list, registryName);
         addArtifactInfo(list, itemStack);
@@ -45,12 +44,12 @@ public class DescriptionHelper {
     public static void addArtifactInfo(List<Component> list, ItemStack itemStack) {
         if (itemStack.getItem() instanceof ArtifactItem) {
 
-            list.add(new TranslatableComponent(
+            list.add(Component.translatable(
                     "artifact.dungeons_libraries.base")
                     .withStyle(ChatFormatting.DARK_AQUA));
 
-            ResourceLocation registryName = itemStack.getItem().getRegistryName();
-            list.add(new TranslatableComponent(
+            ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+            list.add(Component.translatable(
                     "ability." + registryName.getNamespace() + "." + registryName.getPath())
                     .withStyle(ChatFormatting.GREEN));
 
@@ -59,12 +58,12 @@ public class DescriptionHelper {
             int cooldownInSeconds = artifactItem.getCooldownInSeconds();
 
             if(durationInSeconds > 0) {
-                list.add(new TranslatableComponent(
+                list.add(Component.translatable(
                         "artifact.dungeons_libraries.duration", durationInSeconds)
                         .withStyle(ChatFormatting.BLUE));
             }
             if(cooldownInSeconds > 0) {
-                list.add(new TranslatableComponent(
+                list.add(Component.translatable(
                         "artifact.dungeons_libraries.cooldown", cooldownInSeconds)
                         .withStyle(ChatFormatting.BLUE));
             }
@@ -72,12 +71,12 @@ public class DescriptionHelper {
     }
 
     public static void addFullDescription(List<Component> list, ItemStack itemStack) {
-        ResourceLocation registryName = itemStack.getItem().getRegistryName();
+        ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
         addLoreDescription(list, registryName);
     }
 
     public static void addLoreDescription(List<Component> list, ResourceLocation registryName) {
-        list.add(new TranslatableComponent(
+        list.add(Component.translatable(
                 "lore." + registryName.getNamespace() + "." + registryName.getPath())
                 .withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC));
     }
@@ -87,7 +86,7 @@ public class DescriptionHelper {
 //            IChargeableItem chargeableItem = (IChargeableItem) itemStack.getItem();
 //            int chargeTimeInSeconds = chargeableItem.getChargeTimeInSeconds();
 //            if(chargeTimeInSeconds > 0) {
-//                list.add(new TranslatableComponent(
+//                list.add(Component.translatable(
 //                        "artifact.dungeons_gear.charge_time", chargeTimeInSeconds)
 //                        .withStyle(ChatFormatting.BLUE));
 //            }

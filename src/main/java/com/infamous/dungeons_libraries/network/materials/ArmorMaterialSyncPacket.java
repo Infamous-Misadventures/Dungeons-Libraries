@@ -42,7 +42,7 @@ public class ArmorMaterialSyncPacket {
     }
 
     private void handlePacketOnMainThread() {
-        DungeonsArmorMaterials.ARMOR_MATERIALS.data = this.data;
+        DungeonsArmorMaterials.ARMOR_MATERIALS.setData(this.data);
         reloadAllItems();
     }
 }

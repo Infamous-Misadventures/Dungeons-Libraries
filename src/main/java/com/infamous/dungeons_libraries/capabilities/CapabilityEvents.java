@@ -9,7 +9,7 @@ import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.network.NetworkHandler;
 import com.infamous.dungeons_libraries.network.UpdateSoulsMessage;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +22,7 @@ import static com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerR
 public class CapabilityEvents {
 
     @SubscribeEvent
-    public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof ServerPlayer) {
             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new UpdateSoulsMessage(SoulCasterHelper.getSoulCasterCapability(event.getEntity()).getSouls()));
         }
@@ -31,15 +31,15 @@ public class CapabilityEvents {
     @SubscribeEvent
     public static void clonePlayerCaps(PlayerEvent.Clone event){
         Master oldMasterCap = getMasterCapability(event.getOriginal());
-        Master newMasterCap = getMasterCapability(event.getPlayer());
+        Master newMasterCap = getMasterCapability(event.getEntity());
         newMasterCap.copyFrom(oldMasterCap);
         if(!event.isWasDeath() || DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
             SoulCaster oldSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getOriginal());
-            SoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getPlayer());
-            newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getPlayer());
+            SoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getEntity());
+            newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getEntity());
         }
         PlayerRewards oldPlayerRewardsCap = getPlayerRewardsCapability(event.getOriginal());
-        PlayerRewards newPlayerRewardsCap = getPlayerRewardsCapability(event.getPlayer());
+        PlayerRewards newPlayerRewardsCap = getPlayerRewardsCapability(event.getEntity());
         newPlayerRewardsCap.setPlayerRewards(oldPlayerRewardsCap.getAllPlayerRewards());
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -25,15 +25,15 @@ public class MinionEvents {
 
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event){
-        Minion cap = MinionMasterHelper.getMinionCapability(event.getEntityLiving());
+        Minion cap = MinionMasterHelper.getMinionCapability(event.getEntity());
         if (cap.isMinion()) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public static void onLivingEntityTick(LivingEvent.LivingUpdateEvent event){
-        LivingEntity entityLiving = event.getEntityLiving();
+    public static void onLivingEntityTick(LivingEvent.LivingTickEvent event){
+        LivingEntity entityLiving = event.getEntity();
         if(entityLiving.level.isClientSide) return;
         Minion cap = MinionMasterHelper.getMinionCapability(entityLiving);
         if (cap.isMinion()) {
@@ -52,9 +52,9 @@ public class MinionEvents {
     }
 
     @SubscribeEvent
-    public static void reAddMinionGoals(EntityJoinWorldEvent event){
+    public static void reAddMinionGoals(EntityJoinLevelEvent event){
         Entity entity = event.getEntity();
-        if(!event.getWorld().isClientSide() && entity instanceof Mob) {
+        if(!event.getLevel().isClientSide() && entity instanceof Mob) {
             MinionMasterHelper.addMinionGoals((Mob) entity);
             Master masterCapability = getMasterCapability(entity);
             List<Entity> minions = masterCapability.getAllMinions();
@@ -66,7 +66,7 @@ public class MinionEvents {
                 }
             }
         }
-        if(!event.getWorld().isClientSide() && entity instanceof Player) {
+        if(!event.getLevel().isClientSide() && entity instanceof Player) {
             Master masterCapability = getMasterCapability(entity);
             List<Entity> minions = masterCapability.getAllMinions();
             for(Entity minion : minions){
@@ -92,8 +92,8 @@ public class MinionEvents {
 
     @SubscribeEvent
     public static void onMinionDeath(LivingDeathEvent event){
-        if(!event.getEntityLiving().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntityLiving())){
-            LivingEntity livingEntity = event.getEntityLiving();
+        if(!event.getEntity().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntity())){
+            LivingEntity livingEntity = event.getEntity();
             Minion minionCapability = getMinionCapability(livingEntity);
             LivingEntity summoner = minionCapability.getMaster();
             if(summoner != null){

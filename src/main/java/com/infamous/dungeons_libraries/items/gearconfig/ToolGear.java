@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ToolGear extends MeleeGear {
     private final TagKey<Block> blocks;
 

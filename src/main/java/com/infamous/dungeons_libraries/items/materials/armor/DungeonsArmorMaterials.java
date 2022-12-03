@@ -21,7 +21,7 @@ import static net.minecraft.world.item.ArmorMaterials.*;
 
 public class DungeonsArmorMaterials {
 
-    public static final DefaultsCodecJsonDataManager<ArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC, DungeonsLibraries.LOGGER);
+    public static final DefaultsCodecJsonDataManager<ArmorMaterial> ARMOR_MATERIALS = new DefaultsCodecJsonDataManager<>("material/armor", DungeonsArmorMaterial.CODEC);
     public static final Map<ArmorMaterial, ArmorMaterialBaseType> baseArmorMaterials = new HashMap<>();
 
     public static void setupVanillaMaterials(){
@@ -40,19 +40,19 @@ public class DungeonsArmorMaterials {
     }
 
     public static ArmorMaterial getArmorMaterial(ResourceLocation resourceLocation){
-        return ARMOR_MATERIALS.data.getOrDefault(resourceLocation, IRON);
+        return ARMOR_MATERIALS.getData().getOrDefault(resourceLocation, IRON);
     }
 
     public static boolean ArmorMaterialExists(ResourceLocation resourceLocation){
-        return ARMOR_MATERIALS.data.containsKey(resourceLocation);
+        return ARMOR_MATERIALS.getData().containsKey(resourceLocation);
     }
 
     public static Collection<ResourceLocation> armorMaterialsKeys(){
-        return ARMOR_MATERIALS.data.keySet();
+        return ARMOR_MATERIALS.getData().keySet();
     }
 
     public static Collection<ArmorMaterial> getArmorMaterials(ArmorMaterialBaseType baseType){
-        return ARMOR_MATERIALS.data.values().stream().filter(iArmorMaterial -> {
+        return ARMOR_MATERIALS.getData().values().stream().filter(iArmorMaterial -> {
             if(iArmorMaterial instanceof  DungeonsArmorMaterial){
                 return ((DungeonsArmorMaterial) iArmorMaterial).getBaseType() == baseType;
             }else if(baseArmorMaterials.containsKey(iArmorMaterial)){

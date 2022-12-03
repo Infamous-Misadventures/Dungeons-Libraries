@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class MinionMasterHelper {
             });
             minionCap.setGoalsAdded(true);
             if(minionCap.isSummon()){
-                SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
+                SummonConfig config = SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(mobEntity.getType()));
                 if(config.shouldAddAttackGoal()){
                     mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
                 }

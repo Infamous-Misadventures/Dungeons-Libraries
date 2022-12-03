@@ -25,14 +25,14 @@ public class ArtifactEvents {
         ItemStack itemstack = event.getTo();
         if(itemstack.getItem() instanceof ArtifactItem) {
             if (!itemstack.isEmpty()) {
-                event.getEntityLiving().getAttributes().addTransientAttributeModifiers(((ArtifactItem) itemstack.getItem()).getDefaultAttributeModifiers(event.getSlotIndex()));
+                event.getEntity().getAttributes().addTransientAttributeModifiers(((ArtifactItem) itemstack.getItem()).getDefaultAttributeModifiers(event.getSlotIndex()));
             }
         }
 
         ItemStack itemstack1 = event.getFrom();
         if(itemstack1.getItem() instanceof ArtifactItem) {
             if (!itemstack1.isEmpty()) {
-                event.getEntityLiving().getAttributes().removeAttributeModifiers(((ArtifactItem) itemstack1.getItem()).getDefaultAttributeModifiers(event.getSlotIndex()));
+                event.getEntity().getAttributes().removeAttributeModifiers(((ArtifactItem) itemstack1.getItem()).getDefaultAttributeModifiers(event.getSlotIndex()));
             }
         }
     }
@@ -51,18 +51,18 @@ public class ArtifactEvents {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
-        stopUsingAllArtifacts(event.getPlayer());
+        stopUsingAllArtifacts(event.getEntity());
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event){
-        stopUsingAllArtifacts(event.getPlayer());
+        stopUsingAllArtifacts(event.getEntity());
 
     }
 
     @SubscribeEvent
     public static void onPlayerRespawnEvent(PlayerEvent.PlayerRespawnEvent event){
-        stopUsingAllArtifacts(event.getPlayer());
+        stopUsingAllArtifacts(event.getEntity());
     }
 
     private static void stopUsingAllArtifacts(Player player) {

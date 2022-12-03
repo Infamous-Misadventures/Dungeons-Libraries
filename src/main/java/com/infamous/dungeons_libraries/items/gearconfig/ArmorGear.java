@@ -22,7 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -40,6 +41,8 @@ import java.util.function.Consumer;
 import static java.util.UUID.randomUUID;
 import static net.minecraft.world.item.ArmorMaterials.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, IUniqueGear, IAnimatable {
     private static final ResourceLocation DEFAULT_ARMOR_ANIMATIONS = new ResourceLocation(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
@@ -65,7 +68,7 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
     public void reload(){
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
         if(armorGearConfig == ArmorGearConfig.DEFAULT){
-            armorGearConfig = ArmorGearConfigRegistry.getConfig(this.getRegistryName());
+            armorGearConfig = ArmorGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         }
         ArmorMaterial material = armorGearConfig.getArmorMaterial();
         ((ArmorItemAccessor)this).setMaterial(material);
@@ -112,7 +115,7 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
         if(armorSet != null) {
             DescriptionHelper.addLoreDescription(list, armorSet);
         }else {
-            DescriptionHelper.addLoreDescription(list, this.getRegistryName());
+            DescriptionHelper.addLoreDescription(list, ForgeRegistries.ITEMS.getKey(this));
         }
     }
 
@@ -156,11 +159,11 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
         return animationFileLocation;
     }
     @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
-        consumer.accept(new IItemRenderProperties() {
+        consumer.accept(new IClientItemExtensions() {
             @Override
-            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack,
+            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entityLiving, ItemStack itemStack,
                                                   EquipmentSlot armorSlot, HumanoidModel<?> _default) {
                 return (HumanoidModel<?>) GeoArmorRenderer.getRenderer(ArmorGear.class, entityLiving).applyEntityStats(_default)
                     .setCurrentItem(entityLiving, itemStack, armorSlot).applySlot(armorSlot);

@@ -3,6 +3,8 @@ package com.infamous.dungeons_libraries.items.gearconfig;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class PickaxeGear extends ToolGear {
 
     public PickaxeGear(Properties properties) {

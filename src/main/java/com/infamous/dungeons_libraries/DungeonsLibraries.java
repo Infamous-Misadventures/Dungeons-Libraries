@@ -78,8 +78,6 @@ public class DungeonsLibraries
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new RangedItemModelProperties());
-
-        setupCuriosKeybindings();
     }
 
 }

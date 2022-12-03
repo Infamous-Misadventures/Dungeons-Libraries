@@ -10,8 +10,8 @@ import net.minecraftforge.fml.common.Mod;
 public class TimerEvents {
 
     @SubscribeEvent
-    public static void onLivingUpdate(LivingEvent.LivingUpdateEvent event){
-        Timers timersCapability = TimersHelper.getTimersCapability(event.getEntityLiving());
+    public static void onLivingUpdate(LivingEvent.LivingTickEvent event){
+        Timers timersCapability = TimersHelper.getTimersCapability(event.getEntity());
         timersCapability.tickTimers();
     }
 

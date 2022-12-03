@@ -38,7 +38,7 @@ public class ItemEvents {
             AttributeInstance attribute = attacker.getAttribute(LIFE_STEAL.get());
             if (attribute != null) {
                 double lifeStealAmount = attribute.getValue() - 1.0D;
-                float victimMaxHealth = event.getEntityLiving().getMaxHealth();
+                float victimMaxHealth = event.getEntity().getMaxHealth();
                 if (attacker.getHealth() < attacker.getMaxHealth()) {
                     attacker.heal(victimMaxHealth * (float) lifeStealAmount);
                 }

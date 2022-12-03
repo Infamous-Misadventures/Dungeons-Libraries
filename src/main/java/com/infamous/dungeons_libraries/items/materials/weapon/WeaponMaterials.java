@@ -17,7 +17,7 @@ import static net.minecraft.world.item.Tiers.*;
 
 public class WeaponMaterials {
 
-    public static final DefaultsCodecJsonDataManager<Tier> WEAPON_MATERIALS = new DefaultsCodecJsonDataManager<>("material/weapon", DungeonsWeaponMaterial.CODEC, DungeonsLibraries.LOGGER);
+    public static final DefaultsCodecJsonDataManager<Tier> WEAPON_MATERIALS = new DefaultsCodecJsonDataManager<>("material/weapon", DungeonsWeaponMaterial.CODEC);
 
     public static void setupVanillaMaterials(){
         WEAPON_MATERIALS.addDefault(new ResourceLocation("minecraft:wood"), WOOD);
@@ -29,15 +29,15 @@ public class WeaponMaterials {
     }
 
     public static Tier getWeaponMaterial(ResourceLocation resourceLocation){
-        return WEAPON_MATERIALS.data.getOrDefault(resourceLocation, IRON);
+        return WEAPON_MATERIALS.getData().getOrDefault(resourceLocation, IRON);
     }
 
     public static boolean WeaponMaterialExists(ResourceLocation boostResourceLocation){
-        return WEAPON_MATERIALS.data.containsKey(boostResourceLocation);
+        return WEAPON_MATERIALS.getData().containsKey(boostResourceLocation);
     }
 
     public static Collection<ResourceLocation> weaponMaterialsKeys(){
-        return WEAPON_MATERIALS.data.keySet();
+        return WEAPON_MATERIALS.getData().keySet();
     }
 
     public static WeaponMaterialSyncPacket toPacket(Map<ResourceLocation, Tier> map){

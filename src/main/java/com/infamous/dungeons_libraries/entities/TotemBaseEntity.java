@@ -14,6 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public abstract class TotemBaseEntity extends Entity {
 	private final TargetingConditions entityTargeting = TargetingConditions.forCombat().range(8.0D).ignoreLineOfSight().ignoreInvisibilityTesting();
 

@@ -40,7 +40,7 @@ public class CrossbowGearConfigSyncPacket {
     }
 
     private void handlePacketOnMainThread() {
-        CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS.data = this.data;
+        CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS.setData(this.data);
         reloadAllItems();
     }
 }

@@ -40,7 +40,7 @@ public class MeleeGearConfigSyncPacket {
     }
 
     private void handlePacketOnMainThread() {
-        MeleeGearConfigRegistry.MELEE_GEAR_CONFIGS.data = this.data;
+        MeleeGearConfigRegistry.MELEE_GEAR_CONFIGS.setData(this.data);
         reloadAllItems();
     }
 }

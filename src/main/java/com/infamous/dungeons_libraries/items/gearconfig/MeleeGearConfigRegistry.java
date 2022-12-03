@@ -15,15 +15,15 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 public class MeleeGearConfigRegistry {
     public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gear_config");
 
-    public static final CodecJsonDataManager<MeleeGearConfig> MELEE_GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig/melee", MeleeGearConfig.CODEC, DungeonsLibraries.LOGGER);
+    public static final CodecJsonDataManager<MeleeGearConfig> MELEE_GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig/melee", MeleeGearConfig.CODEC);
 
 
     public static MeleeGearConfig getConfig(ResourceLocation resourceLocation) {
-        return MELEE_GEAR_CONFIGS.data.getOrDefault(resourceLocation, MeleeGearConfig.DEFAULT);
+        return MELEE_GEAR_CONFIGS.getData().getOrDefault(resourceLocation, MeleeGearConfig.DEFAULT);
     }
 
     public static boolean gearConfigExists(ResourceLocation resourceLocation) {
-        return MELEE_GEAR_CONFIGS.data.containsKey(resourceLocation);
+        return MELEE_GEAR_CONFIGS.getData().containsKey(resourceLocation);
     }
 
     public static MeleeGearConfigSyncPacket toPacket(Map<ResourceLocation, MeleeGearConfig> map) {

@@ -13,15 +13,15 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 public class SummonConfigRegistry {
     public static final ResourceLocation SUMMON_RESOURCELOCATION = new ResourceLocation(MODID, "summon");
 
-    public static final CodecJsonDataManager<SummonConfig> SUMMON_CONFIGS = new CodecJsonDataManager<>("summon", SummonConfig.CODEC, DungeonsLibraries.LOGGER);
+    public static final CodecJsonDataManager<SummonConfig> SUMMON_CONFIGS = new CodecJsonDataManager<>("summon", SummonConfig.CODEC);
 
 
     public static SummonConfig getConfig(ResourceLocation resourceLocation) {
-        return SUMMON_CONFIGS.data.getOrDefault(resourceLocation, SummonConfig.DEFAULT);
+        return SUMMON_CONFIGS.getData().getOrDefault(resourceLocation, SummonConfig.DEFAULT);
     }
 
     public static boolean gearConfigExists(ResourceLocation resourceLocation) {
-        return SUMMON_CONFIGS.data.containsKey(resourceLocation);
+        return SUMMON_CONFIGS.getData().containsKey(resourceLocation);
     }
 
     @SubscribeEvent

@@ -34,6 +34,9 @@ import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
+import net.minecraft.world.item.Item.Properties;
+import net.minecraftforge.registries.ForgeRegistries;
+
 public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
@@ -46,7 +49,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
 
     @Override
     public void reload(){
-        bowGearConfig = BowGearConfigRegistry.getConfig(this.getRegistryName());
+        bowGearConfig = BowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         bowGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());

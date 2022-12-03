@@ -15,7 +15,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ArrowHelper {
 
     @SubscribeEvent
-    public static void onArrowJoinWorld(EntityJoinWorldEvent event) {
+    public static void onArrowJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof AbstractArrow) {
             AbstractArrow arrowEntity = (AbstractArrow) event.getEntity();
             //if(arrowEntity.getTags().contains("BonusProjectile") || arrowEntity.getTags().contains("ChainReactionProjectile")) return;

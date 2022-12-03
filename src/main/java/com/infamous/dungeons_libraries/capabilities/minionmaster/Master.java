@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.*;
@@ -42,7 +43,7 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     public int getSummonedMobsCost(){
-        return this.getSummonedMobs().stream().map(entity -> SummonConfigRegistry.getConfig(entity.getType().getRegistryName()).getCost()).reduce(0, Integer::sum);
+        return this.getSummonedMobs().stream().map(entity -> SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).getCost()).reduce(0, Integer::sum);
     }
 
     public boolean addSummonedMob(Entity entity) {

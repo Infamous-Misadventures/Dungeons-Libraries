@@ -15,13 +15,14 @@ public class DefaultsCodecJsonDataManager<T> extends CodecJsonDataManager<T>{
 
     private Map<ResourceLocation, T> defaults = new HashMap<>();
 
-    public DefaultsCodecJsonDataManager(String folderName, Codec<T> codec, Logger logger) {
-        super(folderName, codec, logger);
+    public DefaultsCodecJsonDataManager(String folderName, Codec<T> codec) {
+        super(folderName, codec);
     }
 
-    public DefaultsCodecJsonDataManager(String folderName, Codec<T> codec, Logger logger, Gson gson) {
-        super(folderName, codec, logger, gson);
+    public DefaultsCodecJsonDataManager(String folderName, Codec<T> codec, Gson gson) {
+        super(folderName, codec, gson);
     }
+
 
     public void addDefault(ResourceLocation resourceLocation, T object){
         defaults.put(resourceLocation, object);

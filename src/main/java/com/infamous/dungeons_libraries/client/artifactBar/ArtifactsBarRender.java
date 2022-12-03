@@ -14,7 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -34,8 +36,8 @@ public class ArtifactsBarRender {
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
 
     @SubscribeEvent
-    public static void displaySoulBar(RenderGameOverlayEvent.Pre event) {
-        PoseStack poseStack = event.getMatrixStack();
+    public static void displaySoulBar(RenderGuiOverlayEvent.Pre event) {
+        PoseStack poseStack = event.getPoseStack();
         Window sr = event.getWindow();
         int scaledWidth = sr.getGuiScaledWidth();
         int scaledHeight = sr.getGuiScaledHeight();
@@ -43,7 +45,7 @@ public class ArtifactsBarRender {
 
         if(Minecraft.getInstance() != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
 
-        if (event.getType().equals(RenderGameOverlayEvent.ElementType.LAYER) && mc.getCameraEntity() instanceof Player renderPlayer) {
+        if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player renderPlayer) {
             if(renderPlayer == null) return;
 
 //            GlStateManager._enableRescaleNormal();

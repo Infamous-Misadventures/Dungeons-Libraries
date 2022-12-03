@@ -21,12 +21,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static java.util.UUID.randomUUID;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
@@ -36,11 +37,11 @@ public class EliteMobEvents {
     public static final float SIZE_ADJUSTMENT = 1.1F;
 
     @SubscribeEvent
-    public static void onEntityJoin(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ELITE_MOBS.get()) {
+    public static void onEntityJoin(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ELITE_MOBS.get()) {
             LivingEntity entity = (LivingEntity) event.getEntity();
             EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-            EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
+            EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()), entity.getRandom());
             if (!cap.hasSpawned() && config != null && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
                 setItemSlot(entity, EquipmentSlot.HEAD, config.getHeadItem());
                 setItemSlot(entity, EquipmentSlot.CHEST, config.getChestItem());
@@ -106,7 +107,7 @@ public class EliteMobEvents {
 
     @SubscribeEvent
     public static void onPlayerStartTracking(PlayerEvent.StartTracking event){
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         Entity target = event.getTarget();
         if (player instanceof ServerPlayer && target instanceof LivingEntity) {
             EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getTarget());

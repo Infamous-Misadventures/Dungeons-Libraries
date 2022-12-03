@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class AxeGear extends ToolGear {
 
     public AxeGear(Properties properties) {

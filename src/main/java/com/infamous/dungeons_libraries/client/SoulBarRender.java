@@ -12,7 +12,8 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -25,14 +26,14 @@ public class SoulBarRender {
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
 
     @SubscribeEvent
-    public static void displaySoulBar(RenderGameOverlayEvent.Post event) {
-        PoseStack matrixStack = event.getMatrixStack();
+    public static void displaySoulBar(RenderGuiOverlayEvent.Post event) {
+        PoseStack matrixStack = event.getPoseStack();
         Window sr = event.getWindow();
         int scaledWidth = sr.getGuiScaledWidth();
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
 
-        if (event.getType().equals(RenderGameOverlayEvent.ElementType.LAYER) && mc.getCameraEntity() instanceof Player) {
+        if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player) {
             //draw souls
             RenderSystem.setShaderTexture(0, SOUL_BAR_RESOURCE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

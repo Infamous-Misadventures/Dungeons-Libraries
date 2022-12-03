@@ -40,7 +40,7 @@ public class ArmorGearConfigSyncPacket {
     }
 
     private void handlePacketOnMainThread() {
-        ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS.data = this.data;
+        ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS.setData(this.data);
         reloadAllItems();
     }
 }

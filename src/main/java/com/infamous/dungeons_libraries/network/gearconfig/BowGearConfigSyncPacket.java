@@ -40,7 +40,7 @@ public class BowGearConfigSyncPacket {
     }
 
     private void handlePacketOnMainThread() {
-        BowGearConfigRegistry.BOW_GEAR_CONFIGS.data = this.data;
+        BowGearConfigRegistry.BOW_GEAR_CONFIGS.setData(this.data);
         reloadAllItems();
     }
 }

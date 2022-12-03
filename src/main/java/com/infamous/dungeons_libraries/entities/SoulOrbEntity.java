@@ -19,6 +19,8 @@ import net.minecraftforge.network.NetworkHooks;
 
 import java.util.UUID;
 
+import net.minecraft.world.entity.Entity.RemovalReason;
+
 public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData {
    public int tickCount;
    public int age;

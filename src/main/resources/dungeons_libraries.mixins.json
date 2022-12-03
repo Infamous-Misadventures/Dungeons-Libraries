@@ -6,8 +6,8 @@
   "refmap": "dungeons_libraries.refmap.json",
   "mixins": [
     "ArmorItemAccessor", "ArmorMaterialsAccessor", "AxeItemAccessor", "BeeMixin", "BowItemMixin", "CooldownAccessor",
-    "CrossbowItemInvoker", "CrossbowItemMixin", "EnchantmentHelperMixin", "ItemAccessor", "MobInvoker", "MobMixin",
-    "TieredItemAccessor"
+    "CrossbowItemInvoker", "CrossbowItemMixin", "EnchantmentHelperMixin", "ItemAccessor",
+    "MobInvoker", "MobMixin", "TieredItemAccessor"
   ],
   "client": [
     "GeoEntityRendererMixin", "LivingRendererMixin", "MinecraftMixin"

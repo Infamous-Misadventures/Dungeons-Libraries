@@ -11,6 +11,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -115,7 +116,7 @@ public class BuiltInEnchantments implements INBTSerializable<CompoundTag> {
             ListTag enchantmentListnbt = new ListTag();
             enchantmentInstances.forEach(enchantmentInstance -> {
                 CompoundTag enchantmentInstanceNBT = new CompoundTag();
-                enchantmentInstanceNBT.putString("id", String.valueOf(enchantmentInstance.enchantment.getRegistryName()));
+                enchantmentInstanceNBT.putString("id", String.valueOf(ForgeRegistries.ENCHANTMENTS.getKey(enchantmentInstance.enchantment)));
                 enchantmentInstanceNBT.putShort("lvl", (short)enchantmentInstance.level);
                 enchantmentListnbt.add(enchantmentInstanceNBT);
             });

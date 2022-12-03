@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static net.minecraftforge.registries.ForgeRegistries.ENCHANTMENTS;
 
@@ -14,7 +15,7 @@ public class Codecs {
 
 
     public static final Codec<EnchantmentInstance> ENCHANTMENT_DATA_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("enchantment").forGetter(data -> data.enchantment.getRegistryName()),
+            ResourceLocation.CODEC.fieldOf("enchantment").forGetter(data -> ENCHANTMENTS.getKey(data.enchantment)),
             Codec.INT.fieldOf("level").forGetter(data -> data.level)
     ).apply(instance, Codecs::getEnchantmentInstance));
 

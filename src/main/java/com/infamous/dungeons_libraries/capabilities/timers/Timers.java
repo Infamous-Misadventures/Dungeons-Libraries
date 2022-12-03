@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +20,11 @@ public class Timers implements INBTSerializable<CompoundTag> {
     private final Map<ResourceLocation, Integer> enchantmentTimers = new HashMap<>();
 
     public int getEnchantmentTimer(Enchantment enchantment) {
-        return enchantmentTimers.computeIfAbsent(enchantment.getRegistryName(), resourceLocation -> -1);
+        return enchantmentTimers.computeIfAbsent(ForgeRegistries.ENCHANTMENTS.getKey(enchantment), resourceLocation -> -1);
     }
 
     public boolean setEnchantmentTimer(Enchantment enchantment, int value) {
-        enchantmentTimers.put(enchantment.getRegistryName(), value);
+        enchantmentTimers.put(ForgeRegistries.ENCHANTMENTS.getKey(enchantment), value);
         return true;
     }
 

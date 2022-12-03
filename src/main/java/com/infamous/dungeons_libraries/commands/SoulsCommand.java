@@ -9,14 +9,14 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
 
 public class SoulsCommand {
-    private static final SimpleCommandExceptionType ERROR_ADD_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("commands.souls.add.failed"));
-    private static final SimpleCommandExceptionType ERROR_SET_FAILED = new SimpleCommandExceptionType(new TranslatableComponent("commands.souls.set.failed"));
+    private static final SimpleCommandExceptionType ERROR_ADD_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.souls.add.failed"));
+    private static final SimpleCommandExceptionType ERROR_SET_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.souls.set.failed"));
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> mobEnchantCommand
@@ -39,7 +39,7 @@ public class SoulsCommand {
         if(targets.isEmpty()){
             throw ERROR_ADD_FAILED.create();
         }else{
-            source.sendSuccess(new TranslatableComponent("commands.souls.add.success"), true);
+            source.sendSuccess(Component.translatable("commands.souls.add.success"), true);
         }
         return targets.size();
     }
@@ -51,7 +51,7 @@ public class SoulsCommand {
         if(targets.isEmpty()){
             throw ERROR_SET_FAILED.create();
         }else{
-            source.sendSuccess(new TranslatableComponent("commands.souls.set.success"), true);
+            source.sendSuccess(Component.translatable("commands.souls.set.success"), true);
         }
         return targets.size();
     }

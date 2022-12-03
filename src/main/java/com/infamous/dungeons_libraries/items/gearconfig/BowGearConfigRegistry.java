@@ -15,15 +15,15 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 public class BowGearConfigRegistry {
     public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gear_config");
 
-    public static final CodecJsonDataManager<BowGearConfig> BOW_GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig/bow", BowGearConfig.CODEC, DungeonsLibraries.LOGGER);
+    public static final CodecJsonDataManager<BowGearConfig> BOW_GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig/bow", BowGearConfig.CODEC);
 
 
     public static BowGearConfig getConfig(ResourceLocation resourceLocation) {
-        return BOW_GEAR_CONFIGS.data.getOrDefault(resourceLocation, BowGearConfig.DEFAULT);
+        return BOW_GEAR_CONFIGS.getData().getOrDefault(resourceLocation, BowGearConfig.DEFAULT);
     }
 
     public static boolean gearConfigExists(ResourceLocation resourceLocation) {
-        return BOW_GEAR_CONFIGS.data.containsKey(resourceLocation);
+        return BOW_GEAR_CONFIGS.getData().containsKey(resourceLocation);
     }
 
     public static BowGearConfigSyncPacket toPacket(Map<ResourceLocation, BowGearConfig> map) {

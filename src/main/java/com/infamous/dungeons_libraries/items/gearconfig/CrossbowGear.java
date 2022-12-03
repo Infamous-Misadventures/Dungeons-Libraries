@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,10 +32,10 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
@@ -57,7 +58,7 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
 
     @Override
     public void reload(){
-        crossbowGearConfig = CrossbowGearConfigRegistry.getConfig(this.getRegistryName());
+        crossbowGearConfig = CrossbowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         crossbowGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
@@ -90,12 +91,12 @@ public class CrossbowGear extends CrossbowItem  implements IRangedWeapon, IReloa
         return event.getVelocity();
     }
 
-    public static float[] getRandomSoundPitches(Random rand) {
+    public static float[] getRandomSoundPitches(RandomSource rand) {
         boolean flag = rand.nextBoolean();
         return new float[]{1.0F, getRandomSoundPitch(flag, rand), getRandomSoundPitch(!flag, rand)};
     }
 
-    private static float getRandomSoundPitch(boolean flagIn, Random random) {
+    private static float getRandomSoundPitch(boolean flagIn, RandomSource random) {
         float f = flagIn ? 0.63F : 0.43F;
         return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }

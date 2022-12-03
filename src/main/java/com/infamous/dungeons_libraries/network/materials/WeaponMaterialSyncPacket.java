@@ -42,7 +42,7 @@ public class WeaponMaterialSyncPacket {
 	}
 
 	private void handlePacketOnMainThread() {
-		WeaponMaterials.WEAPON_MATERIALS.data = this.data;
+		WeaponMaterials.WEAPON_MATERIALS.setData(this.data);
 		reloadAllItems();
 	}
 }

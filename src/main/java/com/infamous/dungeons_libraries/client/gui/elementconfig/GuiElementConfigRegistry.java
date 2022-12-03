@@ -13,15 +13,15 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 public class GuiElementConfigRegistry {
     public static final ResourceLocation ELEMENT_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gui/element");
 
-    public static final CodecJsonDataManager<GuiElementConfig> GUI_ELEMENT_CONFIGS = new CodecJsonDataManager<>("gui/element", GuiElementConfig.CODEC, DungeonsLibraries.LOGGER);
+    public static final CodecJsonDataManager<GuiElementConfig> GUI_ELEMENT_CONFIGS = new CodecJsonDataManager<>("gui/element", GuiElementConfig.CODEC);
 
 
     public static GuiElementConfig getConfig(ResourceLocation resourceLocation) {
-        return GUI_ELEMENT_CONFIGS.data.getOrDefault(resourceLocation, GuiElementConfig.DEFAULT);
+        return GUI_ELEMENT_CONFIGS.getData().getOrDefault(resourceLocation, GuiElementConfig.DEFAULT);
     }
 
     public static boolean guiElementConfigExists(ResourceLocation resourceLocation) {
-        return GUI_ELEMENT_CONFIGS.data.containsKey(resourceLocation);
+        return GUI_ELEMENT_CONFIGS.getData().containsKey(resourceLocation);
     }
 
 //    public static GuiElementConfigSyncPacket toPacket(Map<ResourceLocation, GuiElementConfig> map) {

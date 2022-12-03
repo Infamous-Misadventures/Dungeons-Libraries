@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
 
@@ -25,7 +26,7 @@ public class SummonHelper {
     private static boolean canSummonMob(LivingEntity master, Entity beeEntity, Master masterCap) {
         AttributeInstance summonCapAttribute = master.getAttribute(SUMMON_CAP.get());
         if(summonCapAttribute == null) return false;
-        return masterCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(beeEntity.getType().getRegistryName()).getCost() <= summonCapAttribute.getValue();
+        return masterCap.getSummonedMobsCost() + SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(beeEntity.getType())).getCost() <= summonCapAttribute.getValue();
     }
 
     public static boolean canSummonMob(LivingEntity master, Master masterCap) {

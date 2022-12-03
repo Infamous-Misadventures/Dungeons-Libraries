@@ -6,17 +6,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class ArmorGearModel<T extends ArmorGear> extends AnimatedGeoModel<T> {
     @Override
-    public ResourceLocation getModelLocation(ArmorGear object) {
+    public ResourceLocation getModelResource(ArmorGear object) {
         return object.getModelLocation();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ArmorGear object) {
+    public ResourceLocation getTextureResource(ArmorGear object) {
         return object.getTextureLocation();
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(ArmorGear object) {
+    public ResourceLocation getAnimationResource(ArmorGear object) {
         return object.getAnimationFileLocation();
     }
 }

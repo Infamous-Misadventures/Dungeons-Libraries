@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class BuiltInEnchantmentsMessage {
         buffer.writeResourceLocation(resourceLocation);
         buffer.writeVarInt(enchantmentInstanceList.size());
         this.enchantmentInstanceList.forEach(enchantmentInstance -> {
-            buffer.writeResourceLocation(enchantmentInstance.enchantment.getRegistryName());
+            buffer.writeResourceLocation(ENCHANTMENTS.getKey(enchantmentInstance.enchantment));
             buffer.writeInt(enchantmentInstance.level);
         });
     }

@@ -1,36 +1,33 @@
- package com.infamous.dungeons_libraries.integration.curios.client;
+package com.infamous.dungeons_libraries.integration.curios.client;
 
- import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
- import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
- import com.infamous.dungeons_libraries.items.artifacts.ArtifactUseContext;
- import com.infamous.dungeons_libraries.network.NetworkHandler;
- import com.mojang.math.Vector3d;
- import net.minecraft.client.KeyMapping;
- import net.minecraft.client.Minecraft;
- import net.minecraft.client.player.AbstractClientPlayer;
- import net.minecraft.client.player.LocalPlayer;
- import net.minecraft.core.Direction;
- import net.minecraft.world.entity.LivingEntity;
- import net.minecraft.world.entity.player.Player;
- import net.minecraft.world.entity.projectile.ProjectileUtil;
- import net.minecraft.world.item.ItemStack;
- import net.minecraft.world.phys.*;
- import net.minecraftforge.api.distmarker.Dist;
- import net.minecraftforge.client.ClientRegistry;
- import net.minecraftforge.client.event.InputEvent;
- import net.minecraftforge.client.settings.KeyConflictContext;
- import net.minecraftforge.event.entity.player.PlayerEvent;
- import net.minecraftforge.eventbus.api.SubscribeEvent;
- import net.minecraftforge.fml.common.Mod;
- import org.lwjgl.glfw.GLFW;
- import top.theillusivec4.curios.api.CuriosApi;
- import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
+import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
+import com.infamous.dungeons_libraries.items.artifacts.ArtifactUseContext;
+import com.infamous.dungeons_libraries.network.NetworkHandler;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.*;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
- import java.util.Optional;
+import java.util.Optional;
 
- import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
- @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class CuriosKeyBindings {
 
     private static final double RAYTRACE_DISTANCE = 30;
@@ -39,17 +36,18 @@ public class CuriosKeyBindings {
     public static final KeyMapping activateArtifact2 = new KeyMapping("key.dungeons_libraries.curiosintegration.description_slot2", GLFW.GLFW_KEY_B, "key.dungeons_libraries.curiosintegration.category");
     public static final KeyMapping activateArtifact3 = new KeyMapping("key.dungeons_libraries.curiosintegration.description_slot3", GLFW.GLFW_KEY_N, "key.dungeons_libraries.curiosintegration.category");
 
-    public static void setupCuriosKeybindings() {
+    @SubscribeEvent
+    public static void setupCuriosKeybindings(RegisterKeyMappingsEvent event) {
         activateArtifact1.setKeyConflictContext(KeyConflictContext.IN_GAME);
-        ClientRegistry.registerKeyBinding(activateArtifact1);
+        event.register(activateArtifact1);
         activateArtifact2.setKeyConflictContext(KeyConflictContext.IN_GAME);
-        ClientRegistry.registerKeyBinding(activateArtifact2);
+        event.register(activateArtifact2);
         activateArtifact3.setKeyConflictContext(KeyConflictContext.IN_GAME);
-        ClientRegistry.registerKeyBinding(activateArtifact3);
+        event.register(activateArtifact3);
     }
 
     @SubscribeEvent
-    public static void onClientTick(InputEvent.KeyInputEvent event) {
+    public static void onClientTick(InputEvent.Key event) {
         if (activateArtifact1.consumeClick()) {
             sendCuriosStartMessageToServer(0);
         }

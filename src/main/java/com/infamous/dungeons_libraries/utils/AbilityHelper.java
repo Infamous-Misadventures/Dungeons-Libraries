@@ -53,7 +53,7 @@ public class AbilityHelper {
     }
 
     private static boolean isEntityBlacklisted(LivingEntity entity) {
-        return (ForgeRegistries.ENTITIES.getKey(entity.getType()) != null && (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(entity.getType()).toString()) || entity.getType().equals(ARMOR_STAND)));
+        return (ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()) != null && (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()) || entity.getType().equals(ARMOR_STAND)));
     }
 
     private static boolean isAliveAndCanBeSeen(LivingEntity nearbyEntity, LivingEntity attacker) {

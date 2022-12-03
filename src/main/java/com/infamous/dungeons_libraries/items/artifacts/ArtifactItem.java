@@ -30,6 +30,8 @@ import java.util.UUID;
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.ARTIFACT_COOLDOWN_MULTIPLIER;
 import static com.infamous.dungeons_libraries.tags.ItemTags.ARTIFACT_REPAIR_ITEMS;
 
+import net.minecraft.world.item.Item.Properties;
+
 public abstract class ArtifactItem extends Item implements ICurioItem {
     protected final UUID SLOT0_UUID = UUID.fromString("7037798e-ac2c-4711-aa72-ba73589f1411");
     protected final UUID SLOT1_UUID = UUID.fromString("1906bae9-9f26-4194-bb8a-ef95b8cad134");

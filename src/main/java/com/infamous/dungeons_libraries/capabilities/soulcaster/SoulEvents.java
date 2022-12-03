@@ -16,7 +16,7 @@ public class SoulEvents {
 
     @SubscribeEvent
     public static void onSoulSpawning(LivingDeathEvent event) {
-        LivingEntity entityLiving = event.getEntityLiving();
+        LivingEntity entityLiving = event.getEntity();
         Entity sourceEntity = event.getSource().getEntity();
         if(sourceEntity instanceof Player) {
             double soulAmount = ((Player) sourceEntity).getAttributeValue(SOUL_GATHERING.get());

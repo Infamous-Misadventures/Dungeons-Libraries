@@ -16,6 +16,8 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class MinionFollowOwnerGoal extends Goal {
     private final Mob mobEntity;
     private LivingEntity owner;

@@ -19,7 +19,7 @@ public class PatreonEvents {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
-        loadPatreons(() -> PATREON_JOIN_CONSUMERS.forEach(consumer -> consumer.accept(event.getPlayer().getUUID())));
+        loadPatreons(() -> PATREON_JOIN_CONSUMERS.forEach(consumer -> consumer.accept(event.getEntity().getUUID())));
     }
 
     public static void onServerStart(ServerStartedEvent event){

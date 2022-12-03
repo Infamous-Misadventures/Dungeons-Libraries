@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @Override
     public void reload(){
-        meleeGearConfig = MeleeGearConfigRegistry.getConfig(this.getRegistryName());
+        meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         Tier material = meleeGearConfig.getWeaponMaterial();
         ((ItemAccessor)this).setMaxDamage(material.getUses());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
