@@ -3,10 +3,7 @@ package com.infamous.dungeons_libraries.network;
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStartMessage;
 import com.infamous.dungeons_libraries.integration.curios.client.message.CuriosArtifactStopMessage;
-import com.infamous.dungeons_libraries.network.gearconfig.ArmorGearConfigSyncPacket;
-import com.infamous.dungeons_libraries.network.gearconfig.BowGearConfigSyncPacket;
-import com.infamous.dungeons_libraries.network.gearconfig.CrossbowGearConfigSyncPacket;
-import com.infamous.dungeons_libraries.network.gearconfig.MeleeGearConfigSyncPacket;
+import com.infamous.dungeons_libraries.network.gearconfig.*;
 import com.infamous.dungeons_libraries.network.materials.ArmorMaterialSyncPacket;
 import com.infamous.dungeons_libraries.network.materials.WeaponMaterialSyncPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -74,6 +71,10 @@ public class NetworkHandler {
         INSTANCE.messageBuilder(SwitchHandMessage.class, incrementAndGetPacketCounter())
                 .encoder(SwitchHandMessage::encode).decoder(SwitchHandMessage::decode)
                 .consumer(SwitchHandMessage.SwitchHandHandler::handle)
+                .add();
+        INSTANCE.messageBuilder(ArtifactGearConfigSyncPacket.class, incrementAndGetPacketCounter())
+                .encoder(ArtifactGearConfigSyncPacket::encode).decoder(ArtifactGearConfigSyncPacket::decode)
+                .consumer(ArtifactGearConfigSyncPacket::onPacketReceived)
                 .add();
     }
 

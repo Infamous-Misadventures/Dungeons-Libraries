@@ -6,6 +6,7 @@ import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfig
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.items.ItemTagWrappers;
 import com.infamous.dungeons_libraries.items.RangedItemModelProperties;
+import com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry;
 import com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry;
@@ -28,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
 import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.setupCuriosKeybindings;
+import static com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry.ARTIFACT_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS;
@@ -68,6 +70,7 @@ public class DungeonsLibraries
         CROSSBOW_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, CrossbowGearConfigRegistry::toPacket);
         WEAPON_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, WeaponMaterials::toPacket);
         ARMOR_MATERIALS.subscribeAsSyncable(NetworkHandler.INSTANCE, DungeonsArmorMaterials::toPacket);
+        ARTIFACT_GEAR_CONFIGS.subscribeAsSyncable(NetworkHandler.INSTANCE, ArtifactGearConfigRegistry::toPacket);
 
         ModCapabilities.setupCapabilities();
     }

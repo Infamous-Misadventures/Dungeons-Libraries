@@ -8,6 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+import static com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry.ARTIFACT_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.CrossbowGearConfigRegistry.CROSSBOW_GEAR_CONFIGS;
@@ -27,6 +28,7 @@ public class GearConfigReloadListener implements ResourceManagerReloadListener {
         event.addListener(ARMOR_GEAR_CONFIGS);
         event.addListener(BOW_GEAR_CONFIGS);
         event.addListener(CROSSBOW_GEAR_CONFIGS);
+        event.addListener(ARTIFACT_GEAR_CONFIGS);
         event.addListener(new GearConfigReloadListener());
     }
     @Override

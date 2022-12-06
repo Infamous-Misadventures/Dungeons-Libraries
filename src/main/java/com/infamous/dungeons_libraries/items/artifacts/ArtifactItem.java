@@ -2,9 +2,12 @@ package com.infamous.dungeons_libraries.items.artifacts;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.event.ArtifactEvent;
+import com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfig;
+import com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry;
+import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.mixin.CooldownAccessor;
+import com.infamous.dungeons_libraries.mixin.ItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -14,10 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,20 +28,40 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.ARTIFACT_COOLDOWN_MULTIPLIER;
+import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
 import static com.infamous.dungeons_libraries.tags.ItemTags.ARTIFACT_REPAIR_ITEMS;
+import static java.util.UUID.randomUUID;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
+import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-import net.minecraft.world.item.Item.Properties;
-
-public abstract class ArtifactItem extends Item implements ICurioItem {
+public abstract class ArtifactItem extends Item implements ICurioItem, IReloadableGear {
     protected final UUID SLOT0_UUID = UUID.fromString("7037798e-ac2c-4711-aa72-ba73589f1411");
     protected final UUID SLOT1_UUID = UUID.fromString("1906bae9-9f26-4194-bb8a-ef95b8cad134");
     protected final UUID SLOT2_UUID = UUID.fromString("b99aa930-03d0-4b2d-aa69-7b5d943dd75c");
+
+    private Multimap<Attribute, AttributeModifier> defaultModifiers;
     protected boolean procOnItemUse = false;
+    private ArtifactGearConfig artifactGearConfig;
 
     public ArtifactItem(Properties properties) {
-        super(properties
-                .durability(DungeonsLibrariesConfig.ARTIFACT_DURABILITY.get())
-        );
+        super(properties);
+        reload();
+    }
+
+    @Override
+    public void reload(){
+        artifactGearConfig = ArtifactGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
+        ((ItemAccessor)this).setMaxDamage(artifactGearConfig.getDurability());
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        artifactGearConfig.getAttributes().forEach(attributeModifier -> {
+            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            if(attribute != null) {
+                UUID uuid = randomUUID();
+                builder.put(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+            }
+        });
+        this.defaultModifiers = builder.build();
     }
 
     public static void putArtifactOnCooldown(Player playerIn, Item item) {
@@ -94,14 +114,30 @@ public abstract class ArtifactItem extends Item implements ICurioItem {
 
     public abstract InteractionResultHolder<ItemStack> procArtifact(ArtifactUseContext iuc);
 
-    public abstract int getCooldownInSeconds();
+    public int getCooldownInSeconds(){
+        return artifactGearConfig.getCooldown();
+    };
 
-    public abstract int getDurationInSeconds();
+    public int getDurationInSeconds(){
+        return artifactGearConfig.getDuration();
+    };
 
     public void stopUsingArtifact(LivingEntity livingEntity){}
 
+
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(int slotIndex) {
-        return ImmutableMultimap.of();
+        return getAttributeModifiersForSlot(getUUIDForSlot(slotIndex));
+    }
+
+    private ImmutableMultimap<Attribute, AttributeModifier> getAttributeModifiersForSlot(UUID slot_uuid) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        artifactGearConfig.getAttributes().forEach(attributeModifier -> {
+            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            if(attribute != null) {
+                builder.put(attribute, new AttributeModifier(slot_uuid, "Artifact modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+            }
+        });
+        return builder.build();
     }
 
     protected UUID getUUIDForSlot(int slotIndex){
