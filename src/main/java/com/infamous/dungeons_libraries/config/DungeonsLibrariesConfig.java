@@ -12,6 +12,7 @@ public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_DUAL_WIELDING;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_TWO_HANDED_WEAPON;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_BLACKLIST;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_WHITELIST;
     public static ForgeConfigSpec.ConfigValue<Integer> ARTIFACT_DURABILITY;
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ELITE_MOBS;
     public static ForgeConfigSpec.ConfigValue<Double> ELITE_MOBS_BASE_CHANCE;
@@ -29,39 +30,12 @@ public class DungeonsLibrariesConfig {
             ENEMY_BLACKLIST = builder
                     .comment("Add entities that will never be targeted by aggressive Dungeons effects. \n"
                             + "To do so, enter their registry names.")
-                    .defineList("effectTargetBlacklist", Lists.newArrayList(
-                            "guardvillagers:guard",
-                            "minecraft:bat",
-                            "minecraft:bee",
-                            "minecraft:chicken",
-                            "minecraft:cod",
-                            "minecraft:cow",
-                            "minecraft:dolphin",
-                            "minecraft:donkey",
-                            "minecraft:fox",
-                            "minecraft:horse",
-                            "minecraft:iron_golem",
-                            "minecraft:mooshroom",
-                            "minecraft:ocelot",
-                            "minecraft:panda",
-                            "minecraft:parrot",
-                            "minecraft:pig",
-                            "minecraft:polar_bear",
-                            "minecraft:pufferfish",
-                            "minecraft:rabbit",
-                            "minecraft:salmon",
-                            "minecraft:sheep",
-                            "minecraft:squid",
-                            "minecraft:strider",
-                            "minecraft:trader_llama",
-                            "minecraft:tropical_fish",
-                            "minecraft:turtle",
-                            "minecraft:villager",
-                            "minecraft:wandering_trader",
-                            "minecraft:wolf",
-                            "minecraft:cat",
-                            "minecraft:rabbit"
-                            ),
+                    .defineList("effectTargetBlacklist", Lists.newArrayList(),
+                            (itemRaw) -> itemRaw instanceof String);
+            ENEMY_WHITELIST = builder
+                    .comment("Add entities that should be targetted, but aren't by aggressive Dungeons effects. \n"
+                            + "To do so, enter their registry names.")
+                    .defineList("effectTargetWhitelist", Lists.newArrayList(),
                             (itemRaw) -> itemRaw instanceof String);
             builder.pop();
 
