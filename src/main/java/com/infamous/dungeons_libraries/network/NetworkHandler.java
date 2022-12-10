@@ -70,7 +70,7 @@ public class NetworkHandler {
                 .add();
         INSTANCE.messageBuilder(CuriosArtifactStopMessage.class, incrementAndGetPacketCounter())
                 .encoder(CuriosArtifactStopMessage::encode).decoder(CuriosArtifactStopMessage::decode)
-                .consumer(CuriosArtifactStopMessage.CuriosArtifactHandler::handle)
+                .consumer(CuriosArtifactStopMessage::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(BreakItemMessage.class, incrementAndGetPacketCounter())
                 .encoder(BreakItemMessage::encode).decoder(BreakItemMessage::decode)
