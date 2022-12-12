@@ -55,7 +55,7 @@ public abstract class EnchantmentHelperMixin {
 
 
     @Redirect(method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getAllEnchantments()Ljava/util/Map;", remap = false), remap = false)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getAllEnchantments()Ljava/util/Map;", remap = false))
     private static Map dungeonslibraries_getAllEnchantments(ItemStack itemStack) {
         Map<Enchantment, Integer> enchantmentMap = itemStack.getAllEnchantments();
         Map<Enchantment, Integer> newEnchantmentMap = new HashMap<>(enchantmentMap);
