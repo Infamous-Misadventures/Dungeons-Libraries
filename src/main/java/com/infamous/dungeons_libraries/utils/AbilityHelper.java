@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.utils;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.util.Mth;
@@ -49,11 +50,14 @@ public class AbilityHelper {
         return isPetOrColleagueRelation(origin, target)
                 || origin.isAlliedTo(target)
                 || isBothPlayerAndNoPvP(origin, target)
-                || (origin instanceof Monster && target instanceof Monster);
+                || (origin.getClassification(false).equals(MobCategory.MONSTER) && target.getClassification(false).equals(MobCategory.MONSTER))
+                || isEntityBlacklisted(origin, target);
     }
-
-    private static boolean isEntityBlacklisted(LivingEntity entity) {
-        return (ForgeRegistries.ENTITIES.getKey(entity.getType()) != null && (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(entity.getType()).toString()) || entity.getType().equals(ARMOR_STAND)));
+    private static boolean isEntityBlacklisted(LivingEntity origin, LivingEntity target) {
+        if (target.getType().equals(ARMOR_STAND)) return true;
+        return (origin instanceof Player && !target.getClassification(false).equals(MobCategory.MONSTER)
+                && !DungeonsLibrariesConfig.ENEMY_WHITELIST.get().contains(ForgeRegistries.ENTITIES.getKey(target.getType()).toString()))
+                || (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(target.getType()).toString()));
     }
 
     private static boolean isAliveAndCanBeSeen(LivingEntity nearbyEntity, LivingEntity attacker) {
@@ -63,15 +67,13 @@ public class AbilityHelper {
     public static boolean canApplyToSecondEnemy(LivingEntity attacker, LivingEntity target, LivingEntity nearbyEntity) {
         return isNotTheTargetOrAttacker(attacker, target, nearbyEntity)
                 && isAliveAndCanBeSeen(nearbyEntity, attacker)
-                && !isAlly(attacker, nearbyEntity)
-                && !isEntityBlacklisted(nearbyEntity);
+                && !isAlly(attacker, nearbyEntity);
     }
 
     public static boolean canApplyToEnemy(LivingEntity attacker, LivingEntity nearbyEntity) {
         return nearbyEntity != attacker
                 && isAliveAndCanBeSeen(nearbyEntity, attacker)
-                && !isAlly(attacker, nearbyEntity)
-                && !isEntityBlacklisted(nearbyEntity);
+                && !isAlly(attacker, nearbyEntity);
     }
 
 }
