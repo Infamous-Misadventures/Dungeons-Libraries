@@ -61,11 +61,11 @@ public class NetworkHandler {
                 .add();
         INSTANCE.messageBuilder(CuriosArtifactStopMessage.class, incrementAndGetPacketCounter())
                 .encoder(CuriosArtifactStopMessage::encode).decoder(CuriosArtifactStopMessage::decode)
-                .consumer(CuriosArtifactStopMessage.CuriosArtifactHandler::handle)
+                .consumer(CuriosArtifactStopMessage::handle)
                 .add();
         INSTANCE.messageBuilder(EliteMobMessage.class, incrementAndGetPacketCounter())
                 .encoder(EliteMobMessage::encode).decoder(EliteMobMessage::decode)
-                .consumer(EliteMobMessage::onPacketReceived)
+                .consumer(EliteMobMessage::handle)
                 .add();
         INSTANCE.messageBuilder(BreakItemMessage.class, incrementAndGetPacketCounter())
                 .encoder(BreakItemMessage::encode).decoder(BreakItemMessage::decode)
