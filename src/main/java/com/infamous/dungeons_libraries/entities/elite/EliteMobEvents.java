@@ -17,6 +17,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -42,23 +45,28 @@ public class EliteMobEvents {
             EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
             if(cap == null) return;
             EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
-            if (!cap.hasSpawned() && config != null && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * entity.level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
-                setItemSlot(entity, EquipmentSlotType.HEAD, config.getHeadItem());
-                setItemSlot(entity, EquipmentSlotType.CHEST, config.getChestItem());
-                setItemSlot(entity, EquipmentSlotType.LEGS, config.getLegsItem());
-                setItemSlot(entity, EquipmentSlotType.FEET, config.getFeetItem());
-                setItemSlot(entity, EquipmentSlotType.MAINHAND, config.getHandItem());
-                setItemSlot(entity, EquipmentSlotType.OFFHAND, config.getOffhandItem());
-                ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-                config.getAttributes().forEach(attributeModifier -> {
-                    Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-                    if(attribute != null) {
-                        builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
-                    }
-                });
-                entity.getAttributes().addTransientAttributeModifiers(builder.build());
-                cap.setElite(true);
-                cap.setTexture(config.getTexture());
+            World level = event.getWorld();
+            if (!cap.hasSpawned() && config != null) {
+                Chunk chunk = level.getChunkSource().getChunkNow(entity.blockPosition().getX() >> 4, entity.blockPosition().getZ() >> 4);
+                if (chunk != null && chunk.getStatus().isOrAfter(ChunkStatus.FULL)
+                        && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
+                    setItemSlot(entity, EquipmentSlotType.HEAD, config.getHeadItem());
+                    setItemSlot(entity, EquipmentSlotType.CHEST, config.getChestItem());
+                    setItemSlot(entity, EquipmentSlotType.LEGS, config.getLegsItem());
+                    setItemSlot(entity, EquipmentSlotType.FEET, config.getFeetItem());
+                    setItemSlot(entity, EquipmentSlotType.MAINHAND, config.getHandItem());
+                    setItemSlot(entity, EquipmentSlotType.OFFHAND, config.getOffhandItem());
+                    ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+                    config.getAttributes().forEach(attributeModifier -> {
+                        Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+                        if (attribute != null) {
+                            builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+                        }
+                    });
+                    entity.getAttributes().addTransientAttributeModifiers(builder.build());
+                    cap.setElite(true);
+                    cap.setTexture(config.getTexture());
+                }
             }
             cap.setHasSpawned(true);
         }
