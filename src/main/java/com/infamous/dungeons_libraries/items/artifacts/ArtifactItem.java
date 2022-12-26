@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
 import com.infamous.dungeons_libraries.event.ArtifactEvent;
+import com.infamous.dungeons_libraries.items.ItemTagWrappers;
 import com.infamous.dungeons_libraries.mixin.CooldownAccessor;
-import com.infamous.dungeons_libraries.tags.ItemTags;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -78,7 +78,7 @@ public abstract class ArtifactItem extends Item implements ICurioItem {
 
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return ItemTags.ARTIFACT_REPAIR_ITEMS.contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+        return ItemTagWrappers.ARTIFACT_REPAIR_ITEMS.contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
     }
 
     public ActionResult<ItemStack> activateArtifact(ArtifactUseContext artifactUseContext) {
