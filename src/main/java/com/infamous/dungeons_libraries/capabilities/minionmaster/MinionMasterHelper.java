@@ -12,6 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.utils.PetHelper.canPetAttackEntity;
+import static net.minecraft.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 
 public class MinionMasterHelper {
 
@@ -102,10 +105,19 @@ public class MinionMasterHelper {
             if(minionCap.isSummon()){
                 SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
                 if(config.shouldAddAttackGoal()){
-                    mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
+                    addSummonAttackGoal(mobEntity);
                 }
             }
         }
+    }
+
+    private static void addSummonAttackGoal(MobEntity mobEntity) {
+        ModifiableAttributeInstance attribute = mobEntity.getAttribute(ATTACK_DAMAGE);
+        if(attribute == null) return;
+        if(attribute.getValue() == 0){
+            attribute.addTransientModifier(new AttributeModifier("Summon Attack Damage", 1, AttributeModifier.Operation.ADDITION));
+        }
+        mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
     }
 
     static void removeMinion(LivingEntity entityLiving, IMinion cap) {
