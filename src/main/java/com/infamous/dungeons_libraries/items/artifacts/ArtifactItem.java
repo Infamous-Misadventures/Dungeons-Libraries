@@ -114,6 +114,11 @@ public abstract class ArtifactItem extends Item implements ICurioItem {
         return ImmutableMultimap.of();
     }
 
+    @Override
+    public int getEnchantmentValue() {
+        return 9;
+    }
+
     protected UUID getUUIDForSlot(int slotIndex){
         switch(slotIndex){
             case 0: return SLOT0_UUID;
