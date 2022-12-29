@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.ARTIFACT_COOLDOWN_MULTIPLIER;
-import static com.infamous.dungeons_libraries.tags.ItemTags.ARTIFACT_REPAIR_ITEMS;
+import static com.infamous.dungeons_libraries.items.ItemTagWrappers.ARTIFACT_REPAIR_ITEMS;
 
 public abstract class ArtifactItem extends Item implements ICurioItem {
     protected final UUID SLOT0_UUID = UUID.fromString("7037798e-ac2c-4711-aa72-ba73589f1411");
@@ -74,6 +74,11 @@ public abstract class ArtifactItem extends Item implements ICurioItem {
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return ForgeRegistries.ITEMS.tags().getTag(ARTIFACT_REPAIR_ITEMS).contains(repair.getItem()) || super.isValidRepairItem(toRepair, repair);
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        return 9;
     }
 
     public InteractionResultHolder<ItemStack> activateArtifact(ArtifactUseContext artifactUseContext) {
