@@ -12,11 +12,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.MASTER_CAPABILITY;
 import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.MINION_CAPABILITY;
 import static com.infamous.dungeons_libraries.utils.PetHelper.canPetAttackEntity;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 
 public class MinionMasterHelper {
 
@@ -86,10 +88,19 @@ public class MinionMasterHelper {
             if(minionCap.isSummon()){
                 SummonConfig config = SummonConfigRegistry.getConfig(mobEntity.getType().getRegistryName());
                 if(config.shouldAddAttackGoal()){
-                    mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
+                    addSummonAttackGoal(mobEntity);
                 }
             }
         }
+    }
+
+    private static void addSummonAttackGoal(Mob mobEntity) {
+        AttributeInstance attribute = mobEntity.getAttribute(ATTACK_DAMAGE);
+        if(attribute == null) return;
+        if(attribute.getValue() == 0){
+            attribute.addTransientModifier(new AttributeModifier("Summon Attack Damage", 1, AttributeModifier.Operation.ADDITION));
+        }
+        mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
     }
 
     static void removeMinion(LivingEntity entityLiving, Minion cap) {
