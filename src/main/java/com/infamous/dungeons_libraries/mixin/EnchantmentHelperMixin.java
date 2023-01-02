@@ -63,11 +63,11 @@ public abstract class EnchantmentHelperMixin {
             method = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/nbt/CompoundTag;)I",
             at = @At(value = "RETURN"), cancellable = true)
     private static void dungeonslibraries_runIterationOnItem(CompoundTag value, CallbackInfoReturnable<Integer> cir) {
-        if (enchantmentOnIteration == null || itemStackOnIteration == null) {
+        if (itemStackOnIteration == null) {
             return;
         }
         BuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStackOnIteration);
-        if (enchantmentOnIteration.isPresent()) {
+        if (enchantmentOnIteration != null && enchantmentOnIteration.isPresent()) {
             Integer reduce = cap.getAllBuiltInEnchantmentInstances().stream()
                     .filter(enchantmentInstance -> enchantmentInstance.enchantment == enchantmentOnIteration.get())
                     .map(enchantmentInstance -> enchantmentInstance.level)
