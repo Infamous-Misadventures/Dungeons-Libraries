@@ -35,6 +35,9 @@ public class SoulBarRender {
         final Minecraft mc = Minecraft.getInstance();
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.HOTBAR) && mc.getCameraEntity() instanceof PlayerEntity) {
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
+            if(guiElementConfig.isHidden()) return;
+
             //draw souls
             mc.getTextureManager().bind(SOUL_BAR_RESOURCE);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -54,7 +57,6 @@ public class SoulBarRender {
 
             mc.getProfiler().push("soulBar");
 
-            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
             int xPos = guiElementConfig.getXPosition(scaledWidth);
             int yPos = guiElementConfig.getYPosition(scaledHeight);
 
