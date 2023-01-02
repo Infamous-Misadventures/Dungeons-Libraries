@@ -5,12 +5,10 @@ import com.infamous.dungeons_libraries.client.gui.elementconfig.GuiElementConfig
 import com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings;
 import com.infamous.dungeons_libraries.items.artifacts.ArtifactItem;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -27,7 +25,6 @@ import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.ItemTagWrappers.CURIOS_ARTIFACTS;
-import static net.minecraft.client.gui.widget.Widget.WIDGETS_LOCATION;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class ArtifactsBarRender {
@@ -35,14 +32,9 @@ public class ArtifactsBarRender {
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
 
     @SubscribeEvent
-    public static void displyArtifactBar(RenderGameOverlayEvent.Pre event) {
-        MatrixStack matrixStack = event.getMatrixStack();
-        MainWindow sr = event.getWindow();
-        int scaledWidth = sr.getGuiScaledWidth();
-        int scaledHeight = sr.getGuiScaledHeight();
+    public static void displyArtifactBar(RenderGameOverlayEvent.Post event) {
         final Minecraft mc = Minecraft.getInstance();
-
-        if(Minecraft.getInstance() != null && CURIOS_ARTIFACTS.getValues().isEmpty()) return;
+        if(mc != null && CURIOS_ARTIFACTS.getValues().isEmpty()) return;
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.HOTBAR) && mc.getCameraEntity() instanceof PlayerEntity) {
             GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "artifact_bar"));
@@ -51,26 +43,17 @@ public class ArtifactsBarRender {
             PlayerEntity renderPlayer = (PlayerEntity) mc.getCameraEntity();
             if(renderPlayer == null) return;
 
-            GlStateManager._enableRescaleNormal();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderHelper.turnBackOn();
-
-            mc.getProfiler().push("artifactBarBorder");
-            mc.getProfiler().pop();
-
-
-
+            MainWindow sr = event.getWindow();
+            int scaledWidth = sr.getGuiScaledWidth();
+            int scaledHeight = sr.getGuiScaledHeight();
             int x = guiElementConfig.getXPosition(scaledWidth);
             int y = guiElementConfig.getYPosition(scaledHeight);
 
             CuriosApi.getCuriosHelper().getCuriosHandler(renderPlayer).ifPresent(iCuriosItemHandler -> {
-                renderBar(matrixStack, mc, renderPlayer, x, y, iCuriosItemHandler);
+                renderBar(event.getMatrixStack(), mc, renderPlayer, x, y, iCuriosItemHandler);
             });
 
             mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
-            RenderHelper.turnOff();
-            RenderSystem.disableBlend();
         }
 
     }
@@ -81,7 +64,6 @@ public class ArtifactsBarRender {
             int slots = artifactStackHandler.get().getStacks().getSlots();
             renderSlotBg(matrixStack, mc, x, y, slots);
             for(int slot = 0; slot < slots; slot++) {
-                mc.getProfiler().push("artifact Slot " + slot);
                 ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
                 if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
                     int xPos = x + slot * 20 +3;
@@ -89,7 +71,6 @@ public class ArtifactsBarRender {
                     renderSlot(matrixStack, mc, xPos, yPos, renderPlayer, artifact);
                 }
                 renderSlotKeybind(matrixStack, mc, x, y, slot);
-                mc.getProfiler().pop();
             }
         }
     }
@@ -116,8 +97,14 @@ public class ArtifactsBarRender {
 
     private static void renderSlotBg(MatrixStack matrixStack, Minecraft mc, int xPos, int yPos, int slots) {
         mc.getTextureManager().bind(ARTIFACT_BAR_RESOURCE);
+//        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         AbstractGui.blit(matrixStack, xPos, yPos, 0, 0, 62, 22, 62, 22);
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableBlend();
     }
 
     private static void renderSlotKeybind(MatrixStack matrixStack, Minecraft mc, int x, int y, int slot) {
