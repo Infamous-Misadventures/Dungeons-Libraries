@@ -128,6 +128,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
     maven { url = "https://maven.theillusivec4.top/" }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
@@ -137,6 +140,7 @@ dependencies {
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.18:${geckolib_version}")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
+    runtimeOnly fg.deobf("curse.maven:spark-361579:3824951")
 
 
 

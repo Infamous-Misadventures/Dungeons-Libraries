@@ -33,6 +33,9 @@ public class SoulBarRender {
         final Minecraft mc = Minecraft.getInstance();
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.LAYER) && mc.getCameraEntity() instanceof Player) {
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
+            if(guiElementConfig.isHidden()) return;
+
             //draw souls
             RenderSystem.setShaderTexture(0, SOUL_BAR_RESOURCE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -52,7 +55,6 @@ public class SoulBarRender {
             mc.getProfiler().push("soulBar");
 
 
-            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
             int xPos = guiElementConfig.getXPosition(scaledWidth);
             int yPos = guiElementConfig.getYPosition(scaledHeight);
 
@@ -69,11 +71,11 @@ public class SoulBarRender {
                 String soulLevel = "" + souls;
                 int baseXPos = xPos + (guiElementConfig.getSizeX() / 2) - (mc.font.width(soulLevel) / 2) ;
                 int baseYPos = scaledHeight - guiElementConfig.getSizeY() - mc.font.lineHeight;
-                mc.font.draw(matrixStack, soulLevel, (float)(baseXPos + 1), (float)baseYPos, 0);
-                mc.font.draw(matrixStack, soulLevel, (float)(baseXPos - 1), (float)baseYPos, 0);
-                mc.font.draw(matrixStack, soulLevel, (float)baseXPos, (float)(baseYPos + 1), 0);
-                mc.font.draw(matrixStack, soulLevel, (float)baseXPos, (float)(baseYPos - 1), 0);
-                mc.font.draw(matrixStack, soulLevel, (float)baseXPos, (float)baseYPos, SOUL_LEVEL_COLOR);
+//                mc.font.draw(matrixStack, soulLevel, (float)(baseXPos + 1), (float)baseYPos, 0);
+//                mc.font.draw(matrixStack, soulLevel, (float)(baseXPos - 1), (float)baseYPos, 0);
+//                mc.font.draw(matrixStack, soulLevel, (float)baseXPos, (float)(baseYPos + 1), 0);
+//                mc.font.draw(matrixStack, soulLevel, (float)baseXPos, (float)(baseYPos - 1), 0);
+                GuiComponent.drawString(matrixStack, mc.font, soulLevel, baseXPos, baseYPos, SOUL_LEVEL_COLOR);
                 mc.getProfiler().pop();
             }
 

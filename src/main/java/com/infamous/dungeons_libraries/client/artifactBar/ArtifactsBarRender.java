@@ -19,67 +19,46 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 import static com.infamous.dungeons_libraries.items.ItemTagWrappers.CURIOS_ARTIFACTS;
-import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class ArtifactsBarRender {
-    private static final ResourceLocation ARTIFACT_BAR_RESOURCE = new ResourceLocation(MODID, "textures/misc/soul_bar.png");
-    public static final ResourceLocation CURIOS_ICON_TEXTURE = new ResourceLocation(MODID, "textures/icon/empty_artifact_slot.png");
+    private static final ResourceLocation ARTIFACT_BAR_RESOURCE = new ResourceLocation(MODID, "textures/gui/artifact_bar.png");
     public static final int SOUL_LEVEL_COLOR = 0x10B0E4;
 
     @SubscribeEvent
-    public static void displaySoulBar(RenderGameOverlayEvent.Pre event) {
+    public static void displayArtifactBar(RenderGameOverlayEvent.Pre event) {
         PoseStack poseStack = event.getMatrixStack();
         Window sr = event.getWindow();
         int scaledWidth = sr.getGuiScaledWidth();
         int scaledHeight = sr.getGuiScaledHeight();
         final Minecraft mc = Minecraft.getInstance();
 
-        if(Minecraft.getInstance() != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
+//        if(Minecraft.getInstance() != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
 
         if (event.getType().equals(RenderGameOverlayEvent.ElementType.LAYER) && mc.getCameraEntity() instanceof Player renderPlayer) {
             if(renderPlayer == null) return;
+            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "artifact_bar"));
+            if(guiElementConfig.isHidden()) return;
 
-//            GlStateManager._enableRescaleNormal();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-//            RenderHelper.turnBackOn();
 
             mc.getProfiler().push("artifactBarBorder");
             mc.getProfiler().pop();
 
-            GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "artifact_bar"));
 
             int x = guiElementConfig.getXPosition(scaledWidth);
             int y = guiElementConfig.getYPosition(scaledHeight);
 
             CuriosApi.getCuriosHelper().getCuriosHandler(renderPlayer).ifPresent(iCuriosItemHandler -> {
-                Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-                if (artifactStackHandler.isPresent()) {
-                    int slots = artifactStackHandler.get().getStacks().getSlots();
-                    renderSlotBg(poseStack, mc, x, y, slots);
-                    for(int slot = 0; slot < slots; slot++) {
-                        mc.getProfiler().push("artifact Slot " + slot);
-                        ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
-                        if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
-                            int xPos = x + slot * 22 +3;
-                            int yPos = y +3;
-                            renderSlot(poseStack, mc, xPos, yPos, renderPlayer, artifact);
-                        }else{
-                            int xPos = x + slot * 22 + 3;
-                            int yPos = y + 3;
-                            renderEmptySlot(poseStack, mc, xPos, yPos);
-                        }
-                        renderSlotKeybind(poseStack, mc, x, y, slot);
-                        mc.getProfiler().pop();
-                    }
-                }
+                renderBar(poseStack, mc, renderPlayer, x, y, iCuriosItemHandler);
             });
 
             RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
@@ -88,6 +67,25 @@ public class ArtifactsBarRender {
         }
 
 
+    }
+
+    private static void renderBar(PoseStack poseStack, Minecraft mc, Player renderPlayer, int x, int y, ICuriosItemHandler iCuriosItemHandler) {
+        Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
+        if (artifactStackHandler.isPresent()) {
+            int slots = artifactStackHandler.get().getStacks().getSlots();
+            renderSlotBg(poseStack, mc, x, y, slots);
+            for(int slot = 0; slot < slots; slot++) {
+                mc.getProfiler().push("artifact Slot " + slot);
+                ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
+                if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
+                    int xPos = x + slot * 20 + 3;
+                    int yPos = y +3;
+                    renderSlot(poseStack, mc, xPos, yPos, renderPlayer, artifact);
+                }
+                renderSlotKeybind(poseStack, mc, x, y, slot);
+                mc.getProfiler().pop();
+            }
+        }
     }
 
     private static void renderSlot(PoseStack posestack, Minecraft mc,int xPos, int yPos, Player renderPlayer, ItemStack artifactStack) {
@@ -111,17 +109,10 @@ public class ArtifactsBarRender {
         }
     }
 
-    private static void renderEmptySlot(PoseStack poseStack, Minecraft mc, int xPos, int yPos) {
-        RenderSystem.setShaderTexture(0, CURIOS_ICON_TEXTURE);
-        GuiComponent.blit(poseStack, xPos, yPos, 0, 0, 16, 16, 16, 16);
-    }
-
     private static void renderSlotBg(PoseStack poseStack, Minecraft mc, int xPos, int yPos, int slots) {
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+        RenderSystem.setShaderTexture(0, ARTIFACT_BAR_RESOURCE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        for(int i = 0; i < slots; i++) {
-            GuiComponent.blit(poseStack, xPos + i * 22, yPos, 24, 23, 22, 22, 256, 256);
-        }
+        GuiComponent.blit(poseStack, xPos, yPos, 0, 0, 62, 22, 62, 22);
     }
 
     private static void renderSlotKeybind(PoseStack poseStack, Minecraft mc, int x, int y, int slot) {
@@ -137,9 +128,9 @@ public class ArtifactsBarRender {
             keybind = getString(keyMapping);
         }
         int keybindWidth = mc.font.width(keybind);
-        int xPosition = x + slot * 22 + 19 - keybindWidth;
+        int xPosition = x + 1 + slot * 20 + 18 - keybindWidth;
         int yPosition = y + 3;
-        mc.font.draw(poseStack, keybind, xPosition, yPosition, 0xFFFFFF);
+        GuiComponent.drawString(poseStack, mc.font, keybind, xPosition, yPosition, 0xFFFFFF);
     }
 
     private static String getString(KeyMapping keyMapping) {

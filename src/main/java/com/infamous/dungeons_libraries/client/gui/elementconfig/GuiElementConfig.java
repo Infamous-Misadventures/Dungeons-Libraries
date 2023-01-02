@@ -5,14 +5,15 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class GuiElementConfig {
-    public static final GuiElementConfig DEFAULT = new GuiElementConfig(0, 0, 0, 0, Alignment.BOTTOM_RIGHT);
+    public static final GuiElementConfig DEFAULT = new GuiElementConfig(0, 0, 0, 0, Alignment.BOTTOM_RIGHT, false);
 
     public static final Codec<GuiElementConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("sizeX").forGetter(GuiElementConfig::getSizeX),
             Codec.INT.fieldOf("sizeY").forGetter(GuiElementConfig::getSizeY),
             Codec.INT.fieldOf("offsetX").forGetter(GuiElementConfig::getOffsetX),
             Codec.INT.fieldOf("offsetY").forGetter(GuiElementConfig::getOffsetY),
-            Alignment.CODEC.fieldOf("alignment").forGetter(GuiElementConfig::getAlignment)
+            Alignment.CODEC.fieldOf("alignment").forGetter(GuiElementConfig::getAlignment),
+            Codec.BOOL.fieldOf("isHidden").forGetter(GuiElementConfig::isHidden)
     ).apply(instance, GuiElementConfig::new));
 
     private final int sizeX;
@@ -20,13 +21,15 @@ public class GuiElementConfig {
     private final int offsetX;
     private final int offsetY;
     private final Alignment alignment;
+    private final boolean isHidden;
 
-    public GuiElementConfig(int sizeX, int sizeY, int offsetX, int offsetY, Alignment alignment) {
+    public GuiElementConfig(int sizeX, int sizeY, int offsetX, int offsetY, Alignment alignment, boolean isHidden) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.alignment = alignment;
+        this.isHidden = isHidden;
     }
 
     public int getSizeX() {
@@ -48,7 +51,11 @@ public class GuiElementConfig {
     public Alignment getAlignment() {
         return alignment;
     }
-    
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
     public int getXPosition(int scaledWidth){
         switch(alignment){
             case TOP_LEFT:

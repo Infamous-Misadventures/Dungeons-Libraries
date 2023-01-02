@@ -3,5 +3,6 @@
   "sizeY": 22,
   "offsetY": 0,
   "offsetX": -60,
-  "alignment":  "bottom_right"
+  "alignment":  "bottom_right",
+  "isHidden": false
 }
