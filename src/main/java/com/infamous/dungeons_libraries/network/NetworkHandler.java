@@ -26,55 +26,55 @@ public class NetworkHandler {
     public static void init() {
         INSTANCE.messageBuilder(UpdateSoulsMessage.class, incrementAndGetPacketCounter())
                 .encoder(UpdateSoulsMessage::encode).decoder(UpdateSoulsMessage::decode)
-                .consumer(UpdateSoulsMessage.UpdateSoulsHandler::handle)
+                .consumerMainThread(UpdateSoulsMessage.UpdateSoulsHandler::handle)
                 .add();
         INSTANCE.messageBuilder(ArmorGearConfigSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(ArmorGearConfigSyncPacket::encode).decoder(ArmorGearConfigSyncPacket::decode)
-                .consumer(ArmorGearConfigSyncPacket::onPacketReceived)
+                .consumerMainThread(ArmorGearConfigSyncPacket::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(MeleeGearConfigSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(MeleeGearConfigSyncPacket::encode).decoder(MeleeGearConfigSyncPacket::decode)
-                .consumer(MeleeGearConfigSyncPacket::onPacketReceived)
+                .consumerMainThread(MeleeGearConfigSyncPacket::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(BowGearConfigSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(BowGearConfigSyncPacket::encode).decoder(BowGearConfigSyncPacket::decode)
-                .consumer(BowGearConfigSyncPacket::onPacketReceived)
+                .consumerMainThread(BowGearConfigSyncPacket::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(CrossbowGearConfigSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(CrossbowGearConfigSyncPacket::encode).decoder(CrossbowGearConfigSyncPacket::decode)
-                .consumer(CrossbowGearConfigSyncPacket::onPacketReceived)
+                .consumerMainThread(CrossbowGearConfigSyncPacket::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(ArmorMaterialSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(ArmorMaterialSyncPacket::encode).decoder(ArmorMaterialSyncPacket::decode)
-                .consumer(ArmorMaterialSyncPacket::onPacketReceived)
+                .consumerMainThread(ArmorMaterialSyncPacket::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(WeaponMaterialSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(WeaponMaterialSyncPacket::encode).decoder(WeaponMaterialSyncPacket::decode)
-                .consumer(WeaponMaterialSyncPacket::onPacketReceived)
+                .consumerMainThread(WeaponMaterialSyncPacket::onPacketReceived)
                 .add();
         INSTANCE.messageBuilder(CuriosArtifactStartMessage.class, incrementAndGetPacketCounter())
                 .encoder(CuriosArtifactStartMessage::encode).decoder(CuriosArtifactStartMessage::decode)
-                .consumer(CuriosArtifactStartMessage.CuriosArtifactHandler::handle)
+                .consumerMainThread(CuriosArtifactStartMessage.CuriosArtifactHandler::handle)
                 .add();
         INSTANCE.messageBuilder(CuriosArtifactStopMessage.class, incrementAndGetPacketCounter())
                 .encoder(CuriosArtifactStopMessage::encode).decoder(CuriosArtifactStopMessage::decode)
-                .consumer(CuriosArtifactStopMessage.CuriosArtifactHandler::handle)
+                .consumerMainThread(CuriosArtifactStopMessage::handle)
                 .add();
         INSTANCE.messageBuilder(EliteMobMessage.class, incrementAndGetPacketCounter())
                 .encoder(EliteMobMessage::encode).decoder(EliteMobMessage::decode)
-                .consumer(EliteMobMessage::onPacketReceived)
+                .consumerMainThread(EliteMobMessage::handle)
                 .add();
         INSTANCE.messageBuilder(BreakItemMessage.class, incrementAndGetPacketCounter())
                 .encoder(BreakItemMessage::encode).decoder(BreakItemMessage::decode)
-                .consumer(BreakItemMessage.BreakItemHandler::handle)
+                .consumerMainThread(BreakItemMessage.BreakItemHandler::handle)
                 .add();
         INSTANCE.messageBuilder(SwitchHandMessage.class, incrementAndGetPacketCounter())
                 .encoder(SwitchHandMessage::encode).decoder(SwitchHandMessage::decode)
-                .consumer(SwitchHandMessage.SwitchHandHandler::handle)
+                .consumerMainThread(SwitchHandMessage.SwitchHandHandler::handle)
                 .add();
         INSTANCE.messageBuilder(ArtifactGearConfigSyncPacket.class, incrementAndGetPacketCounter())
                 .encoder(ArtifactGearConfigSyncPacket::encode).decoder(ArtifactGearConfigSyncPacket::decode)
-                .consumer(ArtifactGearConfigSyncPacket::onPacketReceived)
+                .consumerMainThread(ArtifactGearConfigSyncPacket::onPacketReceived)
                 .add();
     }
 

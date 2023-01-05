@@ -27,19 +27,28 @@ public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T>
     }
 
     @Override
-    public void preparePositionRotationScale(GeoBone bone, PoseStack stack) {
-        RenderUtils.translate(bone, stack);
-        RenderUtils.moveToPivot(bone, stack);
+    public void renderRecursively(GeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                                  int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.pushPose();
+        this.prepMatrixForBone(poseStack, bone);
+        renderCubesOfBone(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        renderChildBones(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        poseStack.popPose();
+    }
+
+    public void prepMatrixForBone(PoseStack stack, GeoBone bone) {
+        RenderUtils.translateMatrixToBone(stack, bone);
+        RenderUtils.translateToPivotPoint(stack, bone);
         EntityRenderer<? super LivingEntity> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityLiving);
         if(!(entityRenderer instanceof GeoEntityRenderer) || !bone.getName().contains("armor")) {
-            RenderUtils.rotate(bone, stack);
+            RenderUtils.rotateMatrixAroundBone(stack, bone);
         }
-        RenderUtils.scale(bone, stack);
+        RenderUtils.scaleMatrixForBone(stack, bone);
         ArmorMaterial material = this.currentArmorItem.getMaterial();
         if(bone.getName().contains("Body") && material instanceof DungeonsArmorMaterial && ((DungeonsArmorMaterial) material).getBaseType() == ArmorMaterialBaseType.CLOTH){
             stack.scale(1.0F, 1.0F, 0.93F);
         }
-        RenderUtils.moveBackFromPivot(bone, stack);
+        RenderUtils.translateAwayFromPivotPoint(stack, bone);
     }
 
     @Override
