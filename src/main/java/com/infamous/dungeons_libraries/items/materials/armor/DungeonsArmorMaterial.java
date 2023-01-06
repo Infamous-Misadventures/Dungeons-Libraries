@@ -21,11 +21,11 @@ public class DungeonsArmorMaterial implements ArmorMaterial {
             Codec.STRING.fieldOf("name").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getName()),
             Codec.INT.fieldOf("durability").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).durability),
             Codec.INT.listOf().fieldOf("damage_reduction_amounts").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).damageReductionAmounts),
-            Codec.INT.fieldOf("enchantability").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEnchantmentValue()),
+            Codec.INT.fieldOf("enchantability").forGetter(iArmorMaterial -> iArmorMaterial.getEnchantmentValue()),
             ResourceLocation.CODEC.fieldOf("repair_item").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).repairItemResourceLocation),
             SoundEvent.CODEC.fieldOf("equip_sound").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEquipSound()),
-            Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getToughness()),
-            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getKnockbackResistance()),
+            Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> iArmorMaterial.getToughness()),
+            Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> iArmorMaterial.getKnockbackResistance()),
             ArmorMaterialBaseType.CODEC.fieldOf("base_type").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).baseType)
     ).apply(instance, DungeonsArmorMaterial::new));
 
@@ -42,17 +42,16 @@ public class DungeonsArmorMaterial implements ArmorMaterial {
     private final float knockbackResistance;
     private final ArmorMaterialBaseType baseType;
 
-    private DungeonsArmorMaterial(String name, int durability, List<Integer> damageReductionAmounts, int enchantability, ResourceLocation repairItemResourceLocation, SoundEvent equipSound, float toughness, float knockbackResistance, ArmorMaterialBaseType baseType)
-    {
+    private DungeonsArmorMaterial(String name, int durability, List<Integer> damageReductionAmounts, int enchantability, ResourceLocation repairItemResourceLocation, SoundEvent equipSound, float toughness, float knockbackResistance, ArmorMaterialBaseType baseType) {
         this.name = name;
         this.equipSound = equipSound;
         this.durability = durability;
         this.enchantability = enchantability;
         this.repairItemResourceLocation = repairItemResourceLocation;
-        if(ITEMS.containsKey(repairItemResourceLocation)){
+        if (ITEMS.containsKey(repairItemResourceLocation)) {
             Item item = ITEMS.getValue(repairItemResourceLocation);
             this.repairItem = new LazyLoadedValue<>(() -> Ingredient.of(item));
-        }else{
+        } else {
             this.repairItem = new LazyLoadedValue<>(() -> Ingredient.of(Items.IRON_INGOT));
         }
         this.damageReductionAmounts = damageReductionAmounts;
@@ -62,44 +61,37 @@ public class DungeonsArmorMaterial implements ArmorMaterial {
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot slot)
-    {
+    public int getDefenseForSlot(EquipmentSlot slot) {
         return this.damageReductionAmounts.get(slot.getIndex());
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot slot)
-    {
+    public int getDurabilityForSlot(EquipmentSlot slot) {
         return BASE_DURABILITY_ARRAY[slot.getIndex()] * this.durability;
     }
 
     @Override
-    public int getEnchantmentValue()
-    {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
     @Override
-    public Ingredient getRepairIngredient()
-    {
+    public Ingredient getRepairIngredient() {
         return this.repairItem.get();
     }
 
     @Override
-    public SoundEvent getEquipSound()
-    {
+    public SoundEvent getEquipSound() {
         return this.equipSound;
     }
 
     @Override
-    public float getToughness()
-    {
+    public float getToughness() {
         return this.toughness;
     }
 

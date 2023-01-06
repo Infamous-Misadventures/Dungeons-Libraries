@@ -18,10 +18,9 @@ import java.util.UUID;
 public class PatreonHelper {
     private static final Map<UUID, Patreon> patreons = new HashMap<>();
 
-    public static void loadPatreons(Runnable runnable){
+    public static void loadPatreons(Runnable runnable) {
         new Thread(() -> {
-            try
-            {
+            try {
                 final SSLSocketFactory sslsocketfactory = HttpsURLConnection.getDefaultSSLSocketFactory();
                 final URL url = new URL("https://raw.githubusercontent.com/Patrigan/Dungeons-Libraries/alpha/src/main/resources/patreon/patreons.json");
                 final HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -34,11 +33,11 @@ public class PatreonHelper {
                 JsonArray asJsonArray = new JsonParser().parse(reader).getAsJsonArray();
                 patreons.clear();
                 asJsonArray.forEach(jsonElement -> {
-                    if(jsonElement.isJsonObject()) {
+                    if (jsonElement.isJsonObject()) {
                         JsonObject asJsonObject = jsonElement.getAsJsonObject();
-                        if (asJsonObject.has("uuid") && asJsonObject.has("level")){
+                        if (asJsonObject.has("uuid") && asJsonObject.has("level")) {
                             String uuidString = asJsonObject.get("uuid").getAsString();
-                            try{
+                            try {
                                 UUID uuid = UUID.fromString(uuidString);
                                 patreons.put(
                                         uuid,
@@ -48,22 +47,20 @@ public class PatreonHelper {
                                                 asJsonObject.has("username") ? asJsonObject.get("username").getAsString() : ""
                                         )
                                 );
-                            } catch (IllegalArgumentException e){
+                            } catch (IllegalArgumentException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                 });
                 runnable.run();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
     }
 
-    public static Patreon getPatreon(UUID uuid){
+    public static Patreon getPatreon(UUID uuid) {
         return patreons.getOrDefault(uuid, Patreon.DEFAULT);
     }
 }

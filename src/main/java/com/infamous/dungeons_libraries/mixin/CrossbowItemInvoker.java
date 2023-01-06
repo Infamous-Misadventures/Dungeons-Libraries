@@ -13,11 +13,17 @@ import java.util.List;
 public interface CrossbowItemInvoker {
 
     @Invoker("addChargedProjectile")
-    static void addChargedProjectile(ItemStack pCrossbowStack, ItemStack pAmmoStack) { throw new RuntimeException("Invoker failed to mixin"); }
+    static void addChargedProjectile(ItemStack pCrossbowStack, ItemStack pAmmoStack) {
+        throw new RuntimeException("Invoker failed to mixin");
+    }
 
     @Invoker("getChargedProjectiles")
-    static List<ItemStack> getChargedProjectiles(ItemStack pCrossbowStack) { throw new RuntimeException("Invoker failed to mixin"); }
+    static List<ItemStack> getChargedProjectiles(ItemStack pCrossbowStack) {
+        throw new RuntimeException("Invoker failed to mixin");
+    }
 
     @Invoker("onCrossbowShot")
-    static void onCrossbowShot(Level pLevel, LivingEntity pShooter, ItemStack pCrossbowStack) { throw new RuntimeException("Invoker failed to mixin"); }
+    static void onCrossbowShot(Level pLevel, LivingEntity pShooter, ItemStack pCrossbowStack) {
+        throw new RuntimeException("Invoker failed to mixin");
+    }
 }

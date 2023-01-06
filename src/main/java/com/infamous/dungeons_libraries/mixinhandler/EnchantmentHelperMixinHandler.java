@@ -1,11 +1,10 @@
 package com.infamous.dungeons_libraries.mixinhandler;
 
-import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
 import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantments;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.ItemStack;
+import com.infamous.dungeons_libraries.capabilities.builtinenchants.BuiltInEnchantmentsHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.LazyOptional;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;

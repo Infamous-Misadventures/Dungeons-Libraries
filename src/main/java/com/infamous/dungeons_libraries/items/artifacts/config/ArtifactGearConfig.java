@@ -1,19 +1,11 @@
 package com.infamous.dungeons_libraries.items.artifacts.config;
 
 import com.infamous.dungeons_libraries.items.gearconfig.GearConfigAttributeModifier;
-import com.infamous.dungeons_libraries.items.materials.weapon.WeaponMaterials;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.infamous.dungeons_libraries.data.Codecs.ENCHANTMENT_DATA_CODEC;
-import static com.infamous.dungeons_libraries.data.Codecs.ITEM_RARITY_CODEC;
 
 public class ArtifactGearConfig {
 
@@ -26,10 +18,10 @@ public class ArtifactGearConfig {
             Codec.INT.optionalFieldOf("duration", 5).forGetter(ArtifactGearConfig::getDuration)
     ).apply(instance, ArtifactGearConfig::new));
 
-    private List<GearConfigAttributeModifier> attributes;
-    private int cooldown;
-    private int durability;
-    private int duration;
+    private final List<GearConfigAttributeModifier> attributes;
+    private final int cooldown;
+    private final int durability;
+    private final int duration;
 
     public ArtifactGearConfig(List<GearConfigAttributeModifier> attributes, int cooldown, int durability, int duration) {
         this.attributes = attributes;

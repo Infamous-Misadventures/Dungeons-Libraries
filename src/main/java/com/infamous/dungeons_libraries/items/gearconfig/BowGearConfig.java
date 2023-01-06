@@ -24,12 +24,12 @@ public class BowGearConfig {
             ITEM_RARITY_CODEC.fieldOf("rarity").forGetter(BowGearConfig::getRarity)
     ).apply(instance, BowGearConfig::new));
 
-    private List<GearConfigAttributeModifier> attributes;
-    private List<EnchantmentInstance> builtInEnchantments;
-    private int durability;
-    private float defaultChargeTime;
-    private boolean unique;
-    private Rarity rarity;
+    private final List<GearConfigAttributeModifier> attributes;
+    private final List<EnchantmentInstance> builtInEnchantments;
+    private final int durability;
+    private final float defaultChargeTime;
+    private final boolean unique;
+    private final Rarity rarity;
 
     public BowGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentInstance> builtInEnchantments, int durability, float defaultChargeTime, boolean unique, Rarity rarity) {
         this.attributes = attributes;

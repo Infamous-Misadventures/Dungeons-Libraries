@@ -38,7 +38,7 @@ public class BowItemMixin {
             at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/BowItem;customArrow(Lnet/minecraft/world/entity/projectile/AbstractArrow;)Lnet/minecraft/world/entity/projectile/AbstractArrow;", remap = false), locals = LocalCapture.CAPTURE_FAILSOFT)
     public void libraries_releaseUsing_setArrowDamage(ItemStack pStack, Level j, LivingEntity k, int pTimeLeft, CallbackInfo ci, Player playerentity, boolean flag, ItemStack itemstack, int i, float f, boolean flag1, ArrowItem arrowitem, AbstractArrow abstractArrowEntity) {
         AttributeInstance attribute = playerentity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
-        if(attribute != null) {
+        if (attribute != null) {
             abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue()));
         }
     }

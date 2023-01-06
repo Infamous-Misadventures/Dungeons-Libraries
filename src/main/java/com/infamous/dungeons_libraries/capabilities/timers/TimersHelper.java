@@ -7,8 +7,7 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.TIMER
 
 public class TimersHelper {
 
-    public static Timers getTimersCapability(Entity entity)
-    {
+    public static Timers getTimersCapability(Entity entity) {
         return entity.getCapability(TIMERS_CAPABILITY).orElse(new Timers());
     }
 }

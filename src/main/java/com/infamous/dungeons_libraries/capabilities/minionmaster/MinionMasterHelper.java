@@ -32,13 +32,12 @@ import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 public class MinionMasterHelper {
 
     @Nullable
-    public static LivingEntity getOwnerForHorse(AbstractHorse horseEntity){
+    public static LivingEntity getOwnerForHorse(AbstractHorse horseEntity) {
         try {
-            if(horseEntity.getOwnerUUID() != null){
+            if (horseEntity.getOwnerUUID() != null) {
                 UUID ownerUniqueId = horseEntity.getOwnerUUID();
                 return ownerUniqueId == null ? null : horseEntity.level.getPlayerByUUID(ownerUniqueId);
-            }
-            else return null;
+            } else return null;
         } catch (IllegalArgumentException var2) {
             return null;
         }
@@ -61,34 +60,32 @@ public class MinionMasterHelper {
         return minion.getMaster();
     }
 
-    public static Master getMasterCapability(Entity entity)
-    {
+    public static Master getMasterCapability(Entity entity) {
         return entity.getCapability(MASTER_CAPABILITY).orElse(new Master());
     }
 
-    public static Minion getMinionCapability(Entity entity)
-    {
+    public static Minion getMinionCapability(Entity entity) {
         return entity.getCapability(MINION_CAPABILITY).orElse(new Minion());
     }
 
     public static void addMinionGoals(Mob mobEntity) {
         Minion minionCap = getMinionCapability(mobEntity);
-        if(minionCap.isGoalsAdded()) return;
-        if(minionCap.isMinion()){
+        if (minionCap.isGoalsAdded()) return;
+        if (minionCap.isMinion()) {
             mobEntity.goalSelector.addGoal(2, new MinionFollowOwnerGoal(mobEntity, 1.5D, 24.0F, 3.0F, false));
             clearGoals(mobEntity.targetSelector);
             mobEntity.targetSelector.addGoal(1, new MasterHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new MasterHurtTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
-                    (entityIterator) -> entityIterator.getClassification(false).equals(MobCategory.MONSTER) &&  canPetAttackEntity(mobEntity, entityIterator)));
+                    (entityIterator) -> entityIterator.getClassification(false).equals(MobCategory.MONSTER) && canPetAttackEntity(mobEntity, entityIterator)));
 
             minionCap.getMaster().getCapability(ModCapabilities.MASTER_CAPABILITY).ifPresent(master -> {
                 master.addMinion(mobEntity);
             });
             minionCap.setGoalsAdded(true);
-            if(minionCap.isSummon()){
+            if (minionCap.isSummon()) {
                 SummonConfig config = SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(mobEntity.getType()));
-                if(config.shouldAddAttackGoal()){
+                if (config.shouldAddAttackGoal()) {
                     addSummonAttackGoal(mobEntity);
                 }
             }
@@ -97,8 +94,8 @@ public class MinionMasterHelper {
 
     private static void addSummonAttackGoal(Mob mobEntity) {
         AttributeInstance attribute = mobEntity.getAttribute(ATTACK_DAMAGE);
-        if(attribute == null) return;
-        if(attribute.getValue() == 0){
+        if (attribute == null) return;
+        if (attribute.getValue() == 0) {
             attribute.addTransientModifier(new AttributeModifier("Summon Attack Damage", 1, AttributeModifier.Operation.ADDITION));
         }
         mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
@@ -109,7 +106,7 @@ public class MinionMasterHelper {
         Master masterCapability = getMasterCapability(master);
         masterCapability.removeMinion(entityLiving);
         cap.setMaster(null);
-        if(entityLiving instanceof Mob){
+        if (entityLiving instanceof Mob) {
             Mob mobEntity = (Mob) entityLiving;
             clearGoals(mobEntity.goalSelector);
             clearGoals(mobEntity.targetSelector);

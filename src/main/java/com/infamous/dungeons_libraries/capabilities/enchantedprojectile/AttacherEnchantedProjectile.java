@@ -40,7 +40,7 @@ public class AttacherEnchantedProjectile {
     }
 
     public static void attach(final AttachCapabilitiesEvent<Entity> event) {
-        if(event.getObject() instanceof Projectile) {
+        if (event.getObject() instanceof Projectile) {
             final AttacherEnchantedProjectile.EnchantedProjectileProvider provider = new AttacherEnchantedProjectile.EnchantedProjectileProvider();
             event.addCapability(AttacherEnchantedProjectile.EnchantedProjectileProvider.IDENTIFIER, provider);
         }

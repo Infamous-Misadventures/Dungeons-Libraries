@@ -18,7 +18,7 @@ public class ItemEvents {
     @SubscribeEvent
     public static void onMagicDamage(LivingDamageEvent event) {
         if (event.getSource() instanceof IndirectEntityDamageSource && event.getSource().isMagic() &&
-            event.getSource().getEntity() instanceof LivingEntity) {
+                event.getSource().getEntity() instanceof LivingEntity) {
 
             float originalDamage = event.getAmount();
 

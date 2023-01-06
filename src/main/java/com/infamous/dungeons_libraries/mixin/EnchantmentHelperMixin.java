@@ -9,7 +9,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.common.extensions.IForgeItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,15 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.minecraft.world.item.enchantment.EnchantmentHelper.getEnchantmentId;
-
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
 
-    private static Optional<Enchantment> enchantmentOnIteration = null;
-    private static ItemStack itemStackOnIteration = null;
+    private static final Optional<Enchantment> enchantmentOnIteration = null;
+    private static final ItemStack itemStackOnIteration = null;
 
-    @Inject(method = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getTagEnchantmentLevel(Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/item/ItemStack;)I" , remap = false,
+    @Inject(method = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getTagEnchantmentLevel(Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/item/ItemStack;)I", remap = false,
             at = @At(value = "RETURN", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private static void dungeonslibraries_getItemEnchantmentLevelEnchantmentFound(Enchantment enchantment, ItemStack itemStack, CallbackInfoReturnable<Integer> cir, ResourceLocation enchantmentRL, ListTag listNbt, int i, CompoundTag compoundnbt, ResourceLocation found) {
         int currentLvl = Mth.clamp(compoundnbt.getInt("lvl"), 0, 255);

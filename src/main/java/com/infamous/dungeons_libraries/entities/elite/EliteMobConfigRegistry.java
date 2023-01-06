@@ -18,13 +18,13 @@ import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 public class EliteMobConfigRegistry {
     public static final MergeableCodecDataManager<EliteMobConfigList, List<EliteMobConfig>> ELITE_MOB_CONFIGS = new MergeableCodecDataManager<>("elite_mob", EliteMobConfigList.CODEC, EliteMobConfigRegistry::eliteMobMerger);
 
-    public static List<EliteMobConfig> eliteMobMerger(List<EliteMobConfigList> raws){
+    public static List<EliteMobConfig> eliteMobMerger(List<EliteMobConfigList> raws) {
         return raws.stream().flatMap(rawList -> rawList.getConfigs().stream()).collect(Collectors.toList());
     }
 
     public static EliteMobConfig getRandomConfig(ResourceLocation resourceLocation, RandomSource random) {
         List<EliteMobConfig> eliteMobConfigs = ELITE_MOB_CONFIGS.getData().getOrDefault(resourceLocation, Collections.emptyList());
-        if(eliteMobConfigs.isEmpty()){
+        if (eliteMobConfigs.isEmpty()) {
             return null;
         }
         return WeightedRandom.getRandomItem(random, eliteMobConfigs).orElse(null);

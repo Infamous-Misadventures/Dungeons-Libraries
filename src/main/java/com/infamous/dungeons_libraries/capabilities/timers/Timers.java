@@ -1,13 +1,10 @@
 package com.infamous.dungeons_libraries.capabilities.timers;
 
 
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -66,7 +63,7 @@ public class Timers implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag tag) {
         ListTag listNBT = tag.getList(ENCHANTS_KEY, 10);
-        for(int i = 0; i < listNBT.size(); ++i) {
+        for (int i = 0; i < listNBT.size(); ++i) {
             CompoundTag compoundnbt = listNBT.getCompound(i);
             ResourceLocation resourcelocation = ResourceLocation.tryParse(compoundnbt.getString(ENCHANTMENT_KEY));
             int timer = compoundnbt.getInt(TIMER_KEY);

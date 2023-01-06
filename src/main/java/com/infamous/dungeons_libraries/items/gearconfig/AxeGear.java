@@ -18,8 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class AxeGear extends ToolGear {
 
     public AxeGear(Properties properties) {
@@ -51,7 +49,7 @@ public class AxeGear extends ToolGear {
 
         if (optional3.isPresent()) {
             if (player instanceof ServerPlayer) {
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockpos, itemstack);
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, blockpos, itemstack);
             }
 
             level.setBlock(blockpos, optional3.get(), 11);

@@ -6,14 +6,13 @@ import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultsCodecJsonDataManager<T> extends CodecJsonDataManager<T>{
+public class DefaultsCodecJsonDataManager<T> extends CodecJsonDataManager<T> {
 
-    private Map<ResourceLocation, T> defaults = new HashMap<>();
+    private final Map<ResourceLocation, T> defaults = new HashMap<>();
 
     public DefaultsCodecJsonDataManager(String folderName, Codec<T> codec) {
         super(folderName, codec);
@@ -24,7 +23,7 @@ public class DefaultsCodecJsonDataManager<T> extends CodecJsonDataManager<T>{
     }
 
 
-    public void addDefault(ResourceLocation resourceLocation, T object){
+    public void addDefault(ResourceLocation resourceLocation, T object) {
         defaults.put(resourceLocation, object);
     }
 

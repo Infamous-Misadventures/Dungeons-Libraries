@@ -6,7 +6,7 @@ public enum PatreonLevel {
     ARCHILLAGER("archillager", 3),
     STAFF("staff", 99),
     UNKNOWN("unknown", 0);
-    
+
     private final String name;
     private final int level;
 

@@ -4,7 +4,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,9 @@ import java.util.function.Supplier;
 import static net.minecraftforge.registries.ForgeRegistries.ENCHANTMENTS;
 
 public class BuiltInEnchantmentsMessage {
-    private int entityId;
-    private ResourceLocation resourceLocation;
-    private List<EnchantmentInstance> enchantmentInstanceList;
+    private final int entityId;
+    private final ResourceLocation resourceLocation;
+    private final List<EnchantmentInstance> enchantmentInstanceList;
 
     public BuiltInEnchantmentsMessage(int entityId, ResourceLocation resourceLocation, List<EnchantmentInstance> enchantmentInstanceList) {
         this.entityId = entityId;

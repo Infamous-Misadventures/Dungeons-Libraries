@@ -15,26 +15,26 @@ import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMa
 public class SummonEvents {
 
     @SubscribeEvent
-    public static void onSummonedMobAttemptsToAttack(LivingChangeTargetEvent event){
-        if(event.getNewTarget() == null) return;
-        if(MinionMasterHelper.isMinionEntity(event.getEntity())){
+    public static void onSummonedMobAttemptsToAttack(LivingChangeTargetEvent event) {
+        if (event.getNewTarget() == null) return;
+        if (MinionMasterHelper.isMinionEntity(event.getEntity())) {
             LivingEntity minionAttacker = event.getEntity();
             Minion attackerMinionCap = getMinionCapability(minionAttacker);
-            if(attackerMinionCap.getMaster() != null){
+            if (attackerMinionCap.getMaster() != null) {
                 LivingEntity attackersOwner = attackerMinionCap.getMaster();
-                if(MinionMasterHelper.isMinionEntity(event.getNewTarget())){
+                if (MinionMasterHelper.isMinionEntity(event.getNewTarget())) {
                     LivingEntity summonableTarget = event.getNewTarget();
                     Minion targetSummonableCap = getMinionCapability(summonableTarget);
-                    if(targetSummonableCap.getMaster() != null){
+                    if (targetSummonableCap.getMaster() != null) {
                         LivingEntity targetsOwner = targetSummonableCap.getMaster();
-                        if(targetsOwner.equals(attackersOwner)){
+                        if (targetsOwner.equals(attackersOwner)) {
                             event.setCanceled(true);
                             preventAttackForSummonableMob(minionAttacker);
                         }
                     }
                 }
             }
-            if(attackerMinionCap.getMaster() == event.getNewTarget()){
+            if (attackerMinionCap.getMaster() == event.getNewTarget()) {
                 event.setCanceled(true);
                 preventAttackForSummonableMob(minionAttacker);
             }
@@ -42,7 +42,7 @@ public class SummonEvents {
     }
 
     private static void preventAttackForSummonableMob(LivingEntity minionAttacker) {
-        if(minionAttacker instanceof NeutralMob){
+        if (minionAttacker instanceof NeutralMob) {
             ((NeutralMob) minionAttacker).stopBeingAngry();
         }
     }

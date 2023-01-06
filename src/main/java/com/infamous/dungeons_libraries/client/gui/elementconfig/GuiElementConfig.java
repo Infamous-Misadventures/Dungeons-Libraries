@@ -56,8 +56,8 @@ public class GuiElementConfig {
         return isHidden;
     }
 
-    public int getXPosition(int scaledWidth){
-        switch(alignment){
+    public int getXPosition(int scaledWidth) {
+        switch (alignment) {
             case TOP_LEFT:
             case BOTTOM_LEFT:
                 return offsetX;
@@ -71,8 +71,8 @@ public class GuiElementConfig {
         return 0;
     }
 
-    public int getYPosition(int scaledHeight){
-        switch(alignment){
+    public int getYPosition(int scaledHeight) {
+        switch (alignment) {
             case TOP_LEFT:
             case TOP_RIGHT:
             case TOP_CENTER:
@@ -94,7 +94,7 @@ public class GuiElementConfig {
         BOTTOM_LEFT("bottom_left");
 
         public static final Codec<Alignment> CODEC = Codec.STRING.flatComapMap((s) -> {
-            return byName(s, (Alignment)null);
+            return byName(s, null);
         }, (d) -> {
             return DataResult.success(d.getName());
         });
@@ -113,7 +113,7 @@ public class GuiElementConfig {
             Alignment[] var2 = values();
             int var3 = var2.length;
 
-            for(int var4 = 0; var4 < var3; ++var4) {
+            for (int var4 = 0; var4 < var3; ++var4) {
                 Alignment value = var2[var4];
                 if (value.name.equals(name)) {
                     return value;

@@ -17,9 +17,8 @@ public abstract class BowEvent extends LivingEvent {
         return itemStack;
     }
 
-    public static class ChargeTime extends BowEvent
-    {
-        private float originalChargeTime;
+    public static class ChargeTime extends BowEvent {
+        private final float originalChargeTime;
         private float chargeTime;
 
         public ChargeTime(LivingEntity entity, ItemStack itemStack, float chargeTime) {
@@ -41,9 +40,8 @@ public abstract class BowEvent extends LivingEvent {
         }
     }
 
-    public static class Velocity extends BowEvent
-    {
-        private float originalVelocity;
+    public static class Velocity extends BowEvent {
+        private final float originalVelocity;
         private float velocity;
 
         public Velocity(LivingEntity entity, ItemStack itemStack, float velocity) {
@@ -65,9 +63,8 @@ public abstract class BowEvent extends LivingEvent {
         }
     }
 
-    public static class Overcharge extends BowEvent
-    {
-        private int originalCharges;
+    public static class Overcharge extends BowEvent {
+        private final int originalCharges;
         private int charges;
 
         public Overcharge(LivingEntity entity, ItemStack itemStack, int charges) {

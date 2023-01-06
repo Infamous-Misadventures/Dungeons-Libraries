@@ -16,14 +16,14 @@ public class DungeonsWeaponMaterial implements Tier {
     public static final Codec<Tier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getName()),
             SoundEvent.CODEC.fieldOf("equip_sound").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getEquipSound()),
-            Codec.INT.fieldOf("durability").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getUses()),
-            Codec.INT.fieldOf("enchantability").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getEnchantmentValue()),
+            Codec.INT.fieldOf("durability").forGetter(iItemTier -> iItemTier.getUses()),
+            Codec.INT.fieldOf("enchantability").forGetter(iItemTier -> iItemTier.getEnchantmentValue()),
             ResourceLocation.CODEC.fieldOf("repair_item").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getRepairItemResourceLocation()),
-            Codec.FLOAT.fieldOf("attack_speed").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getSpeed()),
-            Codec.FLOAT.fieldOf("attack_damage").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getAttackDamageBonus()),
+            Codec.FLOAT.fieldOf("attack_speed").forGetter(iItemTier -> iItemTier.getSpeed()),
+            Codec.FLOAT.fieldOf("attack_damage").forGetter(iItemTier -> iItemTier.getAttackDamageBonus()),
             Codec.INT.fieldOf("level").forGetter(iItemTier -> ((DungeonsWeaponMaterial) iItemTier).getLevel())
     ).apply(instance, DungeonsWeaponMaterial::new));
-    
+
     private final String name;
     private final SoundEvent equipSound;
     private final int durability;
@@ -40,10 +40,10 @@ public class DungeonsWeaponMaterial implements Tier {
         this.durability = durability;
         this.enchantability = enchantability;
         this.repairItemResourceLocation = repairItemResourceLocation;
-        if(ITEMS.containsKey(repairItemResourceLocation)){
+        if (ITEMS.containsKey(repairItemResourceLocation)) {
             Item item = ITEMS.getValue(repairItemResourceLocation);
             this.repairItem = Ingredient.of(item);
-        }else{
+        } else {
             this.repairItem = Ingredient.of(Items.IRON_INGOT);
         }
         this.attackSpeed = attackSpeed;

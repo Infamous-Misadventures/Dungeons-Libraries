@@ -49,7 +49,7 @@ public class EliteMob {
         hasSpawned = tag.getBoolean("hasSpawned");
         if (tag.contains("texture")) {
             texture = new ResourceLocation(tag.getString("texture"));
-        }else{
+        } else {
             texture = EMPTY_TEXTURE;
         }
     }

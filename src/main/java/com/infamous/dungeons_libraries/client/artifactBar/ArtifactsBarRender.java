@@ -18,7 +18,6 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -26,8 +25,6 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
-import static com.infamous.dungeons_libraries.items.ItemTagWrappers.CURIOS_ARTIFACTS;
-import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
 public class ArtifactsBarRender {
@@ -39,9 +36,9 @@ public class ArtifactsBarRender {
 //        if(mc != null && ForgeRegistries.ITEMS.tags().getTag(CURIOS_ARTIFACTS).isEmpty()) return;
 
         if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player renderPlayer) {
-            if(renderPlayer == null) return;
+            if (renderPlayer == null) return;
             GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "artifact_bar"));
-            if(guiElementConfig.isHidden()) return;
+            if (guiElementConfig.isHidden()) return;
 
             Window sr = event.getWindow();
             int scaledWidth = sr.getGuiScaledWidth();
@@ -65,11 +62,11 @@ public class ArtifactsBarRender {
         if (artifactStackHandler.isPresent()) {
             int slots = artifactStackHandler.get().getStacks().getSlots();
             renderSlotBg(poseStack, mc, x, y, slots);
-            for(int slot = 0; slot < slots; slot++) {
+            for (int slot = 0; slot < slots; slot++) {
                 ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
                 if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
                     int xPos = x + slot * 20 + 3;
-                    int yPos = y +3;
+                    int yPos = y + 3;
                     renderSlot(poseStack, mc, xPos, yPos, renderPlayer, artifact);
                 }
                 renderSlotKeybind(poseStack, mc, x, y, slot);
@@ -77,15 +74,15 @@ public class ArtifactsBarRender {
         }
     }
 
-    private static void renderSlot(PoseStack posestack, Minecraft mc,int xPos, int yPos, Player renderPlayer, ItemStack artifactStack) {
+    private static void renderSlot(PoseStack posestack, Minecraft mc, int xPos, int yPos, Player renderPlayer, ItemStack artifactStack) {
         if (!artifactStack.isEmpty()) {
-            float f = (float)artifactStack.getPopTime() - 0;
+            float f = (float) artifactStack.getPopTime() - 0;
             if (f > 0.0F) {
                 float f1 = 1.0F + f / 5.0F;
                 posestack.pushPose();
-                posestack.translate((float)(xPos + 8), (float)(yPos + 12), 0.0F);
+                posestack.translate((float) (xPos + 8), (float) (yPos + 12), 0.0F);
                 posestack.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
-                posestack.translate((float)(-(xPos + 8)), (float)(-(yPos + 12)), 0.0F);
+                posestack.translate((float) (-(xPos + 8)), (float) (-(yPos + 12)), 0.0F);
                 RenderSystem.applyModelViewMatrix();
             }
 
@@ -109,13 +106,13 @@ public class ArtifactsBarRender {
 
     private static void renderSlotKeybind(PoseStack poseStack, Minecraft mc, int x, int y, int slot) {
         String keybind = "";
-        if(slot == 0) {
+        if (slot == 0) {
             KeyMapping keyMapping = CuriosKeyBindings.activateArtifact1;
             keybind = getString(keyMapping);
-        }else if(slot == 1) {
+        } else if (slot == 1) {
             KeyMapping keyMapping = CuriosKeyBindings.activateArtifact2;
             keybind = getString(keyMapping);
-        }else if(slot == 2) {
+        } else if (slot == 2) {
             KeyMapping keyMapping = CuriosKeyBindings.activateArtifact3;
             keybind = getString(keyMapping);
         }

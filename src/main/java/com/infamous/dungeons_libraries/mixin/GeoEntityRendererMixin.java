@@ -18,7 +18,7 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 import static com.infamous.dungeons_libraries.entities.elite.EliteMobConfig.EMPTY_TEXTURE;
 
 @Mixin(GeoEntityRenderer.class)
-public abstract class GeoEntityRendererMixin<T extends LivingEntity & IAnimatable> extends EntityRenderer<T> implements IGeoRenderer<T>  {
+public abstract class GeoEntityRendererMixin<T extends LivingEntity & IAnimatable> extends EntityRenderer<T> implements IGeoRenderer<T> {
 
     protected GeoEntityRendererMixin(EntityRendererProvider.Context p_i46179_1_) {
         super(p_i46179_1_);
@@ -28,7 +28,7 @@ public abstract class GeoEntityRendererMixin<T extends LivingEntity & IAnimatabl
             at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true, remap = false)
     private void dungeonsLibraries_bindEliteTexture(T instance, CallbackInfoReturnable<ResourceLocation> cir) {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(instance);
-        if(cap.isElite() && !cap.getTexture().equals(EMPTY_TEXTURE)) {
+        if (cap.isElite() && !cap.getTexture().equals(EMPTY_TEXTURE)) {
             cir.setReturnValue(cap.getTexture());
         }
     }

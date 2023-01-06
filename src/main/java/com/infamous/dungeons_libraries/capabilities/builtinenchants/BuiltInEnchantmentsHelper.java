@@ -7,8 +7,7 @@ import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.BUILT
 
 public class BuiltInEnchantmentsHelper {
 
-    public static BuiltInEnchantments getBuiltInEnchantmentsCapability(ItemStack itemStack)
-    {
+    public static BuiltInEnchantments getBuiltInEnchantmentsCapability(ItemStack itemStack) {
         return itemStack.getCapability(BUILT_IN_ENCHANTMENTS_CAPABILITY).orElse(new BuiltInEnchantments(itemStack));
     }
 

@@ -16,8 +16,6 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class MinionFollowOwnerGoal extends Goal {
     private final Mob mobEntity;
     private LivingEntity owner;
@@ -56,7 +54,7 @@ public class MinionFollowOwnerGoal extends Goal {
             return false;
         } else if (this.mobEntity.isLeashed()) {
             return false;
-        } else if (this.mobEntity.distanceTo(livingentity) < (double)(this.maxDist)) {
+        } else if (this.mobEntity.distanceTo(livingentity) < (double) (this.maxDist)) {
             return false;
         } else {
             this.owner = livingentity;
@@ -73,7 +71,7 @@ public class MinionFollowOwnerGoal extends Goal {
         } else if (this.mobEntity.isLeashed()) {
             return false;
         } else {
-            return !(this.mobEntity.distanceTo(this.owner) <= (double)(this.minDist));
+            return !(this.mobEntity.distanceTo(this.owner) <= (double) (this.minDist));
         }
     }
 
@@ -99,11 +97,11 @@ public class MinionFollowOwnerGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        this.mobEntity.getLookControl().setLookAt(this.owner, 10.0F, (float)this.mobEntity.getMaxHeadXRot());
+        this.mobEntity.getLookControl().setLookAt(this.owner, 10.0F, (float) this.mobEntity.getMaxHeadXRot());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
             if (!this.mobEntity.isLeashed() && !this.mobEntity.isPassenger()) {
-                if (this.mobEntity.distanceTo(this.owner) >= maxDist*2) {
+                if (this.mobEntity.distanceTo(this.owner) >= maxDist * 2) {
                     this.teleportToOwner();
                 } else {
                     this.navigator.moveTo(this.owner, this.followSpeed);
@@ -116,7 +114,7 @@ public class MinionFollowOwnerGoal extends Goal {
     private void teleportToOwner() {
         BlockPos blockpos = this.owner.blockPosition();
 
-        for(int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; ++i) {
             int j = this.randomIntInclusive(-3, 3);
             int k = this.randomIntInclusive(-1, 1);
             int l = this.randomIntInclusive(-3, 3);
@@ -129,12 +127,12 @@ public class MinionFollowOwnerGoal extends Goal {
     }
 
     private boolean maybeTeleportTo(int p_226328_1_, int p_226328_2_, int p_226328_3_) {
-        if (Math.abs((double)p_226328_1_ - this.owner.getX()) < 2.0D && Math.abs((double)p_226328_3_ - this.owner.getZ()) < 2.0D) {
+        if (Math.abs((double) p_226328_1_ - this.owner.getX()) < 2.0D && Math.abs((double) p_226328_3_ - this.owner.getZ()) < 2.0D) {
             return false;
         } else if (!this.canTeleportTo(new BlockPos(p_226328_1_, p_226328_2_, p_226328_3_))) {
             return false;
         } else {
-            this.mobEntity.moveTo((double)p_226328_1_ + 0.5D, (double)p_226328_2_, (double)p_226328_3_ + 0.5D, this.mobEntity.getYRot(), this.mobEntity.getXRot());
+            this.mobEntity.moveTo((double) p_226328_1_ + 0.5D, p_226328_2_, (double) p_226328_3_ + 0.5D, this.mobEntity.getYRot(), this.mobEntity.getXRot());
             this.navigator.stop();
             return true;
         }

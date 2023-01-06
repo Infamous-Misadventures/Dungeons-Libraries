@@ -46,7 +46,7 @@ public class ClientHandler {
                     EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
                     cap.setElite(message.isElite());
                     cap.setTexture(message.getTexture());
-                    if(cap.isElite()) {
+                    if (cap.isElite()) {
                         entity.refreshDimensions();
                     }
                 }

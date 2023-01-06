@@ -24,7 +24,7 @@ import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMa
 public class MinionEvents {
 
     @SubscribeEvent
-    public static void onLivingDropsEvent(LivingDropsEvent event){
+    public static void onLivingDropsEvent(LivingDropsEvent event) {
         Minion cap = MinionMasterHelper.getMinionCapability(event.getEntity());
         if (cap.isMinion()) {
             event.setCanceled(true);
@@ -32,9 +32,9 @@ public class MinionEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingEntityTick(LivingEvent.LivingTickEvent event){
+    public static void onLivingEntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entityLiving = event.getEntity();
-        if(entityLiving.level.isClientSide) return;
+        if (entityLiving.level.isClientSide) return;
         Minion cap = MinionMasterHelper.getMinionCapability(entityLiving);
         if (cap.isMinion()) {
             if (cap.isTemporary()) {
@@ -52,25 +52,25 @@ public class MinionEvents {
     }
 
     @SubscribeEvent
-    public static void reAddMinionGoals(EntityJoinLevelEvent event){
+    public static void reAddMinionGoals(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
-        if(!event.getLevel().isClientSide() && entity instanceof Mob) {
+        if (!event.getLevel().isClientSide() && entity instanceof Mob) {
             MinionMasterHelper.addMinionGoals((Mob) entity);
             Master masterCapability = getMasterCapability(entity);
             List<Entity> minions = masterCapability.getAllMinions();
-            for(Entity minion : minions){
-                if(minion instanceof Mob){
+            for (Entity minion : minions) {
+                if (minion instanceof Mob) {
                     Minion minionCapability = getMinionCapability(minion);
                     minionCapability.setMaster((Mob) entity);
                     MinionMasterHelper.addMinionGoals((Mob) minion);
                 }
             }
         }
-        if(!event.getLevel().isClientSide() && entity instanceof Player) {
+        if (!event.getLevel().isClientSide() && entity instanceof Player) {
             Master masterCapability = getMasterCapability(entity);
             List<Entity> minions = masterCapability.getAllMinions();
-            for(Entity minion : minions){
-                if(minion instanceof Mob){
+            for (Entity minion : minions) {
+                if (minion instanceof Mob) {
                     Minion minionCapability = getMinionCapability(minion);
                     minionCapability.setMaster((Player) entity);
                     MinionMasterHelper.addMinionGoals((Mob) minion);
@@ -82,21 +82,21 @@ public class MinionEvents {
     // Avoids a situation where your minion died but onSummonableDeath didn't fire in time,
     // making you unable to summon any more of that entity
     @SubscribeEvent
-    public static void checkSummonedMobIsDead(TickEvent.PlayerTickEvent event){
+    public static void checkSummonedMobIsDead(TickEvent.PlayerTickEvent event) {
         Player master = event.player;
-        if(event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
-        if(!master.isAlive()) return;
+        if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
+        if (!master.isAlive()) return;
         Master masterCap = getMasterCapability(event.player);
         updateAliveList(masterCap);
     }
 
     @SubscribeEvent
-    public static void onMinionDeath(LivingDeathEvent event){
-        if(!event.getEntity().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntity())){
+    public static void onMinionDeath(LivingDeathEvent event) {
+        if (!event.getEntity().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntity())) {
             LivingEntity livingEntity = event.getEntity();
             Minion minionCapability = getMinionCapability(livingEntity);
             LivingEntity summoner = minionCapability.getMaster();
-            if(summoner != null){
+            if (summoner != null) {
                 Master masterCap = getMasterCapability(summoner);
                 updateAliveList(masterCap);
             }

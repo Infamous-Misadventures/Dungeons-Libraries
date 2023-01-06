@@ -32,18 +32,18 @@ public class UpdateSoulsMessage {
             if (packet != null) {
                 ctx.get().setPacketHandled(true);
                 ctx.get().enqueueWork(() ->
-                DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new SafeRunnable() {
-                    private static final long serialVersionUID = 1;
+                        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new SafeRunnable() {
+                            private static final long serialVersionUID = 1;
 
-                    @Override
-                    public void run() {
-                        LocalPlayer player = Minecraft.getInstance().player;
-                        if (player != null) {
-                            SoulCaster soulCasterCap = SoulCasterHelper.getSoulCasterCapability(player);
-                            soulCasterCap.setSouls(packet.newAmount, player);
-                        }
-                    }
-                }));
+                            @Override
+                            public void run() {
+                                LocalPlayer player = Minecraft.getInstance().player;
+                                if (player != null) {
+                                    SoulCaster soulCasterCap = SoulCasterHelper.getSoulCasterCapability(player);
+                                    soulCasterCap.setSouls(packet.newAmount, player);
+                                }
+                            }
+                        }));
             }
         }
     }

@@ -6,14 +6,16 @@ public interface IRangedWeapon {
 
     boolean isUnique();
 
-    default boolean shootsHeavyArrows(ItemStack stack){
+    default boolean shootsHeavyArrows(ItemStack stack) {
         return false;
     }
 
-    default boolean hasExtraMultishot(ItemStack stack){
+    default boolean hasExtraMultishot(ItemStack stack) {
         return false;
     }
 
-    default boolean hasMultishotWhenCharged(ItemStack stack){ return false;}
+    default boolean hasMultishotWhenCharged(ItemStack stack) {
+        return false;
+    }
 
 }

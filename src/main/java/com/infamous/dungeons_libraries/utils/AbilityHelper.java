@@ -1,12 +1,11 @@
 package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -44,7 +43,7 @@ public class AbilityHelper {
     public static boolean isAlly(LivingEntity origin, LivingEntity target) {
         LivingEntity originOwner = PetHelper.getOwner(origin);
         LivingEntity targetOwner = PetHelper.getOwner(target);
-        if(originOwner != null || targetOwner != null){
+        if (originOwner != null || targetOwner != null) {
             return isAlly(originOwner != null ? originOwner : origin, targetOwner != null ? targetOwner : target);
         }
         return isPetOrColleagueRelation(origin, target)

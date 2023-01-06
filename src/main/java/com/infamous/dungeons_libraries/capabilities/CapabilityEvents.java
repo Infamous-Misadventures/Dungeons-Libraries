@@ -29,11 +29,11 @@ public class CapabilityEvents {
     }
 
     @SubscribeEvent
-    public static void clonePlayerCaps(PlayerEvent.Clone event){
+    public static void clonePlayerCaps(PlayerEvent.Clone event) {
         Master oldMasterCap = getMasterCapability(event.getOriginal());
         Master newMasterCap = getMasterCapability(event.getEntity());
         newMasterCap.copyFrom(oldMasterCap);
-        if(!event.isWasDeath() || DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
+        if (!event.isWasDeath() || DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
             SoulCaster oldSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getOriginal());
             SoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getEntity());
             newSoulsCap.setSouls(oldSoulsCap.getSouls(), event.getEntity());

@@ -5,9 +5,9 @@ import java.util.UUID;
 public class Patreon {
     public static final Patreon DEFAULT = new Patreon(null, PatreonLevel.UNKNOWN, "default");
 
-    private UUID uuid;
-    private PatreonLevel level;
-    private String username;
+    private final UUID uuid;
+    private final PatreonLevel level;
+    private final String username;
 
     public Patreon(UUID uuid, PatreonLevel level, String username) {
         this.uuid = uuid;

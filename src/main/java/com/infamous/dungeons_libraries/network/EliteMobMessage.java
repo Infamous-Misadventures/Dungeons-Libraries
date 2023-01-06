@@ -8,9 +8,9 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class EliteMobMessage {
-    private int entityId;
-    private boolean isElite;
-    private ResourceLocation texture;
+    private final int entityId;
+    private final boolean isElite;
+    private final ResourceLocation texture;
 
     public EliteMobMessage(int entityId, boolean isElite, ResourceLocation texture) {
         this.entityId = entityId;

@@ -62,7 +62,7 @@ public class CuriosKeyBindings {
     private static void sendCuriosStartMessageToServer(int slot) {
         HitResult hitResult = Minecraft.getInstance().hitResult;
         LocalPlayer player = Minecraft.getInstance().player;
-        if(player != null) {
+        if (player != null) {
             if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) {
                 BlockHitResult blockHitResult = new BlockHitResult(player.position(), Direction.UP, player.blockPosition(), false);
                 curiosStartMessage(slot, blockHitResult, player);
@@ -90,18 +90,18 @@ public class CuriosKeyBindings {
         });
     }
 
-     private static BlockHitResult getBlockHitResult(AbstractClientPlayer player) {
-         Vec3 eyeVector = player.getEyePosition(1.0F);
-         Vec3 lookVector = player.getViewVector(1.0F);
-         Vec3 rayTraceVector = eyeVector.add(lookVector.x * RAYTRACE_DISTANCE, lookVector.y * RAYTRACE_DISTANCE, lookVector.z * RAYTRACE_DISTANCE);
-         AABB rayTraceBoundingBox = player.getBoundingBox().expandTowards(lookVector.scale(RAYTRACE_DISTANCE)).inflate(1.0D, 1.0D, 1.0D);
-         EntityHitResult entityRTR = ProjectileUtil.getEntityHitResult(player.level, player, eyeVector, rayTraceVector, rayTraceBoundingBox, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
-         if(entityRTR != null) {
-             return new BlockHitResult(entityRTR.getEntity().position(), Direction.UP, entityRTR.getEntity().blockPosition(), false);
-         }else{
-             BlockHitResult blockRTR = (BlockHitResult) player.pick(RAYTRACE_DISTANCE, 1.0f, false);
-             return blockRTR;
-         }
-     }
+    private static BlockHitResult getBlockHitResult(AbstractClientPlayer player) {
+        Vec3 eyeVector = player.getEyePosition(1.0F);
+        Vec3 lookVector = player.getViewVector(1.0F);
+        Vec3 rayTraceVector = eyeVector.add(lookVector.x * RAYTRACE_DISTANCE, lookVector.y * RAYTRACE_DISTANCE, lookVector.z * RAYTRACE_DISTANCE);
+        AABB rayTraceBoundingBox = player.getBoundingBox().expandTowards(lookVector.scale(RAYTRACE_DISTANCE)).inflate(1.0D, 1.0D, 1.0D);
+        EntityHitResult entityRTR = ProjectileUtil.getEntityHitResult(player.level, player, eyeVector, rayTraceVector, rayTraceBoundingBox, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
+        if (entityRTR != null) {
+            return new BlockHitResult(entityRTR.getEntity().position(), Direction.UP, entityRTR.getEntity().blockPosition(), false);
+        } else {
+            BlockHitResult blockRTR = (BlockHitResult) player.pick(RAYTRACE_DISTANCE, 1.0f, false);
+            return blockRTR;
+        }
+    }
 
- }
+}

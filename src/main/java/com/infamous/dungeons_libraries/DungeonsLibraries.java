@@ -28,7 +28,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.infamous.dungeons_libraries.entities.ModEntityTypes.ENTITY_TYPES;
-import static com.infamous.dungeons_libraries.integration.curios.client.CuriosKeyBindings.setupCuriosKeybindings;
 import static com.infamous.dungeons_libraries.items.artifacts.config.ArtifactGearConfigRegistry.ARTIFACT_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.ArmorGearConfigRegistry.ARMOR_GEAR_CONFIGS;
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfigRegistry.BOW_GEAR_CONFIGS;
@@ -39,8 +38,7 @@ import static com.infamous.dungeons_libraries.items.materials.weapon.WeaponMater
 
 
 @Mod("dungeons_libraries")
-public class DungeonsLibraries
-{
+public class DungeonsLibraries {
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "dungeons_libraries";
@@ -75,7 +73,7 @@ public class DungeonsLibraries
         ModCapabilities.setupCapabilities();
     }
 
-    private void setup(final FMLCommonSetupEvent event){
+    private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(NetworkHandler::init);
     }
 

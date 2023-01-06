@@ -18,7 +18,7 @@ public class LivingRendererMixin<T extends LivingEntity, M extends EntityModel<T
     @ModifyVariable(method = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/world/entity/LivingEntity;ZZZ)Lnet/minecraft/client/renderer/RenderType;", at = @At("STORE"), ordinal = 0)
     private ResourceLocation dungeonslibraries_getRenderType(ResourceLocation value, T p_115322_, boolean p_115323_, boolean p_115324_, boolean p_115325_) {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(p_115322_);
-        if(cap.isElite() && !cap.getTexture().equals(EMPTY_TEXTURE)) {
+        if (cap.isElite() && !cap.getTexture().equals(EMPTY_TEXTURE)) {
             return cap.getTexture();
         }
         return value;

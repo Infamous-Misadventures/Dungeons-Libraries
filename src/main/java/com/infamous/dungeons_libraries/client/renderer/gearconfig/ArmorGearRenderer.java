@@ -17,7 +17,7 @@ import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.RenderUtils;
 
-public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T> {
+public class ArmorGearRenderer<T extends ArmorGear> extends GeoArmorRenderer<T> {
     public ArmorGearRenderer() {
         super(new ArmorGearModel<>());
     }
@@ -40,12 +40,12 @@ public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T>
         RenderUtils.translateMatrixToBone(stack, bone);
         RenderUtils.translateToPivotPoint(stack, bone);
         EntityRenderer<? super LivingEntity> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityLiving);
-        if(!(entityRenderer instanceof GeoEntityRenderer) || !bone.getName().contains("armor")) {
+        if (!(entityRenderer instanceof GeoEntityRenderer) || !bone.getName().contains("armor")) {
             RenderUtils.rotateMatrixAroundBone(stack, bone);
         }
         RenderUtils.scaleMatrixForBone(stack, bone);
         ArmorMaterial material = this.currentArmorItem.getMaterial();
-        if(bone.getName().contains("Body") && material instanceof DungeonsArmorMaterial && ((DungeonsArmorMaterial) material).getBaseType() == ArmorMaterialBaseType.CLOTH){
+        if (bone.getName().contains("Body") && material instanceof DungeonsArmorMaterial && ((DungeonsArmorMaterial) material).getBaseType() == ArmorMaterialBaseType.CLOTH) {
             stack.scale(1.0F, 1.0F, 0.93F);
         }
         RenderUtils.translateAwayFromPivotPoint(stack, bone);
@@ -59,9 +59,9 @@ public class ArmorGearRenderer<T extends ArmorGear>  extends GeoArmorRenderer<T>
         for (GeoCube cube : bone.childCubes) {
             if (!bone.cubesAreHidden()) {
                 poseStack.pushPose();
-                if(entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet().getRegistryName() == this.currentArmorItem.getArmorSet()){
-                renderCube(cube, poseStack, buffer, packedLight, LivingEntityRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
-                }else {
+                if (entityLiving instanceof SpawnArmoredMob && ((SpawnArmoredMob) entityLiving).getArmorSet().getRegistryName() == this.currentArmorItem.getArmorSet()) {
+                    renderCube(cube, poseStack, buffer, packedLight, LivingEntityRenderer.getOverlayCoords(entityLiving, 0.0F), red, green, blue, alpha);
+                } else {
                     renderCube(cube, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
                 }
                 poseStack.popPose();

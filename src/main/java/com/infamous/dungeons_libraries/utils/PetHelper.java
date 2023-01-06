@@ -24,7 +24,7 @@ public class PetHelper {
         pets.addAll(masterCapability.getAllMinions());
         pets.addAll(nearbyEntities);
         for (Entity pet : pets) {
-            if(pet instanceof Mob){
+            if (pet instanceof Mob) {
                 ((Mob) pet).setTarget(target);
             }
         }
@@ -41,7 +41,7 @@ public class PetHelper {
     public static boolean isPetOrColleagueRelation(LivingEntity potentialPet1, LivingEntity potentialPet2) {
         LivingEntity owner = getOwner(potentialPet1);
         LivingEntity otherOwner = getOwner(potentialPet2);
-        
+
         if (owner == null)
             return potentialPet1 == otherOwner;
         if (otherOwner == null)
@@ -55,7 +55,7 @@ public class PetHelper {
             owner = ((TamableAnimal) potentialPet).getOwner();
         if (potentialPet instanceof AbstractHorse)
             owner = MinionMasterHelper.getOwnerForHorse((AbstractHorse) potentialPet);
-        if(MinionMasterHelper.getMaster(potentialPet) != null)
+        if (MinionMasterHelper.getMaster(potentialPet) != null)
             owner = MinionMasterHelper.getMaster(potentialPet);
         return owner;
     }

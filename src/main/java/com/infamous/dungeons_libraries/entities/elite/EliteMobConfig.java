@@ -14,7 +14,7 @@ import java.util.List;
 public class EliteMobConfig implements WeightedEntry {
 
     public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation("empty");
-    public static final EliteMobConfig DEFAULT = new EliteMobConfig(Weight.of(0),null, null, null, null, null, null, new ArrayList<>(), EMPTY_TEXTURE);
+    public static final EliteMobConfig DEFAULT = new EliteMobConfig(Weight.of(0), null, null, null, null, null, null, new ArrayList<>(), EMPTY_TEXTURE);
 
     public static final Codec<EliteMobConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Weight.CODEC.fieldOf("weight").forGetter(eliteMobConfig -> eliteMobConfig.weight),

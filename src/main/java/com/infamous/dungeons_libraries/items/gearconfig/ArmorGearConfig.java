@@ -26,11 +26,11 @@ public class ArmorGearConfig {
             ITEM_RARITY_CODEC.fieldOf("rarity").forGetter(ArmorGearConfig::getRarity)
     ).apply(instance, ArmorGearConfig::new));
 
-    private List<GearConfigAttributeModifier> attributes;
-    private List<EnchantmentInstance> builtInEnchantments;
-    private ResourceLocation materialResource;
-    private boolean unique;
-    private Rarity rarity;
+    private final List<GearConfigAttributeModifier> attributes;
+    private final List<EnchantmentInstance> builtInEnchantments;
+    private final ResourceLocation materialResource;
+    private final boolean unique;
+    private final Rarity rarity;
 
     public ArmorGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentInstance> builtInEnchantments, ResourceLocation materialResource, boolean unique, Rarity rarity) {
         this.attributes = attributes;
@@ -48,7 +48,7 @@ public class ArmorGearConfig {
         return builtInEnchantments;
     }
 
-    public ArmorMaterial getArmorMaterial(){
+    public ArmorMaterial getArmorMaterial() {
         return DungeonsArmorMaterials.getArmorMaterial(materialResource);
     }
 

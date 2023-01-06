@@ -48,7 +48,7 @@ public class EliteMobEvents {
             if (!cap.hasSpawned() && config != null) {
                 LevelChunk chunk = level.getChunkSource().getChunkNow(entity.blockPosition().getX() >> 4, entity.blockPosition().getZ() >> 4);
                 if (chunk != null && chunk.getStatus().isOrAfter(ChunkStatus.FULL)
-                        && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()){
+                        && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
                     setItemSlot(entity, EquipmentSlot.HEAD, config.getHeadItem());
                     setItemSlot(entity, EquipmentSlot.CHEST, config.getChestItem());
                     setItemSlot(entity, EquipmentSlot.LEGS, config.getLegsItem());
@@ -72,7 +72,7 @@ public class EliteMobEvents {
     }
 
     private static void setItemSlot(LivingEntity entity, EquipmentSlot slotType, ItemStack item) {
-        if(!item.equals(ItemStack.EMPTY)) {
+        if (!item.equals(ItemStack.EMPTY)) {
             entity.setItemSlot(slotType, item);
         }
     }
@@ -113,7 +113,7 @@ public class EliteMobEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerStartTracking(PlayerEvent.StartTracking event){
+    public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
         Player player = event.getEntity();
         Entity target = event.getTarget();
         if (player instanceof ServerPlayer && target instanceof LivingEntity) {
@@ -125,12 +125,11 @@ public class EliteMobEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingConvert(LivingConversionEvent.Post event)
-    {
+    public static void onLivingConvert(LivingConversionEvent.Post event) {
         EliteMob cap = EliteMobHelper.getEliteMobCapability(event.getEntity());
         EliteMob outcomeCap = EliteMobHelper.getEliteMobCapability(event.getOutcome());
         outcomeCap.setHasSpawned(true);
-        if(cap.isElite()) {
+        if (cap.isElite()) {
             outcomeCap.setElite(true);
         }
     }

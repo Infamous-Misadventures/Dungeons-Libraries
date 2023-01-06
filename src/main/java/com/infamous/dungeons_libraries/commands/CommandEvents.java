@@ -2,7 +2,6 @@ package com.infamous.dungeons_libraries.commands;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

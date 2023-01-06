@@ -42,18 +42,16 @@ import static java.util.UUID.randomUUID;
 import static net.minecraft.world.item.ArmorMaterials.CHAIN;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, IUniqueGear, IAnimatable {
     private static final ResourceLocation DEFAULT_ARMOR_ANIMATIONS = new ResourceLocation(DungeonsLibraries.MODID, "animations/armor/armor_default.animation.json");
     private static final UUID[] ARMOR_MODIFIER_UUID_PER_SLOT = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
     private Multimap<Attribute, AttributeModifier> defaultModifiers;
     private ArmorGearConfig armorGearConfig;
-    private ResourceLocation armorSet;
-    private ResourceLocation modelLocation;
-    private ResourceLocation textureLocation;
-    private ResourceLocation animationFileLocation;
+    private final ResourceLocation armorSet;
+    private final ResourceLocation modelLocation;
+    private final ResourceLocation textureLocation;
+    private final ResourceLocation animationFileLocation;
 
     public ArmorGear(EquipmentSlot slotType, Properties properties, ResourceLocation armorSet, ResourceLocation modelLocation, ResourceLocation textureLocation, ResourceLocation animationFileLocation) {
         super(CHAIN, slotType, properties);
@@ -65,27 +63,27 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
     }
 
     @Override
-    public void reload(){
+    public void reload() {
         armorGearConfig = ArmorGearConfigRegistry.getConfig(this.armorSet);
-        if(armorGearConfig == ArmorGearConfig.DEFAULT){
+        if (armorGearConfig == ArmorGearConfig.DEFAULT) {
             armorGearConfig = ArmorGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         }
         ArmorMaterial material = armorGearConfig.getArmorMaterial();
-        ((ArmorItemAccessor)this).setMaterial(material);
-        ((ArmorItemAccessor)this).setDefense(material.getDefenseForSlot(this.slot));
-        ((ArmorItemAccessor)this).setToughness(material.getToughness());
-        ((ArmorItemAccessor)this).setKnockbackResistance(material.getKnockbackResistance());
-        ((ItemAccessor)this).setMaxDamage(material.getDurabilityForSlot(this.slot));
+        ((ArmorItemAccessor) this).setMaterial(material);
+        ((ArmorItemAccessor) this).setDefense(material.getDefenseForSlot(this.slot));
+        ((ArmorItemAccessor) this).setToughness(material.getToughness());
+        ((ArmorItemAccessor) this).setKnockbackResistance(material.getKnockbackResistance());
+        ((ItemAccessor) this).setMaxDamage(material.getDurabilityForSlot(this.slot));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         UUID primaryUuid = ARMOR_MODIFIER_UUID_PER_SLOT[this.slot.getIndex()];
-        builder.put(Attributes.ARMOR, new AttributeModifier(primaryUuid, "Armor modifier", (double)material.getDefenseForSlot(this.slot), AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(primaryUuid, "Armor toughness", (double)material.getToughness(), AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ARMOR, new AttributeModifier(primaryUuid, "Armor modifier", material.getDefenseForSlot(this.slot), AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(primaryUuid, "Armor toughness", material.getToughness(), AttributeModifier.Operation.ADDITION));
         if (this.knockbackResistance > 0) {
-            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(primaryUuid, "Armor knockback resistance", (double)this.knockbackResistance, AttributeModifier.Operation.ADDITION));
+            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(primaryUuid, "Armor knockback resistance", this.knockbackResistance, AttributeModifier.Operation.ADDITION));
         }
         armorGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-            if(attribute != null) {
+            if (attribute != null) {
                 UUID uuid = randomUUID();
                 builder.put(attribute, new AttributeModifier(uuid, "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
             }
@@ -109,12 +107,11 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
 
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> list, TooltipFlag flag)
-    {
+    public void appendHoverText(ItemStack stack, Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, level, list, flag);
-        if(armorSet != null) {
+        if (armorSet != null) {
             DescriptionHelper.addLoreDescription(list, armorSet);
-        }else {
+        } else {
             DescriptionHelper.addLoreDescription(list, ForgeRegistries.ITEMS.getKey(this));
         }
     }
@@ -134,7 +131,7 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController<>(this, "controller",
-            20, this::predicate));
+                20, this::predicate));
     }
 
     @Override
@@ -158,15 +155,16 @@ public class ArmorGear extends GeoArmorItem implements IReloadableGear, IArmor, 
     public ResourceLocation getAnimationFileLocation() {
         return animationFileLocation;
     }
+
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             @Override
             public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entityLiving, ItemStack itemStack,
-                                                  EquipmentSlot armorSlot, HumanoidModel<?> _default) {
+                                                          EquipmentSlot armorSlot, HumanoidModel<?> _default) {
                 return (HumanoidModel<?>) GeoArmorRenderer.getRenderer(ArmorGear.class, entityLiving).applyEntityStats(_default)
-                    .setCurrentItem(entityLiving, itemStack, armorSlot).applySlot(armorSlot);
+                        .setCurrentItem(entityLiving, itemStack, armorSlot).applySlot(armorSlot);
             }
         });
     }

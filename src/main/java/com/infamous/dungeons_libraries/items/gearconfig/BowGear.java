@@ -24,6 +24,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +34,6 @@ import static java.util.UUID.randomUUID;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
-
-import net.minecraft.world.item.Item.Properties;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, IUniqueGear {
 
@@ -48,12 +46,12 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     }
 
     @Override
-    public void reload(){
+    public void reload() {
         bowGearConfig = BowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         bowGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-            if(attribute != null) {
+            if (attribute != null) {
                 UUID uuid = randomUUID();
                 if (ATTACK_DAMAGE.equals(attribute)) {
                     uuid = BASE_ATTACK_DAMAGE_UUID;
@@ -67,7 +65,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
         ((ItemAccessor) this).setMaxDamage(bowGearConfig.getDurability());
     }
 
-    public float getDefaultChargeTime(){
+    public float getDefaultChargeTime() {
         return this.bowGearConfig.getDefaultChargeTime();
     }
 
@@ -79,7 +77,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     @Override
     public void releaseUsing(ItemStack stack, Level world, LivingEntity livingEntity, int timeLeft) {
         if (livingEntity instanceof Player) {
-            Player playerentity = (Player)livingEntity;
+            Player playerentity = (Player) livingEntity;
             boolean useInfiniteAmmo = playerentity.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack) > 0;
             ItemStack itemstack = playerentity.getProjectile(stack);
             int charge = this.getUseDuration(stack) - timeLeft;
@@ -102,18 +100,18 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     public void fireArrows(ItemStack stack, Level world, Player playerentity, ItemStack itemstack, float arrowVelocity) {
         int multishotLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack);
         int arrowsToFire = 1;
-        if(multishotLevel > 0) arrowsToFire += 2;
-        if(this.hasMultishotWhenCharged(stack) && arrowVelocity == 1.0F) arrowsToFire += 2;
+        if (multishotLevel > 0) arrowsToFire += 2;
+        if (this.hasMultishotWhenCharged(stack) && arrowVelocity == 1.0F) arrowsToFire += 2;
 
-        for(int arrowNumber = 0; arrowNumber < arrowsToFire; arrowNumber++){
-            if ((double)arrowVelocity >= 0.1D) {
-                boolean hasInfiniteAmmo = playerentity.getAbilities().instabuild || itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity);
+        for (int arrowNumber = 0; arrowNumber < arrowsToFire; arrowNumber++) {
+            if ((double) arrowVelocity >= 0.1D) {
+                boolean hasInfiniteAmmo = playerentity.getAbilities().instabuild || itemstack.getItem() instanceof ArrowItem && ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, playerentity);
                 boolean isAdditionalShot = arrowNumber > 0;
                 if (!world.isClientSide) {
                     this.createBowArrow(stack, world, playerentity, itemstack, arrowVelocity, arrowNumber, hasInfiniteAmmo, isAdditionalShot);
                 }
 
-                world.playSound((Player)null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (playerentity.getRandom().nextFloat() * 0.4F + 1.2F) + arrowVelocity * 0.5F);
+                world.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (playerentity.getRandom().nextFloat() * 0.4F + 1.2F) + arrowVelocity * 0.5F);
                 if (!hasInfiniteAmmo && !playerentity.getAbilities().instabuild && !isAdditionalShot) {
                     itemstack.shrink(1);
                     if (itemstack.isEmpty()) {
@@ -131,7 +129,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
         AbstractArrow abstractArrowEntity = arrowitem.createArrow(world, itemstack, playerentity);
         abstractArrowEntity = this.customArrow(abstractArrowEntity);
         AttributeInstance attribute = playerentity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
-        if(attribute != null) {
+        if (attribute != null) {
             abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue()));
         }
         this.setArrowTrajectory(playerentity, arrowVelocity, i, abstractArrowEntity);
@@ -141,10 +139,10 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
         int powerLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
 
         // Damage Boosters
-        if(this.shootsHeavyArrows(stack)) powerLevel++;
+        if (this.shootsHeavyArrows(stack)) powerLevel++;
 
         if (powerLevel > 0) {
-            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() + (double)powerLevel * 0.5D + 0.5D);
+            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() + (double) powerLevel * 0.5D + 0.5D);
         }
         int punchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
         if (punchLevel > 0) {
@@ -160,7 +158,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
                 && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW)) {
             abstractArrowEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
-        if(isAdditionalShot){
+        if (isAdditionalShot) {
             abstractArrowEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
         world.addFreshEntity(abstractArrowEntity);
@@ -168,13 +166,20 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     }
 
     public void setArrowTrajectory(Player playerentity, float arrowVelocity, int i, AbstractArrow abstractarrowentity) {
-        if(i == 0) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot(), 0.0F, arrowVelocity * 3.0F, 1.0F);
-        if(i == 1) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-        if(i == 2) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() - 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-        if(i == 3) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-        if(i == 4) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() - 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-        if(i == 5) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
-        if(i == 6) abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() - 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 0)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot(), 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 1)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 2)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() - 10.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 3)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 4)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() - 20.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 5)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() + 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
+        if (i == 6)
+            abstractarrowentity.shootFromRotation(playerentity, playerentity.getXRot(), playerentity.getYRot() - 30.0F, 0.0F, arrowVelocity * 3.0F, 1.0F);
     }
 
     @Override
@@ -192,8 +197,7 @@ public class BowGear extends BowItem implements IRangedWeapon, IReloadableGear, 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag)
-    {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);
     }

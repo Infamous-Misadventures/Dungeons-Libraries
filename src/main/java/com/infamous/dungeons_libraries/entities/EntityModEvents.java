@@ -17,7 +17,7 @@ import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBA
 public class EntityModEvents {
 
     @SubscribeEvent
-    public static void onEntityAttributeModificationEvent(EntityAttributeModificationEvent event){
+    public static void onEntityAttributeModificationEvent(EntityAttributeModificationEvent event) {
         List<EntityType<? extends LivingEntity>> entitiesWithoutAttack = event.getTypes().stream().filter(entityType -> !event.has(entityType, ATTACK_DAMAGE)).collect(Collectors.toList());
         entitiesWithoutAttack.forEach(entityType -> event.add(entityType, ATTACK_DAMAGE, 0));
         List<EntityType<? extends LivingEntity>> entitiesWithoutKnockback = event.getTypes().stream().filter(entityType -> !event.has(entityType, ATTACK_KNOCKBACK)).collect(Collectors.toList());

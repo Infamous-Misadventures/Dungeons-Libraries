@@ -17,7 +17,7 @@ import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.*;
 public class AttributeEvents {
 
     @SubscribeEvent
-    public static void onEntityAttributeModificationEvent(EntityAttributeModificationEvent event){
+    public static void onEntityAttributeModificationEvent(EntityAttributeModificationEvent event) {
         addAttributeToAll(event, SUMMON_CAP.get());
         addAttributeToAll(event, SOUL_GATHERING.get());
         addAttributeToAll(event, SOUL_CAP.get());
@@ -28,7 +28,7 @@ public class AttributeEvents {
     }
 
     private static void addAttributeToAll(EntityAttributeModificationEvent event, Attribute attribute) {
-        List<EntityType<? extends LivingEntity>> entitiesWithoutAttribute= event.getTypes().stream().filter(entityType -> !event.has(entityType, attribute)).collect(Collectors.toList());
+        List<EntityType<? extends LivingEntity>> entitiesWithoutAttribute = event.getTypes().stream().filter(entityType -> !event.has(entityType, attribute)).collect(Collectors.toList());
         entitiesWithoutAttribute.forEach(entityType -> event.add(entityType, attribute, attribute.getDefaultValue()));
     }
 }

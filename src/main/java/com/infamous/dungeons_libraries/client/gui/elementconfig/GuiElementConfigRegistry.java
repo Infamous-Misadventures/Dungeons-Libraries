@@ -1,6 +1,5 @@
 package com.infamous.dungeons_libraries.client.gui.elementconfig;
 
-import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.data.util.CodecJsonDataManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +34,7 @@ public class GuiElementConfigRegistry {
 
     public static void initGuiElementConfigs() {
         Minecraft mc = Minecraft.getInstance();
-        if(mc != null) {
+        if (mc != null) {
             ResourceManager resourceManager = mc.getResourceManager();
             if (resourceManager instanceof ReloadableResourceManager reloadableResourceManager) {
                 reloadableResourceManager.registerReloadListener(GUI_ELEMENT_CONFIGS);

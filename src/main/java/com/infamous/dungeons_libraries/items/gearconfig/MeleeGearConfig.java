@@ -16,7 +16,7 @@ import static com.infamous.dungeons_libraries.data.Codecs.ITEM_RARITY_CODEC;
 
 public class MeleeGearConfig {
 
-    public static final MeleeGearConfig DEFAULT = new MeleeGearConfig(new ArrayList<>(), new ArrayList<>(), new ResourceLocation("minecraft:iron"), false, false, false,false, Rarity.COMMON, 1);
+    public static final MeleeGearConfig DEFAULT = new MeleeGearConfig(new ArrayList<>(), new ArrayList<>(), new ResourceLocation("minecraft:iron"), false, false, false, false, Rarity.COMMON, 1);
 
     public static final Codec<MeleeGearConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GearConfigAttributeModifier.CODEC.listOf().optionalFieldOf("attributes", new ArrayList<>()).forGetter(MeleeGearConfig::getAttributes),
@@ -30,15 +30,15 @@ public class MeleeGearConfig {
             Codec.INT.optionalFieldOf("combo", 1).forGetter(MeleeGearConfig::getComboLength)
     ).apply(instance, MeleeGearConfig::new));
 
-    private List<GearConfigAttributeModifier> attributes;
-    private List<EnchantmentInstance> builtInEnchantments;
-    private ResourceLocation materialResource;
-    private boolean disablesShield;
-    private boolean light;
-    private boolean twoHanded;
-    private boolean unique;
-    private Rarity rarity;
-    private int comboLength;
+    private final List<GearConfigAttributeModifier> attributes;
+    private final List<EnchantmentInstance> builtInEnchantments;
+    private final ResourceLocation materialResource;
+    private final boolean disablesShield;
+    private final boolean light;
+    private final boolean twoHanded;
+    private final boolean unique;
+    private final Rarity rarity;
+    private final int comboLength;
 
     public MeleeGearConfig(List<GearConfigAttributeModifier> attributes, List<EnchantmentInstance> builtInEnchantments, ResourceLocation materialResource, boolean disablesShield, boolean light, boolean twoHanded, boolean unique, Rarity rarity, int comboLength) {
         this.attributes = attributes;

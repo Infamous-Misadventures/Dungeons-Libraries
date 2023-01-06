@@ -24,7 +24,7 @@ public class SoulsCommand {
                 .requires((commandSource) -> commandSource.hasPermission(2))
                 .then(Commands.literal("add")
                         .then(Commands.argument("targets", EntityArgument.players()).then(Commands.argument("amount", IntegerArgumentType.integer()).executes((p_198445_0_) ->
-                            addSouls(p_198445_0_.getSource(), EntityArgument.getPlayers(p_198445_0_, "targets"), IntegerArgumentType.getInteger(p_198445_0_, "amount"))))))
+                                addSouls(p_198445_0_.getSource(), EntityArgument.getPlayers(p_198445_0_, "targets"), IntegerArgumentType.getInteger(p_198445_0_, "amount"))))))
                 .then(Commands.literal("set")
                         .then(Commands.argument("targets", EntityArgument.players()).then(Commands.argument("amount", IntegerArgumentType.integer()).executes((p_198445_0_) ->
                                 setSouls(p_198445_0_.getSource(), EntityArgument.getPlayers(p_198445_0_, "targets"), IntegerArgumentType.getInteger(p_198445_0_, "amount"))))));
@@ -34,11 +34,11 @@ public class SoulsCommand {
 
     private static int addSouls(CommandSourceStack source, Collection<ServerPlayer> targets, int amount) throws CommandSyntaxException {
         targets.forEach(serverPlayer -> {
-            SoulCasterHelper.addSouls(serverPlayer, amount-1);
+            SoulCasterHelper.addSouls(serverPlayer, amount - 1);
         });
-        if(targets.isEmpty()){
+        if (targets.isEmpty()) {
             throw ERROR_ADD_FAILED.create();
-        }else{
+        } else {
             source.sendSuccess(Component.translatable("commands.souls.add.success"), true);
         }
         return targets.size();
@@ -48,9 +48,9 @@ public class SoulsCommand {
         targets.forEach(serverPlayer -> {
             SoulCasterHelper.setSouls(serverPlayer, amount);
         });
-        if(targets.isEmpty()){
+        if (targets.isEmpty()) {
             throw ERROR_SET_FAILED.create();
-        }else{
+        } else {
             source.sendSuccess(Component.translatable("commands.souls.set.success"), true);
         }
         return targets.size();

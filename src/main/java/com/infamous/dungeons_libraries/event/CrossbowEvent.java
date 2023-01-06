@@ -17,9 +17,8 @@ public abstract class CrossbowEvent extends LivingEvent {
         return itemStack;
     }
 
-    public static class ChargeTime extends CrossbowEvent
-    {
-        private float originalChargeTime;
+    public static class ChargeTime extends CrossbowEvent {
+        private final float originalChargeTime;
         private float chargeTime;
 
         public ChargeTime(LivingEntity entity, ItemStack itemStack, float chargeTime) {
@@ -41,9 +40,8 @@ public abstract class CrossbowEvent extends LivingEvent {
         }
     }
 
-    public static class Velocity extends CrossbowEvent
-    {
-        private float originalVelocity;
+    public static class Velocity extends CrossbowEvent {
+        private final float originalVelocity;
         private float velocity;
 
         public Velocity(LivingEntity entity, ItemStack itemStack, float velocity) {

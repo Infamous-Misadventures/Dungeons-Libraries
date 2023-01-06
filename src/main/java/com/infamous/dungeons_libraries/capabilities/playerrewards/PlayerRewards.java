@@ -22,7 +22,7 @@ public class PlayerRewards implements INBTSerializable<CompoundTag> {
     }
 
     public boolean removePlayerReward(ResourceLocation source) {
-        if(!rewards.containsKey(source) || rewards.get(source) == 0){
+        if (!rewards.containsKey(source) || rewards.get(source) == 0) {
             return true;
         }
         rewards.put(source, rewards.get(source) - 1);
@@ -50,12 +50,13 @@ public class PlayerRewards implements INBTSerializable<CompoundTag> {
         rewards = new HashMap<>(allPlayerRewards);
         return true;
     }
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         Map<ResourceLocation, Integer> rewards = this.getAllPlayerRewards();
         ListTag listNBT = new ListTag();
-        for(Map.Entry<ResourceLocation, Integer> entry : rewards.entrySet()){
+        for (Map.Entry<ResourceLocation, Integer> entry : rewards.entrySet()) {
             CompoundTag compoundNBT = new CompoundTag();
             compoundNBT.putString("source", entry.getKey().toString());
             compoundNBT.putInt("amount", entry.getValue());
@@ -68,8 +69,8 @@ public class PlayerRewards implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag tag) {
         ListTag listNBT = tag.getList("rewards", 10);
-        for(Tag inbt : listNBT){
-            if(inbt instanceof CompoundTag){
+        for (Tag inbt : listNBT) {
+            if (inbt instanceof CompoundTag) {
                 CompoundTag compoundNBT1 = (CompoundTag) inbt;
                 ResourceLocation resourceLocation = new ResourceLocation(compoundNBT1.getString("source"));
                 Integer amount = compoundNBT1.getInt("amount");

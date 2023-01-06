@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 public class CuriosArtifactStartMessage {
     private final int slot;
-    private BlockHitResult hitResult;
+    private final BlockHitResult hitResult;
 
     public CuriosArtifactStartMessage(int slot, BlockHitResult hitResult) {
         this.slot = slot;
@@ -40,7 +40,7 @@ public class CuriosArtifactStartMessage {
                     if (player != null) {
                         CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(iCuriosItemHandler -> {
                             Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
-                            if(artifactStackHandler.isPresent()) {
+                            if (artifactStackHandler.isPresent()) {
                                 ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(packet.slot);
                                 if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
                                     ArtifactUseContext iuc = new ArtifactUseContext(player.level, player, artifact, packet.hitResult);

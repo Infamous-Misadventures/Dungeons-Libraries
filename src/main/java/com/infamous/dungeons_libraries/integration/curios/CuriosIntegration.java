@@ -24,27 +24,27 @@ import static com.infamous.dungeons_libraries.integration.curios.client.CuriosCl
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CuriosIntegration {
 
-	public static final String ARTIFACT_IDENTIFIER = "artifact";
+    public static final String ARTIFACT_IDENTIFIER = "artifact";
 
-	@SubscribeEvent
-	public static void enqueue(InterModEnqueueEvent event) {
-		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder(ARTIFACT_IDENTIFIER).icon(CURIOS_ICON_TEXTURE).priority(10).size(3).build());
-	}
+    @SubscribeEvent
+    public static void enqueue(InterModEnqueueEvent event) {
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder(ARTIFACT_IDENTIFIER).icon(CURIOS_ICON_TEXTURE).priority(10).size(3).build());
+    }
 
-	public static List<ItemStack> getArtifacts(LivingEntity livingEntity){
-		LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(livingEntity);
-		if(curiosHandler.isPresent()){
-			Optional<ICurioStacksHandler> artifactStackHandler = curiosHandler.resolve().get().getStacksHandler(ARTIFACT_IDENTIFIER);
-			if (artifactStackHandler.isPresent()) {
-				IDynamicStackHandler stacks = artifactStackHandler.get().getStacks();
-				List<ItemStack> artifacts = new ArrayList<>();
-				for (int i = 0; i < stacks.getSlots(); i++) {
-					artifacts.add(stacks.getStackInSlot(i));
-				}
-				return artifacts;
-			}
-		}
-		return Collections.emptyList();
-	}
-	
+    public static List<ItemStack> getArtifacts(LivingEntity livingEntity) {
+        LazyOptional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper().getCuriosHandler(livingEntity);
+        if (curiosHandler.isPresent()) {
+            Optional<ICurioStacksHandler> artifactStackHandler = curiosHandler.resolve().get().getStacksHandler(ARTIFACT_IDENTIFIER);
+            if (artifactStackHandler.isPresent()) {
+                IDynamicStackHandler stacks = artifactStackHandler.get().getStacks();
+                List<ItemStack> artifacts = new ArrayList<>();
+                for (int i = 0; i < stacks.getSlots(); i++) {
+                    artifacts.add(stacks.getStackInSlot(i));
+                }
+                return artifacts;
+            }
+        }
+        return Collections.emptyList();
+    }
+
 }

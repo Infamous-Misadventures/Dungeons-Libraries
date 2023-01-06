@@ -28,7 +28,7 @@ public class MinecraftMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/event/InputEvent$InteractionKeyMappingTriggered;shouldSwingHand()Z"),
             method = "Lnet/minecraft/client/Minecraft;startAttack()Z")
     private void dungeons_libraries_startAttack_onSwing(CallbackInfoReturnable<Boolean> cir) {
-        if(SHOULD_SWITCH_HAND){
+        if (SHOULD_SWITCH_HAND) {
             NetworkHandler.INSTANCE.sendToServer(new SwitchHandMessage());
             SHOULD_SWITCH_HAND = false;
         }

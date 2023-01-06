@@ -23,10 +23,10 @@ public abstract class CrossbowItemMixin {
 //        cir.setReturnValue(RangedAttackHelper.getVanillaCrossbowChargeTime(stack)); // TODO: Should take in a LivingEntity to be able to check for Roll Charge
 //    }
 
-    @Redirect(at=@At(value = "INVOKE", target = "Lnet/minecraft/world/item/CrossbowItem;performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FF)V"), method = "use")
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/CrossbowItem;performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FF)V"), method = "use")
     private void hack(Level worldIn, LivingEntity shooter, InteractionHand handIn, ItemStack stack, float velocityIn, float inaccuracyIn) {
-        if(stack.getItem() instanceof CrossbowGear){
-            ((CrossbowGear)stack.getItem()).fireCrossbowProjectiles(worldIn, shooter, handIn, stack, velocityIn, inaccuracyIn);
+        if (stack.getItem() instanceof CrossbowGear) {
+            ((CrossbowGear) stack.getItem()).fireCrossbowProjectiles(worldIn, shooter, handIn, stack, velocityIn, inaccuracyIn);
         } else performShooting(worldIn, shooter, handIn, stack, velocityIn, inaccuracyIn);
     }
 }

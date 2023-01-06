@@ -15,18 +15,19 @@ import static com.infamous.dungeons_libraries.patreon.PatreonHelper.loadPatreons
 
 @Mod.EventBusSubscriber(modid = MODID)
 public class PatreonEvents {
-    private static List<Consumer<UUID>> PATREON_JOIN_CONSUMERS = new ArrayList<>();
+    private static final List<Consumer<UUID>> PATREON_JOIN_CONSUMERS = new ArrayList<>();
 
     @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         loadPatreons(() -> PATREON_JOIN_CONSUMERS.forEach(consumer -> consumer.accept(event.getEntity().getUUID())));
     }
 
-    public static void onServerStart(ServerStartedEvent event){
-        loadPatreons(() -> {});
+    public static void onServerStart(ServerStartedEvent event) {
+        loadPatreons(() -> {
+        });
     }
 
-    private static void addConsumer(Consumer<UUID> consumer){
+    private static void addConsumer(Consumer<UUID> consumer) {
         PATREON_JOIN_CONSUMERS.add(consumer);
     }
 

@@ -21,7 +21,7 @@ public class RangedItemModelProperties {
     private static final ResourceLocation PULLING_PROPERTY = new ResourceLocation("pulling");
     private static final ResourceLocation CHARGED_PROPERTY = new ResourceLocation("charged");
 
-    public static void init(){
+    public static void init() {
         Map<Item, Map<ResourceLocation, ItemPropertyFunction>> itemModelsProperties = ItemProperties.PROPERTIES;
 
         Map<ResourceLocation, ItemPropertyFunction> bowModelProperties = itemModelsProperties.get(Items.BOW);
@@ -39,22 +39,22 @@ public class RangedItemModelProperties {
                 RangedItemModelProperties::getCrossbowChargedProperty);
     }
 
-    public static void addRangedModelProperties(RegistryObject<Item> itemRegistryObject){
-        if(itemRegistryObject.get() instanceof BowItem) {
+    public static void addRangedModelProperties(RegistryObject<Item> itemRegistryObject) {
+        if (itemRegistryObject.get() instanceof BowItem) {
             addBowModelProperties(itemRegistryObject);
-        } else if(itemRegistryObject.get() instanceof CrossbowItem) {
+        } else if (itemRegistryObject.get() instanceof CrossbowItem) {
             addCrossbowModelProperties(itemRegistryObject);
         }
     }
 
-    public static void addBowModelProperties(RegistryObject<Item> itemRegistryObject){
+    public static void addBowModelProperties(RegistryObject<Item> itemRegistryObject) {
         ItemProperties.register(itemRegistryObject.get(), PULL_PROPERTY,
                 RangedItemModelProperties::getBowPullProperty);
         ItemProperties.register(itemRegistryObject.get(), PULLING_PROPERTY,
                 RangedItemModelProperties::getBowPullingProperty);
     }
 
-    public static void addCrossbowModelProperties(RegistryObject<Item> itemRegistryObject){
+    public static void addCrossbowModelProperties(RegistryObject<Item> itemRegistryObject) {
         ItemProperties.register(itemRegistryObject.get(), PULL_PROPERTY,
                 RangedItemModelProperties::getCrossbowPullProperty);
         ItemProperties.register(itemRegistryObject.get(), PULLING_PROPERTY,
@@ -66,7 +66,7 @@ public class RangedItemModelProperties {
     private static float getCrossbowPullProperty(ItemStack stack, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity == null || CrossbowItem.isCharged(stack)) {
             return 0.0F;
-        } else if(stack.getItem() instanceof CrossbowGear) {
+        } else if (stack.getItem() instanceof CrossbowGear) {
             return (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
                     / getModdedCrossbowChargeTime(livingEntity, stack);
         } else {
@@ -90,7 +90,7 @@ public class RangedItemModelProperties {
     private static float getBowPullProperty(ItemStack stack, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity == null || livingEntity.getUseItem() != stack) {
             return 0.0F;
-        }else{
+        } else {
             return (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
                     / RangedAttackHelper.getBowChargeTime(livingEntity, livingEntity.getUseItem());
         }

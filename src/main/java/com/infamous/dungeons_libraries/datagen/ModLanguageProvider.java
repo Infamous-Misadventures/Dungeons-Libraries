@@ -24,10 +24,9 @@ public class ModLanguageProvider extends LanguageProvider {
 
     private String getNameFromId(String idString) {
         StringBuilder sb = new StringBuilder();
-        for(String word : idString.toLowerCase().split("_") )
-        {
-            sb.append(word.substring(0,1).toUpperCase() );
-            sb.append(word.substring(1) );
+        for (String word : idString.toLowerCase().split("_")) {
+            sb.append(word.substring(0, 1).toUpperCase());
+            sb.append(word.substring(1));
             sb.append(" ");
         }
         return sb.toString().trim();

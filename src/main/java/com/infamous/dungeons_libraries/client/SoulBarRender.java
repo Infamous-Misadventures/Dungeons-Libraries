@@ -35,13 +35,13 @@ public class SoulBarRender {
 
         if (event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type()) && mc.getCameraEntity() instanceof Player) {
             GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "soul_bar"));
-            if(guiElementConfig.isHidden()) return;
+            if (guiElementConfig.isHidden()) return;
             //draw souls
             RenderSystem.setShaderTexture(0, SOUL_BAR_RESOURCE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             Player renderPlayer = (Player) mc.getCameraEntity();
-            if(renderPlayer == null) return;
+            if (renderPlayer == null) return;
             SoulCaster soulCasterCapability = SoulCasterHelper.getSoulCasterCapability(renderPlayer);
 
             float souls = soulCasterCapability.getSouls();
@@ -66,7 +66,7 @@ public class SoulBarRender {
             if (souls > 0) {
                 mc.getProfiler().push("soulLevel");
                 String soulLevel = "" + souls;
-                int baseXPos = xPos + (guiElementConfig.getSizeX() / 2) - (mc.font.width(soulLevel) / 2) ;
+                int baseXPos = xPos + (guiElementConfig.getSizeX() / 2) - (mc.font.width(soulLevel) / 2);
                 int baseYPos = scaledHeight - guiElementConfig.getSizeY() - mc.font.lineHeight;
                 GuiComponent.drawString(matrixStack, mc.font, soulLevel, baseXPos, baseYPos, SOUL_LEVEL_COLOR);
                 mc.getProfiler().pop();

@@ -16,9 +16,9 @@ public class GearConfigAttributeModifier {
             ATTRIBUTE_MODIFIER_OPERATION_CODEC.fieldOf("operation").forGetter(GearConfigAttributeModifier::getOperation)
     ).apply(instance, GearConfigAttributeModifier::new));
 
-    private ResourceLocation attributeResourceLocation;
-    private double amount;
-    private AttributeModifier.Operation operation;
+    private final ResourceLocation attributeResourceLocation;
+    private final double amount;
+    private final AttributeModifier.Operation operation;
 
     public GearConfigAttributeModifier(ResourceLocation attributeResourceLocation, double amount, AttributeModifier.Operation operation) {
         this.attributeResourceLocation = attributeResourceLocation;

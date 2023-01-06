@@ -18,31 +18,31 @@ import java.util.stream.Collectors;
 import static com.infamous.dungeons_libraries.items.GearConfigReloadListener.reloadAllItems;
 
 public class WeaponMaterialSyncPacket {
-    	private static final Codec<Map<ResourceLocation, Tier>> MAPPER =
-			Codec.unboundedMap(ResourceLocation.CODEC, DungeonsWeaponMaterial.CODEC);
+    private static final Codec<Map<ResourceLocation, Tier>> MAPPER =
+            Codec.unboundedMap(ResourceLocation.CODEC, DungeonsWeaponMaterial.CODEC);
 
-	public final Map<ResourceLocation, Tier> data;
+    public final Map<ResourceLocation, Tier> data;
 
-	public WeaponMaterialSyncPacket(Map<ResourceLocation, Tier> data) {
-		this.data = data.entrySet().stream().filter(entry -> entry.getValue() instanceof DungeonsWeaponMaterial).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
+    public WeaponMaterialSyncPacket(Map<ResourceLocation, Tier> data) {
+        this.data = data.entrySet().stream().filter(entry -> entry.getValue() instanceof DungeonsWeaponMaterial).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 
-	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeNbt((CompoundTag) (MAPPER.encodeStart(NbtOps.INSTANCE, this.data).result().orElse(new CompoundTag())));
-	}
+    public void encode(FriendlyByteBuf buffer) {
+        buffer.writeNbt((CompoundTag) (MAPPER.encodeStart(NbtOps.INSTANCE, this.data).result().orElse(new CompoundTag())));
+    }
 
-	public static WeaponMaterialSyncPacket decode(FriendlyByteBuf buffer) {
-		return new WeaponMaterialSyncPacket(MAPPER.parse(NbtOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
-	}
+    public static WeaponMaterialSyncPacket decode(FriendlyByteBuf buffer) {
+        return new WeaponMaterialSyncPacket(MAPPER.parse(NbtOps.INSTANCE, buffer.readNbt()).result().orElse(new HashMap<>()));
+    }
 
-	public void onPacketReceived(Supplier<NetworkEvent.Context> contextGetter) {
-		NetworkEvent.Context context = contextGetter.get();
-		context.enqueueWork(this::handlePacketOnMainThread);
-		context.setPacketHandled(true);
-	}
+    public void onPacketReceived(Supplier<NetworkEvent.Context> contextGetter) {
+        NetworkEvent.Context context = contextGetter.get();
+        context.enqueueWork(this::handlePacketOnMainThread);
+        context.setPacketHandled(true);
+    }
 
-	private void handlePacketOnMainThread() {
-		WeaponMaterials.WEAPON_MATERIALS.setData(this.data);
-		reloadAllItems();
-	}
+    private void handlePacketOnMainThread() {
+        WeaponMaterials.WEAPON_MATERIALS.setData(this.data);
+        reloadAllItems();
+    }
 }

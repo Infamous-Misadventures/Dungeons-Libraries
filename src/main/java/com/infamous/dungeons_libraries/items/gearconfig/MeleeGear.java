@@ -48,14 +48,14 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     }
 
     @Override
-    public void reload(){
+    public void reload() {
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         Tier material = meleeGearConfig.getWeaponMaterial();
-        ((ItemAccessor)this).setMaxDamage(material.getUses());
+        ((ItemAccessor) this).setMaxDamage(material.getUses());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-            if(attribute != null) {
+            if (attribute != null) {
                 UUID uuid = randomUUID();
                 if (ATTACK_DAMAGE.equals(attribute)) {
                     uuid = BASE_ATTACK_DAMAGE_UUID;
@@ -90,22 +90,20 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag)
-    {
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, world, list, flag);
         DescriptionHelper.addFullDescription(list, stack);
     }
 
     @Override
-    public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker)
-    {
+    public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
         return this.getGearConfig().isDisablesShield();
     }
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.hurtAndBreak(1, attacker, MojankHelper::hurtEnemyBroadcastBreakEvent);
-        if(attacker.getAttributeBaseValue(ATTACK_SPEED) >= -1.0) {
+        if (attacker.getAttributeBaseValue(ATTACK_SPEED) >= -1.0) {
             target.invulnerableTime = 0;
         }
         return true;

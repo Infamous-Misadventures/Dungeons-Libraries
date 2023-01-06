@@ -19,7 +19,7 @@ public class DungeonsLibrariesConfig {
 
     public static class Common {
 
-        public Common(ForgeConfigSpec.Builder builder){
+        public Common(ForgeConfigSpec.Builder builder) {
 
             builder.comment("Combat Configuration").push("combat_configuration");
             ENABLE_AREA_OF_EFFECT_ON_OTHER_PLAYERS = builder

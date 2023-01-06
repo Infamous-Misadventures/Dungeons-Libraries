@@ -24,7 +24,7 @@ public class Master implements INBTSerializable<CompoundTag> {
     private List<UUID> summonedMobsUUID = new ArrayList<>();
     private ResourceLocation levelOnLoad;
     private Set<Entity> otherMinions;
-    private List<UUID> otherMinionsUUID = new ArrayList<>();
+    private final List<UUID> otherMinionsUUID = new ArrayList<>();
 
     public void copyFrom(Master summoner) {
         this.setSummonedMobs(summoner.getSummonedMobs());
@@ -42,7 +42,7 @@ public class Master implements INBTSerializable<CompoundTag> {
         return new ArrayList<>(this.summonedMobs);
     }
 
-    public int getSummonedMobsCost(){
+    public int getSummonedMobsCost() {
         return this.getSummonedMobs().stream().map(entity -> SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).getCost()).reduce(0, Integer::sum);
     }
 
@@ -78,16 +78,16 @@ public class Master implements INBTSerializable<CompoundTag> {
     }
 
     private Set<Entity> initEntities(Set<Entity> entities, List<UUID> entityUUIDs) {
-        if(entities != null) return entities;
-        if(entityUUIDs != null && this.levelOnLoad != null){
-            if(entityUUIDs.isEmpty()) return new HashSet<>();
+        if (entities != null) return entities;
+        if (entityUUIDs != null && this.levelOnLoad != null) {
+            if (entityUUIDs.isEmpty()) return new HashSet<>();
             ResourceKey<Level> registrykey1 = ResourceKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             ServerLevel world = server.getLevel(registrykey1);
             if (world != null) {
                 entities = entityUUIDs.stream().map(world::getEntity).filter(Objects::nonNull).collect(Collectors.toSet());
             }
-        }else{
+        } else {
             return new HashSet<>();
         }
         return new HashSet<>(entities);
@@ -116,10 +116,10 @@ public class Master implements INBTSerializable<CompoundTag> {
             minions.add(minion);
         });
         nbt.put("minions", minions);
-        if(!this.getSummonedMobs().isEmpty()){
+        if (!this.getSummonedMobs().isEmpty()) {
             ResourceLocation location = this.getSummonedMobs().get(0).level.dimension().location();
             nbt.putString(LEVEL_KEY, location.toString());
-        }else if(!this.getOtherMinions().isEmpty()){
+        } else if (!this.getOtherMinions().isEmpty()) {
             ResourceLocation location = this.getOtherMinions().get(0).level.dimension().location();
             nbt.putString(LEVEL_KEY, location.toString());
         }
@@ -130,18 +130,18 @@ public class Master implements INBTSerializable<CompoundTag> {
     public void deserializeNBT(CompoundTag tag) {
         ListTag listNBT = tag.getList("summoned", 10);
         List<UUID> summonedUUIDs = new ArrayList<>();
-        for(int i = 0; i < listNBT.size(); ++i) {
+        for (int i = 0; i < listNBT.size(); ++i) {
             CompoundTag compoundnbt = listNBT.getCompound(i);
             summonedUUIDs.add(compoundnbt.getUUID("uuid"));
         }
         this.setSummonedMobsUUID(summonedUUIDs);
         ListTag minionsNBT = tag.getList("minions", 10);
         List<UUID> minionUUIDs = new ArrayList<>();
-        for(int i = 0; i < minionsNBT.size(); ++i) {
+        for (int i = 0; i < minionsNBT.size(); ++i) {
             CompoundTag compoundnbt = minionsNBT.getCompound(i);
             minionUUIDs.add(compoundnbt.getUUID("uuid"));
         }
-        if(tag.contains(LEVEL_KEY)) {
+        if (tag.contains(LEVEL_KEY)) {
             this.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
         }
     }

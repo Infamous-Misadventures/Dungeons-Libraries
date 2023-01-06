@@ -40,7 +40,7 @@ public class AttacherPlayerRewards {
     }
 
     public static void attach(final AttachCapabilitiesEvent<Entity> event) {
-        if(event.getObject() instanceof ServerPlayer) {
+        if (event.getObject() instanceof ServerPlayer) {
             final AttacherPlayerRewards.PlayerRewardsProvider provider = new AttacherPlayerRewards.PlayerRewardsProvider();
             event.addCapability(AttacherPlayerRewards.PlayerRewardsProvider.IDENTIFIER, provider);
         }

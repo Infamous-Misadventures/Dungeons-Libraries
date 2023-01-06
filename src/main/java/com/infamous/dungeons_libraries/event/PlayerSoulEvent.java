@@ -32,11 +32,9 @@ import net.minecraftforge.eventbus.api.Cancelable;
  * <br>
  * All children of this event are fired on the {@link MinecraftForge#EVENT_BUS}.
  */
-public class PlayerSoulEvent extends PlayerEvent
-{
+public class PlayerSoulEvent extends PlayerEvent {
 
-    public PlayerSoulEvent(Player player)
-    {
+    public PlayerSoulEvent(Player player) {
         super(player);
     }
 
@@ -45,19 +43,16 @@ public class PlayerSoulEvent extends PlayerEvent
      * It can be cancelled, and no further processing will be done.
      */
     @Cancelable
-    public static class PickupSoul extends PlayerSoulEvent
-    {
+    public static class PickupSoul extends PlayerSoulEvent {
 
         private final SoulOrbEntity orb;
 
-        public PickupSoul(Player player, SoulOrbEntity orb)
-        {
+        public PickupSoul(Player player, SoulOrbEntity orb) {
             super(player);
             this.orb = orb;
         }
 
-        public SoulOrbEntity getOrb()
-        {
+        public SoulOrbEntity getOrb() {
             return orb;
         }
 

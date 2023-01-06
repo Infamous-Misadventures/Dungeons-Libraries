@@ -29,7 +29,7 @@ public class Minion implements INBTSerializable<CompoundTag> {
     private boolean goalsAdded = false;
 
     public LivingEntity getMaster() {
-        if(this.master == null && this.masterUUID != null && this.levelOnLoad != null){
+        if (this.master == null && this.masterUUID != null && this.levelOnLoad != null) {
             ResourceKey<Level> registrykey1 = ResourceKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             ServerLevel world = server.getLevel(registrykey1);
@@ -45,10 +45,10 @@ public class Minion implements INBTSerializable<CompoundTag> {
 
     public void setMaster(LivingEntity master) {
         this.master = master;
-        if(master != null){
+        if (master != null) {
             this.masterUUID = master.getUUID();
             this.levelOnLoad = master.level.dimension().location();
-        }else{
+        } else {
             this.masterUUID = null;
             this.levelOnLoad = null;
         }
@@ -120,7 +120,7 @@ public class Minion implements INBTSerializable<CompoundTag> {
             return new CompoundTag();
         }
         CompoundTag tag = new CompoundTag();
-        if(this.getMaster() != null){
+        if (this.getMaster() != null) {
             tag.putUUID(MASTER_KEY, this.getMaster().getUUID());
             ResourceLocation location = this.getMaster().level.dimension().location();
             tag.putString(LEVEL_KEY, location.toString());
@@ -134,22 +134,22 @@ public class Minion implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        if(tag.hasUUID(MASTER_KEY)){
+        if (tag.hasUUID(MASTER_KEY)) {
             this.setMasterUUID(tag.getUUID(MASTER_KEY));
         }
-        if(tag.contains(LEVEL_KEY)) {
+        if (tag.contains(LEVEL_KEY)) {
             this.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
         }
-        if(tag.contains(SUMMON_FLAG_KEY)){
+        if (tag.contains(SUMMON_FLAG_KEY)) {
             this.setSummon(tag.getBoolean(SUMMON_FLAG_KEY));
         }
-        if(tag.contains(TEMPORARY_FLAG_KEY)){
+        if (tag.contains(TEMPORARY_FLAG_KEY)) {
             this.setTemporary(tag.getBoolean(TEMPORARY_FLAG_KEY));
         }
-        if(tag.contains(REVERTS_ON_EXPIRATION_FLAG_KEY)){
+        if (tag.contains(REVERTS_ON_EXPIRATION_FLAG_KEY)) {
             this.setRevertsOnExpiration(tag.getBoolean(REVERTS_ON_EXPIRATION_FLAG_KEY));
         }
-        if(tag.contains(MINION_TIMER_KEY)){
+        if (tag.contains(MINION_TIMER_KEY)) {
             this.setMinionTimer(tag.getInt(MINION_TIMER_KEY));
         }
     }

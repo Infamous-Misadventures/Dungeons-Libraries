@@ -31,6 +31,7 @@ public class GearConfigReloadListener implements ResourceManagerReloadListener {
         event.addListener(ARTIFACT_GEAR_CONFIGS);
         event.addListener(new GearConfigReloadListener());
     }
+
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
         reloadAllItems();

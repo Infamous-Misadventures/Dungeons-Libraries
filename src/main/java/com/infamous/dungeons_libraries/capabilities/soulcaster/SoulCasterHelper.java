@@ -9,10 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
-
-import javax.annotation.Nullable;
 
 import static com.infamous.dungeons_libraries.capabilities.ModCapabilities.SOUL_CASTER_CAPABILITY;
 
@@ -37,10 +34,10 @@ public class SoulCasterHelper {
     }
 
     public static boolean consumeSouls(LivingEntity le, float amount) {
-        if(le instanceof Player && ((Player) le).isCreative()) return true;
+        if (le instanceof Player && ((Player) le).isCreative()) return true;
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
 
-        if(soulCasterCapability.getSouls() < amount) return false;
+        if (soulCasterCapability.getSouls() < amount) return false;
         float newAmount = soulCasterCapability.getSouls() - amount;
         soulCasterCapability.setSouls(newAmount, le);
         if (le instanceof ServerPlayer) {
@@ -50,19 +47,18 @@ public class SoulCasterHelper {
     }
 
     public static boolean canConsumeSouls(LivingEntity le, ItemStack itemStack) {
-        if(le instanceof Player && ((Player) le).isCreative()) return true;
+        if (le instanceof Player && ((Player) le).isCreative()) return true;
         SoulCaster soulCasterCapability = getSoulCasterCapability(le);
 
         Item item = itemStack.getItem();
-        if(item instanceof ISoulConsumer) {
+        if (item instanceof ISoulConsumer) {
             ISoulConsumer soulConsumer = (ISoulConsumer) item;
             return soulCasterCapability.getSouls() > soulConsumer.getActivationCost(itemStack);
         }
         return false;
     }
 
-    public static SoulCaster getSoulCasterCapability(Entity entity)
-    {
+    public static SoulCaster getSoulCasterCapability(Entity entity) {
         return entity.getCapability(SOUL_CASTER_CAPABILITY).orElse(new SoulCaster());
     }
 }

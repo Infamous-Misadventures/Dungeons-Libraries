@@ -13,8 +13,7 @@ public abstract class ArtifactEvent extends LivingEvent {
         this.itemStack = itemStack;
     }
 
-    public static class Activated extends ArtifactEvent
-    {
+    public static class Activated extends ArtifactEvent {
         public Activated(LivingEntity entity, ItemStack itemStack) {
             super(entity, itemStack);
         }

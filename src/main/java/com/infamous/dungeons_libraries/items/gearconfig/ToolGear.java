@@ -8,10 +8,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Set;
-
-import net.minecraft.world.item.Item.Properties;
-
 public class ToolGear extends MeleeGear {
     private final TagKey<Block> blocks;
 
@@ -37,7 +33,7 @@ public class ToolGear extends MeleeGear {
         } else if (i < 2 && p_150816_.is(BlockTags.NEEDS_IRON_TOOL)) {
             return false;
         } else {
-            return i < 1 && p_150816_.is(BlockTags.NEEDS_STONE_TOOL) ? false : p_150816_.is(this.blocks);
+            return (i >= 1 || !p_150816_.is(BlockTags.NEEDS_STONE_TOOL)) && p_150816_.is(this.blocks);
         }
     }
 

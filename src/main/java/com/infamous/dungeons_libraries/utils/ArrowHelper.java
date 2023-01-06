@@ -71,7 +71,7 @@ public class ArrowHelper {
 //        }
     }
 
-    public static boolean hasEnchantment(ItemStack stack, Enchantment enchantment){
+    public static boolean hasEnchantment(ItemStack stack, Enchantment enchantment) {
         return enchantment != null && EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack) > 0;
     }
 
@@ -84,32 +84,28 @@ public class ArrowHelper {
     }
 
     public static boolean arrowHitLivingEntity(HitResult hitResult) {
-        if(hitResult instanceof EntityHitResult){
-            EntityHitResult entityHitResult = (EntityHitResult)hitResult;
-            if(entityHitResult.getEntity() instanceof LivingEntity){
-                return true;
-            } else{
-                return false;
-            }
-        } else{
+        if (hitResult instanceof EntityHitResult) {
+            EntityHitResult entityHitResult = (EntityHitResult) hitResult;
+            return entityHitResult.getEntity() instanceof LivingEntity;
+        } else {
             return false;
         }
     }
 
     public static boolean arrowHitMob(HitResult hitResult) {
-        if(hitResult instanceof EntityHitResult entityHitResult){
+        if (hitResult instanceof EntityHitResult entityHitResult) {
             return entityHitResult.getEntity() instanceof Mob;
-        } else{
+        } else {
             return false;
         }
     }
 
-    public static void addEnchantmentTagsToArrow(ItemStack itemStack, Projectile projectileEntity){
+    public static void addEnchantmentTagsToArrow(ItemStack itemStack, Projectile projectileEntity) {
         EnchantedProjectile cap = EnchantedProjectileHelper.getEnchantedProjectileCapability(projectileEntity);
         cap.setEnchantments(itemStack);
     }
 
-    public static int enchantmentTagToLevel(Projectile projectileEntity, Enchantment enchantment){
+    public static int enchantmentTagToLevel(Projectile projectileEntity, Enchantment enchantment) {
         EnchantedProjectile cap = EnchantedProjectileHelper.getEnchantedProjectileCapability(projectileEntity);
         return cap.getEnchantmentLevel(enchantment);
     }

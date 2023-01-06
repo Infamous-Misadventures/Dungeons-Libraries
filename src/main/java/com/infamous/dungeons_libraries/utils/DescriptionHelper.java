@@ -41,22 +41,22 @@ public class DescriptionHelper {
         });
     }
 
-    public static void addArtifactDescription(List<Component> list, ItemStack itemStack){
+    public static void addArtifactDescription(List<Component> list, ItemStack itemStack) {
         ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
-        if(registryName == null) return;
+        if (registryName == null) return;
         addLoreDescription(list, registryName);
         addArtifactInfo(list, itemStack);
         addArtifactAttributeInfo(list, itemStack);
     }
 
     private static void addArtifactAttributeInfo(List<Component> list, ItemStack itemStack) {
-        if(!(itemStack.getItem() instanceof ArtifactItem artifactItem)) return;
+        if (!(itemStack.getItem() instanceof ArtifactItem artifactItem)) return;
         Multimap<Attribute, AttributeModifier> multimap = artifactItem.getDefaultAttributeModifiers(0);
         if (!multimap.isEmpty()) {
             list.add(CommonComponents.EMPTY);
             list.add(Component.translatable("item.modifiers.artifact").withStyle(ChatFormatting.GRAY));
 
-            for(Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
+            for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                 AttributeModifier attributemodifier = entry.getValue();
                 double d0 = attributemodifier.getAmount();
 
@@ -85,26 +85,26 @@ public class DescriptionHelper {
         if (itemStack.getItem() instanceof ArtifactItem) {
 
             list.add(Component.translatable(
-                    "artifact.dungeons_libraries.base")
+                            "artifact.dungeons_libraries.base")
                     .withStyle(ChatFormatting.DARK_AQUA));
 
             ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
             list.add(Component.translatable(
-                    "ability." + registryName.getNamespace() + "." + registryName.getPath())
+                            "ability." + registryName.getNamespace() + "." + registryName.getPath())
                     .withStyle(ChatFormatting.GREEN));
 
             ArtifactItem artifactItem = (ArtifactItem) itemStack.getItem();
             int durationInSeconds = artifactItem.getDurationInSeconds();
             int cooldownInSeconds = artifactItem.getCooldownInSeconds();
 
-            if(durationInSeconds > 0) {
+            if (durationInSeconds > 0) {
                 list.add(Component.translatable(
-                        "artifact.dungeons_libraries.duration", durationInSeconds)
+                                "artifact.dungeons_libraries.duration", durationInSeconds)
                         .withStyle(ChatFormatting.BLUE));
             }
-            if(cooldownInSeconds > 0) {
+            if (cooldownInSeconds > 0) {
                 list.add(Component.translatable(
-                        "artifact.dungeons_libraries.cooldown", cooldownInSeconds)
+                                "artifact.dungeons_libraries.cooldown", cooldownInSeconds)
                         .withStyle(ChatFormatting.BLUE));
             }
         }
@@ -117,7 +117,7 @@ public class DescriptionHelper {
 
     public static void addLoreDescription(List<Component> list, ResourceLocation registryName) {
         list.add(Component.translatable(
-                "lore." + registryName.getNamespace() + "." + registryName.getPath())
+                        "lore." + registryName.getNamespace() + "." + registryName.getPath())
                 .withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC));
     }
 
