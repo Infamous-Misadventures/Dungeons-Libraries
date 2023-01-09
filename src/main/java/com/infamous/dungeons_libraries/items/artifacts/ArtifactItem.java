@@ -25,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
+import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
@@ -62,6 +63,11 @@ public abstract class ArtifactItem extends Item implements ICurioItem, IReloadab
             }
         });
         this.defaultModifiers = builder.build();
+    }
+
+    @Override
+    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
+        return true;
     }
 
     public static void putArtifactOnCooldown(Player playerIn, Item item) {
