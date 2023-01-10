@@ -4,7 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.UUID;
 
 public class GearConfigAttributeModifier {
 
@@ -36,5 +40,13 @@ public class GearConfigAttributeModifier {
 
     public AttributeModifier.Operation getOperation() {
         return operation;
+    }
+
+    public AttributeModifier toAttributeModifier(UUID uuid, String name){
+        return new AttributeModifier(uuid, name, amount, operation);
+    }
+
+    public Attribute getAttribute(){
+        return ForgeRegistries.ATTRIBUTES.getValue(attributeResourceLocation);
     }
 }

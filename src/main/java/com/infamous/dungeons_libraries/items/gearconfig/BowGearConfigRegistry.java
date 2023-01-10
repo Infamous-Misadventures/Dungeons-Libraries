@@ -9,7 +9,6 @@ import java.util.Map;
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 public class BowGearConfigRegistry {
-    public static final ResourceLocation GEAR_CONFIG_BUILTIN_RESOURCELOCATION = new ResourceLocation(MODID, "gear_config");
 
     public static final CodecJsonDataManager<BowGearConfig> BOW_GEAR_CONFIGS = new CodecJsonDataManager<>("gearconfig/bow", BowGearConfig.CODEC);
 

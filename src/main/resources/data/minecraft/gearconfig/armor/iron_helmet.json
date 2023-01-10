@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "attribute": "minecraft:generic.attack_damage",
+      "amount": 2,
+      "operation": 1
+    }
+  ],
+  "built_in_enchantments": [],
+  "material": "minecraft:netherite",
+  "unique": false,
+  "rarity": "UNCOMMON"
+}
