@@ -24,11 +24,15 @@ import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.LIFE_S
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.MAGIC_DAMAGE_MULTIPLIER;
 import static com.infamous.dungeons_libraries.items.gearconfig.BowGearConfig.DEFAULT;
 import static java.util.UUID.randomUUID;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class ItemEvents {
     private static final UUID[] ARMOR_MODIFIER_UUID_PER_SLOT = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+    protected static final UUID BASE_ATTACK_DAMAGE_UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+    protected static final UUID BASE_ATTACK_SPEED_UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
     @SubscribeEvent
     public static void onMagicDamage(LivingDamageEvent event) {
@@ -98,6 +102,22 @@ public class ItemEvents {
                 Attribute attribute = gearAttributeModifier.getAttribute();
                 if(attribute != null){
                     event.addModifier(attribute, gearAttributeModifier.toAttributeModifier(uuid, "Armor modifier"));
+                }
+            });
+        }else if(event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND) {
+            MeleeGearConfig meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+            if (meleeGearConfig == MeleeGearConfig.DEFAULT) return;
+            event.clearModifiers();
+            meleeGearConfig.getAttributes().forEach(attributeModifier -> {
+                Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+                if (attribute != null) {
+                    UUID uuid = randomUUID();
+                    if (ATTACK_DAMAGE.equals(attribute)) {
+                        uuid = BASE_ATTACK_DAMAGE_UUID;
+                    } else if (ATTACK_SPEED.equals(attribute)) {
+                        uuid = BASE_ATTACK_SPEED_UUID;
+                    }
+                    event.addModifier(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
                 }
             });
         }
