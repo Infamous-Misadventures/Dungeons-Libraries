@@ -14,19 +14,18 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static net.minecraft.world.item.enchantment.EnchantmentHelper.getEnchantmentId;
 
 @Mixin(EnchantmentHelper.class)
 public abstract class EnchantmentHelperMixin {
-
-    private static Optional<Enchantment> enchantmentOnIteration = null;
-    private static ItemStack itemStackOnIteration = null;
 
     @Inject(method = "getItemEnchantmentLevel(Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/item/ItemStack;)I",
             at = @At(value = "RETURN", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
@@ -52,30 +51,21 @@ public abstract class EnchantmentHelperMixin {
         cir.setReturnValue(currentLvl + reduce);
     }
 
-    @Inject(method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
-            at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentId(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/resources/ResourceLocation;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void dungeonslibraries_runIterationOnItemCapture(EnchantmentHelper.EnchantmentVisitor p_77518_0_, ItemStack p_77518_1_, CallbackInfo ci, ListTag listNBT, int i, CompoundTag compoundtag) {
-        enchantmentOnIteration = Registry.ENCHANTMENT.getOptional(getEnchantmentId(compoundtag));
-        itemStackOnIteration = p_77518_1_;
-    }
-
-    @Inject(
-            method = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/nbt/CompoundTag;)I",
-            at = @At(value = "RETURN"), cancellable = true)
-    private static void dungeonslibraries_runIterationOnItem(CompoundTag value, CallbackInfoReturnable<Integer> cir) {
-        if (itemStackOnIteration == null) {
-            return;
-        }
-        BuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStackOnIteration);
-        if (enchantmentOnIteration != null && enchantmentOnIteration.isPresent()) {
+    @Redirect(
+            method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V")
+    )
+    private static void dungeonslibraries_runIterationOnItem2(Optional<Enchantment> instance, Consumer<Enchantment> action, EnchantmentHelper.EnchantmentVisitor visitor, ItemStack itemStack) {
+        BuiltInEnchantments cap = BuiltInEnchantmentsHelper.getBuiltInEnchantmentsCapability(itemStack);
+        if (instance.isPresent()) {
             Integer reduce = cap.getAllBuiltInEnchantmentInstances().stream()
-                    .filter(enchantmentInstance -> enchantmentInstance.enchantment == enchantmentOnIteration.get())
+                    .filter(enchantmentInstance -> enchantmentInstance.enchantment == instance.get())
                     .map(enchantmentInstance -> enchantmentInstance.level)
                     .reduce(0, Integer::sum);
-            cir.setReturnValue(reduce + cir.getReturnValue());
+            visitor.accept(instance.get(), EnchantmentHelper.getItemEnchantmentLevel(instance.get(), itemStack) + reduce);
         }
-        enchantmentOnIteration = null;
-        itemStackOnIteration = null;
     }
 
     @Inject(method = "runIterationOnItem(Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentVisitor;Lnet/minecraft/world/item/ItemStack;)V",
