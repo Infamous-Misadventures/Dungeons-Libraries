@@ -13,5 +13,6 @@ public class CommandEvents {
     public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
         SoulsCommand.register(commandDispatcher);
+        SummonEliteCommand.register(commandDispatcher);
     }
 }
