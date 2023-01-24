@@ -56,8 +56,8 @@ public class AbilityHelper {
     private static boolean isEntityBlacklisted(LivingEntity origin, LivingEntity target) {
         if(target.getType().equals(ARMOR_STAND)) return true;
         return (origin instanceof PlayerEntity && !target.getClassification(false).equals(EntityClassification.MONSTER)
-                && !DungeonsLibrariesConfig.ENEMY_WHITELIST.get().contains(ForgeRegistries.ENTITIES.getKey(target.getType()).toString()))
-                || (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(target.getType()).toString()));
+                && (!DungeonsLibrariesConfig.ENEMY_WHITELIST.get().contains(ForgeRegistries.ENTITIES.getKey(target.getType()).toString()))
+                || (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(target.getType()).toString())));
     }
 
     private static boolean isAliveAndCanBeSeen(LivingEntity nearbyEntity, LivingEntity attacker) {
