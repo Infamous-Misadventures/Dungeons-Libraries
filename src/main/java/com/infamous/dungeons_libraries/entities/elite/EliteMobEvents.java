@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import static java.util.UUID.randomUUID;
 import static net.minecraftforge.registries.ForgeRegistries.ATTRIBUTES;
@@ -40,36 +41,56 @@ public class EliteMobEvents {
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide() && event.getEntity() instanceof LivingEntity && DungeonsLibrariesConfig.ENABLE_ELITE_MOBS.get()) {
-            LivingEntity entity = (LivingEntity) event.getEntity();
-            EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
-            EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
-            Level level = event.getWorld();
-            if (!cap.hasSpawned() && config != null) {
-                LevelChunk chunk = level.getChunkSource().getChunkNow(entity.blockPosition().getX() >> 4, entity.blockPosition().getZ() >> 4);
-                if (chunk != null && chunk.getStatus().isOrAfter(ChunkStatus.FULL)
-                        && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()){
-                    setItemSlot(entity, EquipmentSlot.HEAD, config.getHeadItem());
-                    setItemSlot(entity, EquipmentSlot.CHEST, config.getChestItem());
-                    setItemSlot(entity, EquipmentSlot.LEGS, config.getLegsItem());
-                    setItemSlot(entity, EquipmentSlot.FEET, config.getFeetItem());
-                    setItemSlot(entity, EquipmentSlot.MAINHAND, config.getHandItem());
-                    setItemSlot(entity, EquipmentSlot.OFFHAND, config.getOffhandItem());
-                    ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-                    config.getAttributes().forEach(attributeModifier -> {
-                        Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-                        if (attribute != null) {
-                            builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
-                        }
-                    });
-                    entity.getAttributes().addTransientAttributeModifiers(builder.build());
-                    cap.setElite(true);
-                    cap.setTexture(config.getTexture());
-                }
-            }
-            cap.setHasSpawned(true);
+        Level level = event.getWorld();
+        if (!level.isClientSide() && event.getEntity() instanceof LivingEntity entity && DungeonsLibrariesConfig.ENABLE_ELITE_MOBS.get()) {
+            makeEliteChance(level, entity);
         }
     }
+
+    public static void makeEliteChance(Level level, LivingEntity entity) {
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
+        EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(ForgeRegistries.ENTITIES.getKey(entity.getType()), entity.getRandom());
+        if (!cap.hasSpawned() && config != null) {
+            LevelChunk chunk = level.getChunkSource().getChunkNow(entity.blockPosition().getX() >> 4, entity.blockPosition().getZ() >> 4);
+            if (chunk != null && chunk.getStatus().isOrAfter(ChunkStatus.FULL)
+                    && entity.getRandom().nextFloat() < DungeonsLibrariesConfig.ELITE_MOBS_BASE_CHANCE.get() * level.getCurrentDifficultyAt(entity.blockPosition()).getSpecialMultiplier()) {
+                makeElite(entity, config);
+            }
+        }
+        cap.setHasSpawned(true);
+    }
+
+    public static void makeElite(LivingEntity entity) {
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
+        if(cap == null) return;
+        EliteMobConfig config = EliteMobConfigRegistry.getRandomConfig(entity.getType().getRegistryName(), entity.getRandom());
+        if (config != null) {
+            makeElite(entity, config);
+        }
+        cap.setHasSpawned(true);
+    }
+
+    private static void makeElite(LivingEntity entity, EliteMobConfig config) {
+        EliteMob cap = EliteMobHelper.getEliteMobCapability(entity);
+        if(cap == null) return;
+        setItemSlot(entity, EquipmentSlot.HEAD, config.getHeadItem());
+        setItemSlot(entity, EquipmentSlot.CHEST, config.getChestItem());
+        setItemSlot(entity, EquipmentSlot.LEGS, config.getLegsItem());
+        setItemSlot(entity, EquipmentSlot.FEET, config.getFeetItem());
+        setItemSlot(entity, EquipmentSlot.MAINHAND, config.getHandItem());
+        setItemSlot(entity, EquipmentSlot.OFFHAND, config.getOffhandItem());
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        config.getAttributes().forEach(attributeModifier -> {
+            Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+            if (attribute != null) {
+                builder.put(attribute, new AttributeModifier(randomUUID(), "Armor modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+            }
+        });
+        entity.getAttributes().addTransientAttributeModifiers(builder.build());
+        cap.setElite(true);
+        cap.setTexture(config.getTexture());
+    }
+
 
     private static void setItemSlot(LivingEntity entity, EquipmentSlot slotType, ItemStack item) {
         if(!item.equals(ItemStack.EMPTY)) {
