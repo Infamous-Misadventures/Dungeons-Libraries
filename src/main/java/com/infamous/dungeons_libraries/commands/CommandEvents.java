@@ -14,5 +14,6 @@ public class CommandEvents {
         CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
         MobEnchantmentCommand.register(commandDispatcher);
         SoulsCommand.register(commandDispatcher);
+        SummonEliteCommand.register(commandDispatcher);
     }
 }
