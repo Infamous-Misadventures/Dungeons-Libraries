@@ -26,9 +26,9 @@ SOFTWARE.
 
 package com.infamous.dungeons_libraries.data.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
