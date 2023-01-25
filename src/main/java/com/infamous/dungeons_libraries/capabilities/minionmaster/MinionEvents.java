@@ -1,12 +1,14 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import com.infamous.dungeons_libraries.utils.AbilityHelper;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -22,6 +24,35 @@ import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMa
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class MinionEvents {
+
+    private static ArmorStand DUMMY_TARGET;
+
+    @SubscribeEvent
+    public static void onSetAttackTarget(LivingChangeTargetEvent event) {
+        LivingEntity attacker = event.getEntity();
+        Level level = attacker.level;
+        LivingEntity target = event.getNewTarget();
+        if (attacker instanceof Mob && target instanceof Mob) {
+            if (AbilityHelper.isAlly(attacker, target)) {
+                createDummyTarget(level);
+                if (attacker instanceof NeutralMob) {
+                    ((NeutralMob) attacker).setPersistentAngerTarget(null);
+                    ((NeutralMob) attacker).setRemainingPersistentAngerTime(0);
+                }
+                ((Mob) attacker).setTarget(DUMMY_TARGET);
+                attacker.setLastHurtByMob(DUMMY_TARGET);
+            }
+        }
+    }
+
+    private static void createDummyTarget(Level level) {
+        if (DUMMY_TARGET == null) {
+            DUMMY_TARGET = EntityType.ARMOR_STAND.create(level);
+            if (DUMMY_TARGET != null) {
+                DUMMY_TARGET.remove(Entity.RemovalReason.DISCARDED);
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event) {
