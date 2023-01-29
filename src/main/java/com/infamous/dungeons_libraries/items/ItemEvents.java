@@ -67,59 +67,59 @@ public class ItemEvents {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onItemAttributeModifierEvent(ItemAttributeModifierEvent event){
-        Item item = event.getItemStack().getItem();
-        if(item instanceof BowItem && (event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND)){
-            BowGearConfig config = BowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
-            if(config != BowGearConfig.DEFAULT){
-                event.clearModifiers();
-                UUID uuid = randomUUID();
-                config.getAttributes().forEach((gearAttributeModifier) -> {
-                        event.addModifier(gearAttributeModifier.getAttribute(), gearAttributeModifier.toAttributeModifier(uuid, "bow modifier"));
-                });
-            }
-        }else if(item instanceof CrossbowItem && (event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND)){
-            BowGearConfig config = CrossbowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
-            if(config != BowGearConfig.DEFAULT){
-                event.clearModifiers();
-                UUID uuid = randomUUID();
-                config.getAttributes().forEach((gearAttributeModifier) -> {
-                    event.addModifier(gearAttributeModifier.getAttribute(), gearAttributeModifier.toAttributeModifier(uuid, "bow modifier"));
-                });
-            }
-        }else if(item instanceof ArmorItem && event.getSlotType() == ((ArmorItem) item).getSlot()){
-            ArmorGearConfig config = ArmorGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
-            if(config == ArmorGearConfig.DEFAULT) return;
-            event.clearModifiers();
-            ArmorMaterial material = config.getArmorMaterial();
-            UUID primaryUuid = ARMOR_MODIFIER_UUID_PER_SLOT[((ArmorItem) item).getSlot().getIndex()];
-            event.addModifier(Attributes.ARMOR, new AttributeModifier(primaryUuid, "Armor modifier", material.getDefenseForSlot(((ArmorItem) item).getSlot()), AttributeModifier.Operation.ADDITION));
-            event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(primaryUuid, "Armor toughness", material.getToughness(), AttributeModifier.Operation.ADDITION));
-            if (material.getKnockbackResistance() > 0) {
-                event.addModifier(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(primaryUuid, "Armor knockback resistance", material.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
-            }
-            config.getAttributes().forEach(gearAttributeModifier -> {
-                UUID uuid = randomUUID();
-                Attribute attribute = gearAttributeModifier.getAttribute();
-                if(attribute != null){
-                    event.addModifier(attribute, gearAttributeModifier.toAttributeModifier(uuid, "Armor modifier"));
-                }
-            });
-        }else if(event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND) {
-            MeleeGearConfig meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
-            if (meleeGearConfig == MeleeGearConfig.DEFAULT) return;
-            event.clearModifiers();
-            meleeGearConfig.getAttributes().forEach(attributeModifier -> {
-                Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
-                if (attribute != null) {
-                    UUID uuid = randomUUID();
-                    if (ATTACK_DAMAGE.equals(attribute)) {
-                        uuid = BASE_ATTACK_DAMAGE_UUID;
-                    } else if (ATTACK_SPEED.equals(attribute)) {
-                        uuid = BASE_ATTACK_SPEED_UUID;
-                    }
-                    event.addModifier(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
-                }
-            });
-        }
+//        Item item = event.getItemStack().getItem();
+//        if(item instanceof BowItem && (event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND)){
+//            BowGearConfig config = BowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            if(config != BowGearConfig.DEFAULT){
+//                event.clearModifiers();
+//                UUID uuid = randomUUID();
+//                config.getAttributes().forEach((gearAttributeModifier) -> {
+//                        event.addModifier(gearAttributeModifier.getAttribute(), gearAttributeModifier.toAttributeModifier(uuid, "bow modifier"));
+//                });
+//            }
+//        }else if(item instanceof CrossbowItem && (event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND)){
+//            BowGearConfig config = CrossbowGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            if(config != BowGearConfig.DEFAULT){
+//                event.clearModifiers();
+//                UUID uuid = randomUUID();
+//                config.getAttributes().forEach((gearAttributeModifier) -> {
+//                    event.addModifier(gearAttributeModifier.getAttribute(), gearAttributeModifier.toAttributeModifier(uuid, "bow modifier"));
+//                });
+//            }
+//        }else if(item instanceof ArmorItem && event.getSlotType() == ((ArmorItem) item).getSlot()){
+//            ArmorGearConfig config = ArmorGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            if(config == ArmorGearConfig.DEFAULT) return;
+//            event.clearModifiers();
+//            ArmorMaterial material = config.getArmorMaterial();
+//            UUID primaryUuid = ARMOR_MODIFIER_UUID_PER_SLOT[((ArmorItem) item).getSlot().getIndex()];
+//            event.addModifier(Attributes.ARMOR, new AttributeModifier(primaryUuid, "Armor modifier", material.getDefenseForSlot(((ArmorItem) item).getSlot()), AttributeModifier.Operation.ADDITION));
+//            event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(primaryUuid, "Armor toughness", material.getToughness(), AttributeModifier.Operation.ADDITION));
+//            if (material.getKnockbackResistance() > 0) {
+//                event.addModifier(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(primaryUuid, "Armor knockback resistance", material.getKnockbackResistance(), AttributeModifier.Operation.ADDITION));
+//            }
+//            config.getAttributes().forEach(gearAttributeModifier -> {
+//                UUID uuid = randomUUID();
+//                Attribute attribute = gearAttributeModifier.getAttribute();
+//                if(attribute != null){
+//                    event.addModifier(attribute, gearAttributeModifier.toAttributeModifier(uuid, "Armor modifier"));
+//                }
+//            });
+//        }else if(event.getSlotType() == EquipmentSlot.MAINHAND || event.getSlotType() == EquipmentSlot.OFFHAND) {
+//            MeleeGearConfig meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(item));
+//            if (meleeGearConfig == MeleeGearConfig.DEFAULT) return;
+//            event.clearModifiers();
+//            meleeGearConfig.getAttributes().forEach(attributeModifier -> {
+//                Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
+//                if (attribute != null) {
+//                    UUID uuid = randomUUID();
+//                    if (ATTACK_DAMAGE.equals(attribute)) {
+//                        uuid = BASE_ATTACK_DAMAGE_UUID;
+//                    } else if (ATTACK_SPEED.equals(attribute)) {
+//                        uuid = BASE_ATTACK_SPEED_UUID;
+//                    }
+//                    event.addModifier(attribute, new AttributeModifier(uuid, "Weapon modifier", attributeModifier.getAmount(), attributeModifier.getOperation()));
+//                }
+//            });
+//        }
     }
 }
