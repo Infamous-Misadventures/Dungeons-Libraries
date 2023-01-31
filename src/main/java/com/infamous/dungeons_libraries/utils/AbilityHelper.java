@@ -1,13 +1,21 @@
 package com.infamous.dungeons_libraries.utils;
 
 import com.infamous.dungeons_libraries.config.DungeonsLibrariesConfig;
+import com.infamous.dungeons_libraries.mixin.NearestAttackableTargetGoalAccessor;
+import com.infamous.dungeons_libraries.mixin.TargetingConditionsAccessor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.function.Predicate;
 
 import static com.infamous.dungeons_libraries.utils.PetHelper.isPetOrColleagueRelation;
 import static net.minecraft.world.entity.EntityType.ARMOR_STAND;
@@ -49,8 +57,22 @@ public class AbilityHelper {
         return isPetOrColleagueRelation(origin, target)
                 || origin.isAlliedTo(target)
                 || isBothPlayerAndNoPvP(origin, target)
-                || (origin.getClassification(false).equals(MobCategory.MONSTER) && target.getClassification(false).equals(MobCategory.MONSTER))
-                || isEntityBlacklisted(origin, target);
+                || isEntityBlacklisted(origin, target)
+                || (origin.getClassification(false).equals(MobCategory.MONSTER) && target.getClassification(false).equals(MobCategory.MONSTER) && !matchesTargetGoal(origin, target));
+    }
+
+    private static boolean matchesTargetGoal(LivingEntity origin, LivingEntity target) {
+        if(!DungeonsLibrariesConfig.ENABLE_TARGETS_BASED_ON_GOALS.get() || !(origin instanceof Mob originMob)) return true;
+        return originMob.targetSelector.getAvailableGoals().stream()
+                .map(WrappedGoal::getGoal)
+                .filter(goal -> goal instanceof NearestAttackableTargetGoal<?>)
+                .map(goal -> matchesPredicate(target, ((NearestAttackableTargetGoalAccessor) goal).getTargetType(), ((NearestAttackableTargetGoalAccessor) goal).getTargetConditions()))
+                .reduce(false, (o, o2) -> o || o2);
+    }
+
+    private static boolean matchesPredicate(LivingEntity target, Class targetType, TargetingConditions targetConditions) {
+        Predicate<LivingEntity> selector = ((TargetingConditionsAccessor) targetConditions).getSelector();
+        return (targetType == null || targetType.isInstance(target)) && (selector == null || selector.test(target));
     }
 
     private static boolean isEntityBlacklisted(LivingEntity origin, LivingEntity target) {

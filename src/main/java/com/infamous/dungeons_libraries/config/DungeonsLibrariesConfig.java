@@ -16,6 +16,7 @@ public class DungeonsLibrariesConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_ELITE_MOBS;
     public static ForgeConfigSpec.ConfigValue<Double> ELITE_MOBS_BASE_CHANCE;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ENEMY_WHITELIST;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_TARGETS_BASED_ON_GOALS;
 
     public static class Common {
 
@@ -26,6 +27,10 @@ public class DungeonsLibrariesConfig {
                     .comment("Enable area of effects also being applied to players. \n" +
                             "If you do not want area of effects being applied to other players, disable this feature. [true / false]")
                     .define("enableAreaOfEffectOnOtherPlayers", false);
+            ENABLE_TARGETS_BASED_ON_GOALS = builder
+                    .comment("Enable limiting area of effects of mobs to only mobs they can normally target. \n" +
+                            "Disabling this feature will cause mobs to hit eachother with AoE effects, but can fix unintended issues. [true / false]")
+                    .define("enableTargetsBasedOnGoals", true);
             ENEMY_BLACKLIST = builder
                     .comment("Add entities that will never be targeted by aggressive Dungeons effects. \n"
                             + "To do so, enter their registry names.")
