@@ -103,9 +103,6 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.hurtAndBreak(1, attacker, MojankHelper::hurtEnemyBroadcastBreakEvent);
-        if (attacker.getAttributeBaseValue(ATTACK_SPEED) >= -1.0) {
-            target.invulnerableTime = 0;
-        }
         return true;
     }
 
