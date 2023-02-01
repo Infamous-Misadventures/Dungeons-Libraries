@@ -1,45 +1,64 @@
 package com.infamous.dungeons_libraries.mixin;
 
+import com.infamous.dungeons_libraries.utils.RangedAttackHelper;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.RANGED_DAMAGE_MULTIPLIER;
-
 @Mixin(BowItem.class)
-public class BowItemMixin {
+public abstract class BowItemMixin {
 
-//    @ModifyVariable(at = @At("STORE"), method = "releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V")
-//    private float libraries_releaseUsing_setArrowVelocity(float arrowVelocity, ItemStack stack, Level worldIn, LivingEntity livingEntity, int timeLeft) {
-//        Player playerentity = (Player)livingEntity;
-//
-//        boolean flag = playerentity.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack) > 0;
-//        ItemStack itemstack = playerentity.getProjectile(stack);
-//
-//        int i = 72000 - timeLeft;
-//        i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, playerentity, i, !itemstack.isEmpty() || flag);
-//        if (i < 0) return 0;
-//
-//        arrowVelocity = RangedAttackHelper.getArrowVelocity(livingEntity, stack, i);
-//        return arrowVelocity;
-//    }
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BowItem;getPowerForTime(I)F"),
+            method = "releaseUsing")
+    private float libraries_releaseUsing_getPowerForTime(int useTime, ItemStack itemStack, Level level, LivingEntity livingEntity, int useTimeRemaining) {
+        return RangedAttackHelper.getBowArrowVelocity(livingEntity, itemStack, useTime);
+    }
 
-    @Inject(method = "releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V",
-            at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/BowItem;customArrow(Lnet/minecraft/world/entity/projectile/AbstractArrow;)Lnet/minecraft/world/entity/projectile/AbstractArrow;", remap = false), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void libraries_releaseUsing_setArrowDamage(ItemStack pStack, Level j, LivingEntity k, int pTimeLeft, CallbackInfo ci, Player playerentity, boolean flag, ItemStack itemstack, int i, float f, boolean flag1, ArrowItem arrowitem, AbstractArrow abstractArrowEntity) {
-        AttributeInstance attribute = playerentity.getAttribute(RANGED_DAMAGE_MULTIPLIER.get());
-        if (attribute != null) {
-            abstractArrowEntity.setBaseDamage(abstractArrowEntity.getBaseDamage() * (attribute.getValue()));
+    @Inject(method = "releaseUsing",
+            at = @At(value = "INVOKE_ASSIGN",
+                    target = "Lnet/minecraft/world/item/BowItem;customArrow(Lnet/minecraft/world/entity/projectile/AbstractArrow;)Lnet/minecraft/world/entity/projectile/AbstractArrow;",
+                    shift = At.Shift.AFTER,
+                    remap = false),
+            locals = LocalCapture.CAPTURE_FAILSOFT)
+    public void setArrowDamage(ItemStack useStack, Level level, LivingEntity shooter, int useTimeRemaining, CallbackInfo ci,
+                               Player playerShooter, boolean infiniteAmmo, ItemStack projectileStack, int useTime, float powerForTime, boolean isInfiniteArrow, ArrowItem arrowitem, AbstractArrow createdArrow) {
+        RangedAttackHelper.multiplyRangedDamage(shooter, createdArrow);
+    }
+
+    @Inject(method = "releaseUsing",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z", shift = At.Shift.AFTER),
+            locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void createAdditionalArrows(ItemStack stack, Level level, LivingEntity shooter, int useTimeRemaining, CallbackInfo ci,
+                                        Player playerShooter, boolean infiniteAmmo, ItemStack projectileStack, int useTime, float powerForTime, boolean isInfiniteArrow, ArrowItem arrowitem, AbstractArrow originalArrow){
+        // Make some last minute changes to the original arrow
+        if(powerForTime >= 1.0F){
+            originalArrow.setCritArrow(true);
+        }
+
+        int piercingLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, stack);
+        if (piercingLevel > 0) {
+            originalArrow.setPierceLevel((byte) piercingLevel);
+        }
+
+        // Finished making changes to original arrow - now to the multishot stuff!
+        int multishotLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack);
+        if(multishotLevel > 0){
+            int additionalArrowCount = multishotLevel * 2;
+            for(int arrowIndex = 1; arrowIndex <= additionalArrowCount; arrowIndex++){
+                RangedAttackHelper.createBowArrow(stack, level, playerShooter, projectileStack, powerForTime, arrowIndex, isInfiniteArrow);
+            }
         }
     }
 }

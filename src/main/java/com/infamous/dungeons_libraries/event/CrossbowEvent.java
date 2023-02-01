@@ -3,6 +3,7 @@ package com.infamous.dungeons_libraries.event;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CrossbowEvent extends LivingEvent {
 
@@ -27,6 +28,12 @@ public abstract class CrossbowEvent extends LivingEvent {
             this.chargeTime = chargeTime;
         }
 
+        @Nullable
+        @Override
+        public LivingEntity getEntity() {
+            return super.getEntity();
+        }
+
         public float getOriginalChargeTime() {
             return originalChargeTime;
         }
@@ -48,6 +55,12 @@ public abstract class CrossbowEvent extends LivingEvent {
             super(entity, itemStack);
             this.originalVelocity = velocity;
             this.velocity = velocity;
+        }
+
+        @Nullable
+        @Override
+        public LivingEntity getEntity() {
+            return super.getEntity();
         }
 
         public float getOriginalVelocity() {

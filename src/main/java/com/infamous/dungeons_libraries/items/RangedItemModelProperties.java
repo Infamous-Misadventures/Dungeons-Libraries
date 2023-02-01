@@ -1,6 +1,5 @@
 package com.infamous.dungeons_libraries.items;
 
-import com.infamous.dungeons_libraries.items.gearconfig.CrossbowGear;
 import com.infamous.dungeons_libraries.utils.RangedAttackHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -12,8 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Map;
 
-import static com.infamous.dungeons_libraries.utils.RangedAttackHelper.getModdedCrossbowChargeTime;
-import static com.infamous.dungeons_libraries.utils.RangedAttackHelper.getVanillaCrossbowChargeTime;
+import static com.infamous.dungeons_libraries.utils.RangedAttackHelper.getCrossbowChargeTime;
 
 public class RangedItemModelProperties {
 
@@ -66,14 +64,8 @@ public class RangedItemModelProperties {
     private static float getCrossbowPullProperty(ItemStack stack, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity == null || CrossbowItem.isCharged(stack)) {
             return 0.0F;
-        } else if (stack.getItem() instanceof CrossbowGear) {
-            return (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
-                    / getModdedCrossbowChargeTime(livingEntity, stack);
-        } else {
-            return CrossbowItem.isCharged(stack) ? 0.0F
-                    : (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
-                    / getVanillaCrossbowChargeTime(livingEntity, stack);
-        }
+        } else return (stack.getUseDuration() - livingEntity.getUseItemRemainingTicks())
+                / getCrossbowChargeTime(livingEntity, stack);
     }
 
     private static float getCrossbowPullingProperty(ItemStack stack, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
