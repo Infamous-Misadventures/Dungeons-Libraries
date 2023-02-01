@@ -26,6 +26,7 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import java.util.Optional;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
+import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
 
 @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class CuriosKeyBindings {
@@ -36,15 +37,6 @@ public class CuriosKeyBindings {
     public static final KeyMapping activateArtifact2 = new KeyMapping("key.dungeons_libraries.curiosintegration.description_slot2", GLFW.GLFW_KEY_B, "key.dungeons_libraries.curiosintegration.category");
     public static final KeyMapping activateArtifact3 = new KeyMapping("key.dungeons_libraries.curiosintegration.description_slot3", GLFW.GLFW_KEY_N, "key.dungeons_libraries.curiosintegration.category");
 
-    @SubscribeEvent
-    public static void setupCuriosKeybindings(RegisterKeyMappingsEvent event) {
-        activateArtifact1.setKeyConflictContext(KeyConflictContext.IN_GAME);
-        event.register(activateArtifact1);
-        activateArtifact2.setKeyConflictContext(KeyConflictContext.IN_GAME);
-        event.register(activateArtifact2);
-        activateArtifact3.setKeyConflictContext(KeyConflictContext.IN_GAME);
-        event.register(activateArtifact3);
-    }
 
     @SubscribeEvent
     public static void onClientTick(InputEvent.Key event) {
