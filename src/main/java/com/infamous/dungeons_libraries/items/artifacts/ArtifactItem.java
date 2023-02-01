@@ -46,7 +46,7 @@ public abstract class ArtifactItem extends Item implements ICurioItem, IReloadab
     private ArtifactGearConfig artifactGearConfig;
 
     public ArtifactItem(Properties properties) {
-        super(properties);
+        super(properties.defaultDurability(64));
         reload();
     }
 
