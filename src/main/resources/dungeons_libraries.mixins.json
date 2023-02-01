@@ -5,12 +5,32 @@
   "minVersion": "0.8.4",
   "refmap": "dungeons_libraries.refmap.json",
   "mixins": [
-    "ArmorItemAccessor", "ArmorMaterialsAccessor", "AxeItemAccessor", "BeeMixin", "BowItemMixin", "BrainAccessor",
-    "CooldownAccessor", "CrossbowItemInvoker", "CrossbowItemMixin", "EnchantmentHelperMixin", "ItemAccessor",
-    "MobInvoker", "MobMixin", "NearestAttackableTargetGoalAccessor", "TargetingConditionsAccessor", "TieredItemAccessor"
+    "AbstractSkeletonMixin",
+    "ArmorItemAccessor",
+    "ArmorMaterialsAccessor",
+    "AxeItemAccessor",
+    "BeeMixin",
+    "BowItemMixin",
+    "BrainAccessor",
+    "CooldownAccessor",
+    "CrossbowItemInvoker",
+    "CrossbowItemMixin",
+    "EnchantmentHelperMixin",
+    "ItemAccessor",
+    "MobInvoker",
+    "MobMixin",
+    "NearestAttackableTargetGoalAccessor",
+    "PiglinMixin",
+    "TargetingConditionsAccessor",
+    "TieredItemAccessor"
   ],
   "client": [
-    "GeoEntityRendererMixin", "LivingRendererMixin", "MinecraftMixin"
+    "AbstractClientPlayerMixin",
+    "GeoEntityRendererMixin",
+    "ItemInHandRendererMixin",
+    "LivingRendererMixin",
+    "MinecraftMixin",
+    "SkeletonModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
