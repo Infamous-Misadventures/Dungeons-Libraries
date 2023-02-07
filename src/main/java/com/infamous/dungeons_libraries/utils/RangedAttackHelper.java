@@ -47,7 +47,7 @@ public class RangedAttackHelper {
         }
 
         BowEvent.Velocity velocityEvent = new BowEvent.Velocity(livingEntity, stack, arrowVelocity);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(overchargeEvent);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(velocityEvent);
         return velocityEvent.getVelocity();
     }
 
