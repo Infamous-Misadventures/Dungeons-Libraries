@@ -7,6 +7,7 @@ import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
+import com.infamous.dungeons_libraries.mixin.TieredItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
 import net.minecraft.core.BlockPos;
@@ -51,6 +52,7 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     public void reload() {
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
         Tier material = meleeGearConfig.getWeaponMaterial();
+        ((TieredItemAccessor)this).setTier(material);
         ((ItemAccessor) this).setMaxDamage(material.getUses());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
@@ -71,21 +73,6 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
 
     public MeleeGearConfig getGearConfig() {
         return meleeGearConfig;
-    }
-
-    @Override
-    public Tier getTier() {
-        return this.meleeGearConfig.getWeaponMaterial();
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return this.meleeGearConfig.getWeaponMaterial().getEnchantmentValue();
-    }
-
-    @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repairItem) {
-        return this.meleeGearConfig.getWeaponMaterial().getRepairIngredient().test(repairItem);
     }
 
     @Override
