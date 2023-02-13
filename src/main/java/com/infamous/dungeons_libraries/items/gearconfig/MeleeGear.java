@@ -74,6 +74,21 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     }
 
     @Override
+    public Tier getTier() {
+        return this.meleeGearConfig.getWeaponMaterial();
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        return this.meleeGearConfig.getWeaponMaterial().getEnchantmentValue();
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repairItem) {
+        return this.meleeGearConfig.getWeaponMaterial().getRepairIngredient().test(repairItem);
+    }
+
+    @Override
     public int getComboLength(ItemStack stack, LivingEntity attacker) {
         return this.getGearConfig().getComboLength();
     }
