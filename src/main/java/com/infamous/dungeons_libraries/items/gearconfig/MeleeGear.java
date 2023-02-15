@@ -51,9 +51,8 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     @Override
     public void reload() {
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(ForgeRegistries.ITEMS.getKey(this));
-        Tier material = meleeGearConfig.getWeaponMaterial();
-        ((TieredItemAccessor)this).setTier(material);
-        ((ItemAccessor) this).setMaxDamage(material.getUses());
+        ((TieredItemAccessor) this).setTier(meleeGearConfig.getWeaponMaterial());
+        ((ItemAccessor) this).setMaxDamage(this.getTier().getUses());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
