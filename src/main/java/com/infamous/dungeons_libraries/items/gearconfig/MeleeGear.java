@@ -7,6 +7,7 @@ import com.infamous.dungeons_libraries.items.interfaces.IMeleeWeapon;
 import com.infamous.dungeons_libraries.items.interfaces.IReloadableGear;
 import com.infamous.dungeons_libraries.items.interfaces.IUniqueGear;
 import com.infamous.dungeons_libraries.mixin.ItemAccessor;
+import com.infamous.dungeons_libraries.mixin.TieredItemAccessor;
 import com.infamous.dungeons_libraries.utils.DescriptionHelper;
 import com.infamous.dungeons_libraries.utils.MojankHelper;
 import net.minecraft.block.BlockState;
@@ -53,10 +54,10 @@ public class MeleeGear extends TieredItem implements IMeleeWeapon, IComboWeapon,
     @Override
     public void reload(){
         meleeGearConfig = MeleeGearConfigRegistry.getConfig(this.getRegistryName());
-        IItemTier material = meleeGearConfig.getWeaponMaterial();
-        ((ItemAccessor)this).setMaxDamage(material.getUses());
+        ((TieredItemAccessor) this).setTier(meleeGearConfig.getWeaponMaterial());
+        ((ItemAccessor)this).setMaxDamage(this.getTier().getUses());
         Set<ToolType> toolTypes = ((ItemAccessor) this).getToolClasses().keySet();
-        toolTypes.forEach(toolType -> ((ItemAccessor) this).getToolClasses().put(toolType, material.getLevel()));
+        toolTypes.forEach(toolType -> ((ItemAccessor) this).getToolClasses().put(toolType, this.getTier().getLevel()));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         meleeGearConfig.getAttributes().forEach(attributeModifier -> {
             Attribute attribute = ATTRIBUTES.getValue(attributeModifier.getAttributeResourceLocation());
