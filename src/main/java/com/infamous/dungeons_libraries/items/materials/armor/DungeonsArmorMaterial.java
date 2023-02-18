@@ -10,6 +10,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class DungeonsArmorMaterial implements ArmorMaterial {
             Codec.INT.listOf().fieldOf("damage_reduction_amounts").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).damageReductionAmounts),
             Codec.INT.fieldOf("enchantability").forGetter(iArmorMaterial -> iArmorMaterial.getEnchantmentValue()),
             ResourceLocation.CODEC.fieldOf("repair_item").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).repairItemResourceLocation),
-            SoundEvent.CODEC.fieldOf("equip_sound").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEquipSound()),
+            ForgeRegistries.SOUND_EVENTS.getCodec().fieldOf("equip_sound").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).getEquipSound()),
             Codec.FLOAT.fieldOf("toughness").forGetter(iArmorMaterial -> iArmorMaterial.getToughness()),
             Codec.FLOAT.fieldOf("knockback_resistance").forGetter(iArmorMaterial -> iArmorMaterial.getKnockbackResistance()),
             ArmorMaterialBaseType.CODEC.fieldOf("base_type").forGetter(iArmorMaterial -> ((DungeonsArmorMaterial) iArmorMaterial).baseType)
