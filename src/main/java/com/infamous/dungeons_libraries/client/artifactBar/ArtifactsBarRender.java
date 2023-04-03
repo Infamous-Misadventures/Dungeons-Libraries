@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class ArtifactsBarRender {
             if (renderPlayer == null) return;
             GuiElementConfig guiElementConfig = GuiElementConfigRegistry.getConfig(new ResourceLocation(MODID, "artifact_bar"));
             if (guiElementConfig.isHidden()) return;
+
 
             Window sr = event.getWindow();
             int scaledWidth = sr.getGuiScaledWidth();
@@ -60,10 +62,12 @@ public class ArtifactsBarRender {
     private static void renderBar(PoseStack poseStack, Minecraft mc, Player renderPlayer, int x, int y, ICuriosItemHandler iCuriosItemHandler) {
         Optional<ICurioStacksHandler> artifactStackHandler = iCuriosItemHandler.getStacksHandler("artifact");
         if (artifactStackHandler.isPresent()) {
-            int slots = artifactStackHandler.get().getStacks().getSlots();
+            IDynamicStackHandler stacks = artifactStackHandler.get().getStacks();
+            if(noArtifactEquipped(stacks)) return;
+            int slots = stacks.getSlots();
             renderSlotBg(poseStack, mc, x, y, slots);
             for (int slot = 0; slot < slots; slot++) {
-                ItemStack artifact = artifactStackHandler.get().getStacks().getStackInSlot(slot);
+                ItemStack artifact = stacks.getStackInSlot(slot);
                 if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
                     int xPos = x + slot * 20 + 3;
                     int yPos = y + 3;
@@ -72,6 +76,17 @@ public class ArtifactsBarRender {
                 renderSlotKeybind(poseStack, mc, x, y, slot);
             }
         }
+    }
+
+    private static boolean noArtifactEquipped(IDynamicStackHandler stacks) {
+        int slots = stacks.getSlots();
+        for (int slot = 0; slot < slots; slot++) {
+            ItemStack artifact = stacks.getStackInSlot(slot);
+            if (!artifact.isEmpty() && artifact.getItem() instanceof ArtifactItem) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static void renderSlot(PoseStack posestack, Minecraft mc, int xPos, int yPos, Player renderPlayer, ItemStack artifactStack) {
