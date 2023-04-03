@@ -124,20 +124,24 @@ public class BuiltInEnchantments implements INBTSerializable<CompoundTag> {
             compoundnbt.put(ENCHANTMENT_DATA_KEY, enchantmentListnbt);
             listnbt.add(compoundnbt);
         });
-        tag.put(ENCHANTS_KEY, listnbt);
+        if(!this.enchantments.isEmpty()) {
+            tag.put(ENCHANTS_KEY, listnbt);
+        }
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        ListTag listNBT = tag.getList(ENCHANTS_KEY, 10);
-        for (int i = 0; i < listNBT.size(); ++i) {
-            CompoundTag compoundnbt = listNBT.getCompound(i);
-            ResourceLocation resourcelocation = ResourceLocation.tryParse(compoundnbt.getString(SOURCE_KEY));
-            ListTag enchantmentListnbt = new ListTag();
-            Map<Enchantment, Integer> enchantmentIntegerMap = EnchantmentHelper.deserializeEnchantments(compoundnbt.getList(ENCHANTMENT_DATA_KEY, 10));
-            List<EnchantmentInstance> enchantmentInstanceList = enchantmentIntegerMap.entrySet().stream().map(entry -> new EnchantmentInstance(entry.getKey(), entry.getValue())).collect(Collectors.toList());
-            this.setBuiltInEnchantments(resourcelocation, enchantmentInstanceList);
+        if(tag.contains(ENCHANTS_KEY, 10)) {
+            ListTag listNBT = tag.getList(ENCHANTS_KEY, 10);
+            for (int i = 0; i < listNBT.size(); ++i) {
+                CompoundTag compoundnbt = listNBT.getCompound(i);
+                ResourceLocation resourcelocation = ResourceLocation.tryParse(compoundnbt.getString(SOURCE_KEY));
+                ListTag enchantmentListnbt = new ListTag();
+                Map<Enchantment, Integer> enchantmentIntegerMap = EnchantmentHelper.deserializeEnchantments(compoundnbt.getList(ENCHANTMENT_DATA_KEY, 10));
+                List<EnchantmentInstance> enchantmentInstanceList = enchantmentIntegerMap.entrySet().stream().map(entry -> new EnchantmentInstance(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+                this.setBuiltInEnchantments(resourcelocation, enchantmentInstanceList);
+            }
         }
     }
 }
