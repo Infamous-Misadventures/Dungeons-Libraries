@@ -75,9 +75,9 @@ public class BuiltInEnchantments implements INBTSerializable<CompoundTag> {
     }
 
     public List<EnchantmentInstance> getAllBuiltInEnchantmentInstances() {
-        return enchantments.values().stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        List<EnchantmentInstance> result = new ArrayList<>();
+        enchantments.values().forEach(result::addAll);
+        return result;
     }
 
     public Map<ResourceLocation, List<EnchantmentInstance>> getAllBuiltInEnchantmentInstancesPerSource() {
