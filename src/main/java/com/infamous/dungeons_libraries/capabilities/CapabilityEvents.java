@@ -1,7 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Leader;
 import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewards;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCaster;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.SoulCasterHelper;
@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
-import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMasterCapability;
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getLeaderCapability;
 import static com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewardsHelper.getPlayerRewardsCapability;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
@@ -30,9 +30,9 @@ public class CapabilityEvents {
 
     @SubscribeEvent
     public static void clonePlayerCaps(PlayerEvent.Clone event) {
-        Master oldMasterCap = getMasterCapability(event.getOriginal());
-        Master newMasterCap = getMasterCapability(event.getEntity());
-        newMasterCap.copyFrom(oldMasterCap);
+        Leader oldLeaderCap = getLeaderCapability(event.getOriginal());
+        Leader newLeaderCap = getLeaderCapability(event.getEntity());
+        newLeaderCap.copyFrom(oldLeaderCap);
         if (!event.isWasDeath() || DungeonsLibrariesConfig.ENABLE_KEEP_SOULS_ON_DEATH.get()) {
             SoulCaster oldSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getOriginal());
             SoulCaster newSoulsCap = SoulCasterHelper.getSoulCasterCapability(event.getEntity());

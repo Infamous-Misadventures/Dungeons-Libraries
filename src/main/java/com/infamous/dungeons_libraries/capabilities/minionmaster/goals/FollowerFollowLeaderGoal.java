@@ -1,6 +1,5 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster.goals;
 
-import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -15,6 +14,8 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
+
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getLeader;
 
 public class FollowerFollowLeaderGoal extends Goal {
     private final Mob mobEntity;
@@ -47,7 +48,7 @@ public class FollowerFollowLeaderGoal extends Goal {
      * method as well.
      */
     public boolean canUse() {
-        LivingEntity livingentity = MinionMasterHelper.getMaster(this.mobEntity);
+        LivingEntity livingentity = getLeader(this.mobEntity);
         if (livingentity == null) {
             return false;
         } else if (livingentity.isSpectator()) {

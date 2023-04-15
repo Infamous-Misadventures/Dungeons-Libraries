@@ -1,6 +1,5 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster.goals;
 
-import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
 import com.infamous.dungeons_libraries.entities.ai.target.MinionTargettingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -8,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.EnumSet;
 
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getLeader;
 import static com.infamous.dungeons_libraries.utils.GoalUtils.shouldAttackEntity;
 
 public class LeaderHurtTargetGoal extends TargetGoal {
@@ -23,7 +23,7 @@ public class LeaderHurtTargetGoal extends TargetGoal {
     }
 
     public boolean canUse() {
-        LivingEntity owner = MinionMasterHelper.getMaster(this.mobEntity);
+        LivingEntity owner = getLeader(this.mobEntity);
         if (owner == null) {
             return false;
         } else {
@@ -38,7 +38,7 @@ public class LeaderHurtTargetGoal extends TargetGoal {
 
     public void start() {
         this.mob.setTarget(this.attacker);
-        LivingEntity owner = MinionMasterHelper.getMaster(this.mobEntity);
+        LivingEntity owner = getLeader(this.mobEntity);
         if (owner != null) {
             this.timestamp = owner.getLastHurtMobTimestamp();
         }

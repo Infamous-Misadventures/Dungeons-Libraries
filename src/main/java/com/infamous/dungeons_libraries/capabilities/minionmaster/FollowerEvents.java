@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getFollowerCapability;
-import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMasterCapability;
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getLeaderCapability;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
 public class FollowerEvents {
@@ -85,25 +85,16 @@ public class FollowerEvents {
     @SubscribeEvent
     public static void reAddFollowerGoals(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
-        if (!event.getLevel().isClientSide() && entity instanceof Mob) {
-            FollowerLeaderHelper.addFollowerGoals((Mob) entity);
-            Master masterCapability = getMasterCapability(entity);
-            List<Entity> minions = masterCapability.getAllMinions();
-            for (Entity minion : minions) {
-                if (minion instanceof Mob) {
-                    Follower minionCapability = getFollowerCapability(minion);
-                    minionCapability.setMaster((Mob) entity);
-                    FollowerLeaderHelper.addFollowerGoals((Mob) minion);
-                }
+        if (!event.getLevel().isClientSide() && entity instanceof LivingEntity livingEntity) {
+            Leader leaderCapability = getLeaderCapability(entity);
+            if(entity instanceof Mob mob) {
+                FollowerLeaderHelper.addFollowerGoals(mob);
             }
-        }
-        if (!event.getLevel().isClientSide() && entity instanceof Player) {
-            Master masterCapability = getMasterCapability(entity);
-            List<Entity> minions = masterCapability.getAllMinions();
+            List<Entity> minions = leaderCapability.getAllMinions();
             for (Entity minion : minions) {
                 if (minion instanceof Mob) {
                     Follower minionCapability = getFollowerCapability(minion);
-                    minionCapability.setMaster((Player) entity);
+                    minionCapability.setLeader(livingEntity);
                     FollowerLeaderHelper.addFollowerGoals((Mob) minion);
                 }
             }
@@ -114,11 +105,11 @@ public class FollowerEvents {
     // making you unable to summon any more of that entity
     @SubscribeEvent
     public static void checkSummonedMobIsDead(TickEvent.PlayerTickEvent event) {
-        Player master = event.player;
+        Player player = event.player;
         if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
-        if (!master.isAlive()) return;
-        Master masterCap = getMasterCapability(event.player);
-        updateAliveList(masterCap);
+        if (!player.isAlive()) return;
+        Leader leaderCap = getLeaderCapability(event.player);
+        updateAliveList(leaderCap);
     }
 
     @SubscribeEvent
@@ -126,19 +117,19 @@ public class FollowerEvents {
         if (!event.getEntity().level.isClientSide() && FollowerLeaderHelper.isFollower(event.getEntity())) {
             LivingEntity livingEntity = event.getEntity();
             Follower FollowerCapability = getFollowerCapability(livingEntity);
-            LivingEntity summoner = FollowerCapability.getMaster();
+            LivingEntity summoner = FollowerCapability.getLeader();
             if (summoner != null) {
-                Master masterCap = getMasterCapability(summoner);
-                updateAliveList(masterCap);
+                Leader leaderCapability = getLeaderCapability(summoner);
+                updateAliveList(leaderCapability);
             }
         }
     }
 
-    private static void updateAliveList(Master masterCap) {
-        List<Entity> aliveSummons = masterCap.getSummonedMobs().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
-        masterCap.setSummonedMobs(aliveSummons);
-        List<Entity> aliveMinions = masterCap.getOtherMinions().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
-        masterCap.setOtherMinions(aliveMinions);
+    private static void updateAliveList(Leader leader) {
+        List<Entity> aliveSummons = leader.getSummonedMobs().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
+        leader.setSummonedMobs(aliveSummons);
+        List<Entity> aliveMinions = leader.getOtherMinions().stream().filter(entity -> entity != null && entity.isAlive()).collect(Collectors.toList());
+        leader.setOtherMinions(aliveMinions);
     }
 
 }

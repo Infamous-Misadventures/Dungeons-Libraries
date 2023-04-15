@@ -155,26 +155,31 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
     }
 
     // Methods deprectated after 1.20.0
+    @Deprecated(forRemoval = true)
     @Override
     public LivingEntity getMaster() {
         return getLeader();
     }
 
+    @Deprecated(forRemoval = true)
     @Override
     public void setMaster(LivingEntity master) {
         setLeader(master);
     }
 
+    @Deprecated(forRemoval = true)
     @Override
     public boolean isMinion() {
         return isFollower();
     }
 
+    @Deprecated(forRemoval = true)
     @Override
     public int getMinionTimer() {
         return getFollowerDuration();
     }
 
+    @Deprecated(forRemoval = true)
     @Override
     public void setMinionTimer(int minionTimer) {
           setFollowerDuration(minionTimer);
