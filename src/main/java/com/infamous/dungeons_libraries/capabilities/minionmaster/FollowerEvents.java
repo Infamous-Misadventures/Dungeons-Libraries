@@ -19,11 +19,11 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getFollowerCapability;
 import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMasterCapability;
-import static com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper.getMinionCapability;
 
 @Mod.EventBusSubscriber(modid = DungeonsLibraries.MODID)
-public class MinionEvents {
+public class FollowerEvents {
 
     private static ArmorStand DUMMY_TARGET;
 
@@ -56,8 +56,8 @@ public class MinionEvents {
 
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event) {
-        Minion cap = MinionMasterHelper.getMinionCapability(event.getEntity());
-        if (cap.isMinion()) {
+        Follower cap = getFollowerCapability(event.getEntity());
+        if (cap.isFollower()) {
             event.setCanceled(true);
         }
     }
@@ -66,14 +66,14 @@ public class MinionEvents {
     public static void onLivingEntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entityLiving = event.getEntity();
         if (entityLiving.level.isClientSide) return;
-        Minion cap = MinionMasterHelper.getMinionCapability(entityLiving);
-        if (cap.isMinion()) {
+        Follower cap = getFollowerCapability(entityLiving);
+        if (cap.isFollower()) {
             if (cap.isTemporary()) {
-                if (cap.getMinionTimer() > 0) {
-                    cap.setMinionTimer(cap.getMinionTimer() - 1);
+                if (cap.getFollowerDuration() > 0) {
+                    cap.setFollowerDuration(cap.getFollowerDuration() - 1);
                 } else {
                     if (cap.revertsOnExpiration()) {
-                        MinionMasterHelper.removeMinion(entityLiving, cap);
+                        FollowerLeaderHelper.removeFollower(entityLiving);
                     } else {
                         entityLiving.remove(Entity.RemovalReason.KILLED);
                     }
@@ -83,17 +83,17 @@ public class MinionEvents {
     }
 
     @SubscribeEvent
-    public static void reAddMinionGoals(EntityJoinLevelEvent event) {
+    public static void reAddFollowerGoals(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (!event.getLevel().isClientSide() && entity instanceof Mob) {
-            MinionMasterHelper.addMinionGoals((Mob) entity);
+            FollowerLeaderHelper.addFollowerGoals((Mob) entity);
             Master masterCapability = getMasterCapability(entity);
             List<Entity> minions = masterCapability.getAllMinions();
             for (Entity minion : minions) {
                 if (minion instanceof Mob) {
-                    Minion minionCapability = getMinionCapability(minion);
+                    Follower minionCapability = getFollowerCapability(minion);
                     minionCapability.setMaster((Mob) entity);
-                    MinionMasterHelper.addMinionGoals((Mob) minion);
+                    FollowerLeaderHelper.addFollowerGoals((Mob) minion);
                 }
             }
         }
@@ -102,9 +102,9 @@ public class MinionEvents {
             List<Entity> minions = masterCapability.getAllMinions();
             for (Entity minion : minions) {
                 if (minion instanceof Mob) {
-                    Minion minionCapability = getMinionCapability(minion);
+                    Follower minionCapability = getFollowerCapability(minion);
                     minionCapability.setMaster((Player) entity);
-                    MinionMasterHelper.addMinionGoals((Mob) minion);
+                    FollowerLeaderHelper.addFollowerGoals((Mob) minion);
                 }
             }
         }
@@ -122,11 +122,11 @@ public class MinionEvents {
     }
 
     @SubscribeEvent
-    public static void onMinionDeath(LivingDeathEvent event) {
-        if (!event.getEntity().level.isClientSide() && MinionMasterHelper.isMinionEntity(event.getEntity())) {
+    public static void onFollowerDeath(LivingDeathEvent event) {
+        if (!event.getEntity().level.isClientSide() && FollowerLeaderHelper.isFollower(event.getEntity())) {
             LivingEntity livingEntity = event.getEntity();
-            Minion minionCapability = getMinionCapability(livingEntity);
-            LivingEntity summoner = minionCapability.getMaster();
+            Follower FollowerCapability = getFollowerCapability(livingEntity);
+            LivingEntity summoner = FollowerCapability.getMaster();
             if (summoner != null) {
                 Master masterCap = getMasterCapability(summoner);
                 updateAliveList(masterCap);

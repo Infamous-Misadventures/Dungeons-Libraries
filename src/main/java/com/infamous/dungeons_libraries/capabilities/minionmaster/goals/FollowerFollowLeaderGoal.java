@@ -16,7 +16,7 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
-public class MinionFollowOwnerGoal extends Goal {
+public class FollowerFollowLeaderGoal extends Goal {
     private final Mob mobEntity;
     private LivingEntity owner;
     private final LevelReader world;
@@ -28,7 +28,7 @@ public class MinionFollowOwnerGoal extends Goal {
     private float oldWaterCost;
     private final boolean passesThroughLeaves;
 
-    public MinionFollowOwnerGoal(Mob mobEntity, double followSpeed, float maxDist, float minDist, boolean passesThroughLeaves) {
+    public FollowerFollowLeaderGoal(Mob mobEntity, double followSpeed, float maxDist, float minDist, boolean passesThroughLeaves) {
         this.mobEntity = mobEntity;
         this.world = mobEntity.level;
         this.followSpeed = followSpeed;

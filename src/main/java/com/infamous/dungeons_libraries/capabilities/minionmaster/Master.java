@@ -1,148 +1,34 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
-import com.infamous.dungeons_libraries.summon.SummonConfigRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+/**
+ * @deprecated Use {@link FollowerLeaderHelper} instead.
+ * Removal in 1.20.0
+ */
+@Deprecated(forRemoval = true)
+public interface Master {
 
-public class Master implements INBTSerializable<CompoundTag> {
+    void copyFrom(Master summoner);
 
-    private Set<Entity> summonedMobs;
-    private List<UUID> summonedMobsUUID = new ArrayList<>();
-    private ResourceLocation levelOnLoad;
-    private Set<Entity> otherMinions;
-    private final List<UUID> otherMinionsUUID = new ArrayList<>();
+    List<Entity> getAllMinions();
 
-    public void copyFrom(Master summoner) {
-        this.setSummonedMobs(summoner.getSummonedMobs());
-    }
+    List<Entity> getSummonedMobs();
 
-    public List<Entity> getAllMinions() {
-        List<Entity> minions = new ArrayList<>();
-        minions.addAll(this.getSummonedMobs());
-        minions.addAll(this.getOtherMinions());
-        return minions;
-    }
+    int getSummonedMobsCost();
 
-    public List<Entity> getSummonedMobs() {
-        summonedMobs = initEntities(this.summonedMobs, this.summonedMobsUUID);
-        return new ArrayList<>(this.summonedMobs);
-    }
+    boolean addSummonedMob(Entity entity);
 
-    public int getSummonedMobsCost() {
-        return this.getSummonedMobs().stream().map(entity -> SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).getCost()).reduce(0, Integer::sum);
-    }
+    void setSummonedMobs(List<Entity> summonedMobs);
 
-    public boolean addSummonedMob(Entity entity) {
-        summonedMobs = initEntities(this.summonedMobs, this.summonedMobsUUID);
-        return this.summonedMobs.add(entity);
-    }
+    boolean addMinion(Entity entity);
 
-    public void setSummonedMobs(List<Entity> summonedMobs) {
-        this.summonedMobs = new HashSet<>(summonedMobs);
-    }
+    List<Entity> getOtherMinions();
 
-    public void setSummonedMobsUUID(List<UUID> summonedMobsUUID) {
-        this.summonedMobsUUID = summonedMobsUUID;
-    }
+    void setOtherMinions(List<Entity> otherMinions);
 
-    public void setLevelOnLoad(ResourceLocation levelOnLoad) {
-        this.levelOnLoad = levelOnLoad;
-    }
+    void removeMinion(LivingEntity entityLiving);
 
-    public boolean addMinion(Entity entity) {
-        otherMinions = initEntities(this.otherMinions, this.otherMinionsUUID);
-        return otherMinions.add(entity);
-    }
-
-    public List<Entity> getOtherMinions() {
-        otherMinions = initEntities(this.otherMinions, this.otherMinionsUUID);
-        return new ArrayList<>(this.otherMinions);
-    }
-
-    public void setOtherMinions(List<Entity> otherMinions) {
-        this.otherMinions = new HashSet<>(otherMinions);
-    }
-
-    private Set<Entity> initEntities(Set<Entity> entities, List<UUID> entityUUIDs) {
-        if (entities != null) return entities;
-        if (entityUUIDs != null && this.levelOnLoad != null) {
-            if (entityUUIDs.isEmpty()) return new HashSet<>();
-            ResourceKey<Level> registrykey1 = ResourceKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
-            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            ServerLevel world = server.getLevel(registrykey1);
-            if (world != null) {
-                entities = entityUUIDs.stream().map(world::getEntity).filter(Objects::nonNull).collect(Collectors.toSet());
-            }
-        } else {
-            return new HashSet<>();
-        }
-        return new HashSet<>(entities);
-    }
-
-    public void removeMinion(LivingEntity entityLiving) {
-        this.getOtherMinions().remove(entityLiving);
-    }
-
-    public static final String LEVEL_KEY = "level";
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        ListTag summoned = new ListTag();
-        this.getSummonedMobs().forEach(entity -> {
-            CompoundTag mob = new CompoundTag();
-            mob.putUUID("uuid", entity.getUUID());
-            summoned.add(mob);
-        });
-        nbt.put("summoned", summoned);
-        ListTag minions = new ListTag();
-        this.getOtherMinions().forEach(entity -> {
-            CompoundTag minion = new CompoundTag();
-            minion.putUUID("uuid", entity.getUUID());
-            minions.add(minion);
-        });
-        nbt.put("minions", minions);
-        if (!this.getSummonedMobs().isEmpty()) {
-            ResourceLocation location = this.getSummonedMobs().get(0).level.dimension().location();
-            nbt.putString(LEVEL_KEY, location.toString());
-        } else if (!this.getOtherMinions().isEmpty()) {
-            ResourceLocation location = this.getOtherMinions().get(0).level.dimension().location();
-            nbt.putString(LEVEL_KEY, location.toString());
-        }
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
-        ListTag listNBT = tag.getList("summoned", 10);
-        List<UUID> summonedUUIDs = new ArrayList<>();
-        for (int i = 0; i < listNBT.size(); ++i) {
-            CompoundTag compoundnbt = listNBT.getCompound(i);
-            summonedUUIDs.add(compoundnbt.getUUID("uuid"));
-        }
-        this.setSummonedMobsUUID(summonedUUIDs);
-        ListTag minionsNBT = tag.getList("minions", 10);
-        List<UUID> minionUUIDs = new ArrayList<>();
-        for (int i = 0; i < minionsNBT.size(); ++i) {
-            CompoundTag compoundnbt = minionsNBT.getCompound(i);
-            minionUUIDs.add(compoundnbt.getUUID("uuid"));
-        }
-        if (tag.contains(LEVEL_KEY)) {
-            this.setLevelOnLoad(new ResourceLocation(tag.getString(LEVEL_KEY)));
-        }
-    }
 }

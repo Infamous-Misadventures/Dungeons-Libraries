@@ -15,17 +15,17 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
-public class AttacherMinion {
+public class AttacherFollower {
 
-    private static class MinionProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+    private static class FollowerProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
         public static final ResourceLocation IDENTIFIER = new ResourceLocation(MODID, "minion");
-        private final Minion backend = new Minion();
-        private final LazyOptional<Minion> optionalData = LazyOptional.of(() -> backend);
+        private final Follower backend = new Follower();
+        private final LazyOptional<Follower> optionalData = LazyOptional.of(() -> backend);
 
         @Override
         public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-            return ModCapabilities.MINION_CAPABILITY.orEmpty(cap, this.optionalData);
+            return ModCapabilities.FOLLOWER_CAPABILITY.orEmpty(cap, this.optionalData);
         }
 
         @Override
@@ -43,8 +43,8 @@ public class AttacherMinion {
     public static void attach(final AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
         if (entity instanceof LivingEntity) {
-            final AttacherMinion.MinionProvider provider = new AttacherMinion.MinionProvider();
-            event.addCapability(AttacherMinion.MinionProvider.IDENTIFIER, provider);
+            final FollowerProvider provider = new FollowerProvider();
+            event.addCapability(FollowerProvider.IDENTIFIER, provider);
         }
     }
 }

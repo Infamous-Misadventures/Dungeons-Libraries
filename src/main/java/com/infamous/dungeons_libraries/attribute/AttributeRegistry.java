@@ -12,9 +12,20 @@ public class AttributeRegistry {
 
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MODID);
 
+    /**
+     * @deprecated To be renamed FOLLOWER_COST_LIMIT in 1.20.0
+     */
+    @Deprecated
     public static final RegistryObject<Attribute> SUMMON_CAP = ATTRIBUTES.register("summon_cap", () -> new RangedAttribute(
             "attribute.name.generic.dungeons_libraries.summon_cap",
             0.0D,
+            0.0D,
+            1024.0D)
+            .setSyncable(true));
+
+    public static final RegistryObject<Attribute> FOLLOWER_COST_LIMIT = ATTRIBUTES.register("follower_cost_limit", () -> new RangedAttribute(
+            "attribute.name.generic.dungeons_libraries.follower_cost_limit",
+            24.0D,
             0.0D,
             1024.0D)
             .setSyncable(true));

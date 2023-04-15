@@ -1,17 +1,22 @@
 package com.infamous.dungeons_libraries.summon;
 
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.Minion;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.MinionMasterHelper;
+import com.infamous.dungeons_libraries.entities.ai.goal.MeleeAttackGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.infamous.dungeons_libraries.attribute.AttributeRegistry.SUMMON_CAP;
+import static com.infamous.dungeons_libraries.capabilities.minionmaster.FollowerLeaderHelper.getFollowerCapability;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
 
 public class SummonHelper {
 
@@ -30,9 +35,9 @@ public class SummonHelper {
     }
 
     public static boolean canSummonMob(LivingEntity master, Master masterCap) {
-        AttributeInstance summonCapAttribute = master.getAttribute(SUMMON_CAP.get());
-        if (summonCapAttribute == null) return false;
-        return masterCap.getSummonedMobsCost() < summonCapAttribute.getValue();
+        AttributeInstance summonCostLimitAttribute = master.getAttribute(SUMMON_CAP.get());
+        if (summonCostLimitAttribute == null) return false;
+        return masterCap.getSummonedMobsCost() < summonCostLimitAttribute.getValue();
     }
 
     public static Entity summonEntity(LivingEntity master, BlockPos position, EntityType<?> entityType) {
@@ -58,6 +63,25 @@ public class SummonHelper {
             MinionMasterHelper.addMinionGoals(mobEntity);
         }
         master.level.addFreshEntity(entity);
+    }
+
+    public static void addSummonGoals(Mob mobEntity) {
+        Follower followerCap = getFollowerCapability(mobEntity);
+        if (followerCap.isSummon()) {
+            SummonConfig config = SummonConfigRegistry.getConfig(ForgeRegistries.ENTITY_TYPES.getKey(mobEntity.getType()));
+            if (config.shouldAddAttackGoal()) {
+                addSummonAttackGoal(mobEntity);
+            }
+        }
+    }
+
+    private static void addSummonAttackGoal(Mob mobEntity) {
+        AttributeInstance attribute = mobEntity.getAttribute(ATTACK_DAMAGE);
+        if (attribute == null) return;
+        if (attribute.getValue() == 0) {
+            attribute.addTransientModifier(new AttributeModifier("Summon Attack Damage", 1, AttributeModifier.Operation.ADDITION));
+        }
+        mobEntity.goalSelector.addGoal(1, new MeleeAttackGoal(mobEntity, 1.0D, true));
     }
 
 }

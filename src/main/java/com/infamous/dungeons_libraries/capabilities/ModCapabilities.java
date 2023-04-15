@@ -8,10 +8,10 @@ import com.infamous.dungeons_libraries.capabilities.elite.AttacherEliteMob;
 import com.infamous.dungeons_libraries.capabilities.elite.EliteMob;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.AttacherEnchantedProjectile;
 import com.infamous.dungeons_libraries.capabilities.enchantedprojectile.EnchantedProjectile;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherMaster;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherMinion;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Master;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.Minion;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherLeader;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.AttacherFollower;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Leader;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.Follower;
 import com.infamous.dungeons_libraries.capabilities.playerrewards.AttacherPlayerRewards;
 import com.infamous.dungeons_libraries.capabilities.playerrewards.PlayerRewards;
 import com.infamous.dungeons_libraries.capabilities.soulcaster.AttacherSoulCaster;
@@ -36,9 +36,9 @@ public class ModCapabilities {
 
     public static final Capability<Timers> TIMERS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
-    public static final Capability<Minion> MINION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    public static final Capability<Follower> FOLLOWER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
-    public static final Capability<Master> MASTER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    public static final Capability<Leader> LEADER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
     public static final Capability<SoulCaster> SOUL_CASTER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
@@ -57,8 +57,8 @@ public class ModCapabilities {
     public static void setupCapabilities() {
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         forgeBus.addGenericListener(Entity.class, AttacherTimers::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherMinion::attach);
-        forgeBus.addGenericListener(Entity.class, AttacherMaster::attach);
+        forgeBus.addGenericListener(Entity.class, AttacherFollower::attach);
+        forgeBus.addGenericListener(Entity.class, AttacherLeader::attach);
         forgeBus.addGenericListener(Entity.class, AttacherSoulCaster::attach);
         forgeBus.addGenericListener(Entity.class, AttacherEnchantedProjectile::attach);
         forgeBus.addGenericListener(Entity.class, AttacherPlayerRewards::attach);
@@ -70,8 +70,8 @@ public class ModCapabilities {
     @SubscribeEvent
     public static void registerCaps(RegisterCapabilitiesEvent event) {
         event.register(Timers.class);
-        event.register(Minion.class);
-        event.register(Master.class);
+        event.register(Follower.class);
+        event.register(Leader.class);
         event.register(SoulCaster.class);
         event.register(EnchantedProjectile.class);
         event.register(PlayerRewards.class);
