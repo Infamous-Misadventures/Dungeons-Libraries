@@ -7,6 +7,8 @@
   "commands.mobEnchantment.clear.specific.success.multiple": "Removed mob enchantment %s from %s targets",
   "commands.mobEnchantment.give.failed": "Unable to apply this mobEnchantment (target likely already has it)",
   "commands.mobEnchantment.clear.everything.failed": "Target has no mobEnchantments to remove",
+  "attribute.name.generic.dungeons_libraries.summon_cap": "Summon Cap",
+  "attribute.name.generic.dungeons_libraries.follower_cost_limit": "Follower Cost Limit",
   "attribute.name.generic.dungeons_libraries.soul_gathering": "Soul Gathering",
   "attribute.name.generic.dungeons_libraries.soul_cap": "Max Soul Capacity",
   "attribute.name.generic.dungeons_libraries.life_steal": "Life Steal",
@@ -24,6 +26,7 @@
   "artifact.dungeons_libraries.cooldown": "%d Seconds Cooldown",
 
   "curios.identifier.artifact": "Artifact",
+  "item.modifiers.artifact": "When In Artifact Slot:",
   "key.dungeons_libraries.curiosintegration.category": "Dungeons Gear Curios",
   "key.dungeons_libraries.curiosintegration.description_slot1": "Artifact Slot 1",
   "key.dungeons_libraries.curiosintegration.description_slot2": "Artifact Slot 2",
