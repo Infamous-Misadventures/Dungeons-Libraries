@@ -1,5 +1,7 @@
 package com.infamous.dungeons_libraries.capabilities.builtinenchants;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,8 +12,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import org.jetbrains.annotations.NotNull;
-
 import static com.infamous.dungeons_libraries.DungeonsLibraries.MODID;
 
 public class AttacherBuiltInEnchantments {
@@ -45,6 +45,9 @@ public class AttacherBuiltInEnchantments {
 
     public static void attach(final AttachCapabilitiesEvent<ItemStack> event) {
         final AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider provider = new AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider(event.getObject());
-        event.addCapability(AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider.IDENTIFIER, provider);
+
+        if (event.getObject().isEnchantable() && event.getObject().getMaxStackSize() == 1) {
+            event.addCapability(AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider.IDENTIFIER, provider);
+        }
     }
 }
