@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
+import com.infamous.dungeons_libraries.DungeonsLibraries;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -28,10 +29,15 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
     private boolean revertsOnExpiration = false;
     private boolean goalsAdded = false;
 
+    @Nullable
     public LivingEntity getLeader() {
         if (this.leader == null && this.leaderUUID != null && this.levelOnLoad != null) {
             ResourceKey<Level> registrykey1 = ResourceKey.create(Registry.DIMENSION_REGISTRY, this.levelOnLoad);
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if(server == null){
+                DungeonsLibraries.LOGGER.debug("Tried and failed to query leader by UUID from a Follower with no MinecraftServer present");
+                return null;
+            }
             ServerLevel world = server.getLevel(registrykey1);
             if (world != null) {
                 Entity entity = world.getEntity(leaderUUID);
@@ -43,7 +49,7 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
         return this.leader;
     }
 
-    public void setLeader(LivingEntity leader) {
+    public void setLeader(@Nullable LivingEntity leader) {
         this.leader = leader;
         if (leader != null) {
             this.leaderUUID = leader.getUUID();
@@ -121,7 +127,7 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
         }
         CompoundTag tag = new CompoundTag();
         if (this.getLeader() != null) {
-            tag.putUUID(LEADER_KEY, this.getLeader().getUUID());
+            tag.putUUID(LEADER_KEY, this.leaderUUID);
             ResourceLocation location = this.getLeader().level.dimension().location();
             tag.putString(LEVEL_KEY, location.toString());
         }
@@ -157,7 +163,7 @@ public class Follower implements INBTSerializable<CompoundTag>, Minion {
     // Methods deprectated after 1.20.0
     @Deprecated(forRemoval = true)
     @Override
-    public LivingEntity getMaster() {
+    public @Nullable LivingEntity getMaster() {
         return getLeader();
     }
 
