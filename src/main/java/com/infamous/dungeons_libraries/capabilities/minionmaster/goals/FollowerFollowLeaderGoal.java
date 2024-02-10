@@ -4,8 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -38,9 +36,11 @@ public class FollowerFollowLeaderGoal extends Goal {
         this.minDist = minDist;
         this.passesThroughLeaves = passesThroughLeaves;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        if (!(mobEntity.getNavigation() instanceof GroundPathNavigation) && !(mobEntity.getNavigation() instanceof FlyingPathNavigation)) {
+        /*
+        if (!FollowerLeaderHelper.isSuitableNavigationForFollowLeader(mobEntity)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
+         */
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
+import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.LeaderHurtByTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.LeaderHurtTargetGoal;
@@ -13,6 +14,8 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.Monster;
 
@@ -62,6 +65,10 @@ public class FollowerLeaderHelper {
         return minion.getLeader();
     }
 
+    public static boolean isSuitableNavigationForFollowLeader(Mob mobEntity) {
+        return mobEntity.getNavigation() instanceof GroundPathNavigation || mobEntity.getNavigation() instanceof FlyingPathNavigation;
+    }
+
     private void makeFollowerOf(LivingEntity livingEntity, LivingEntity nearbyEntity) {
         if (nearbyEntity instanceof Monster) {
             Monster mobEntity = (Monster) nearbyEntity;
@@ -94,6 +101,10 @@ public class FollowerLeaderHelper {
         Follower minionCap = getFollowerCapability(mobEntity);
         if (minionCap.isGoalsAdded()) return;
         if (minionCap.isFollower()) {
+            if(!isSuitableNavigationForFollowLeader(mobEntity)){
+                DungeonsLibraries.LOGGER.error("Unsupported mob type for FollowerFollowLeaderGoal: {}", mobEntity.getType());
+                return;
+            }
             mobEntity.goalSelector.addGoal(2, new FollowerFollowLeaderGoal(mobEntity, 1.5D, 24.0F, 3.0F, false));
             clearGoals(mobEntity.targetSelector);
             mobEntity.targetSelector.addGoal(1, new LeaderHurtByTargetGoal(mobEntity));
