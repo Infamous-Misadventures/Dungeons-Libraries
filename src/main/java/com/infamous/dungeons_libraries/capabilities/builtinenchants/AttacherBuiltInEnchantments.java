@@ -45,6 +45,9 @@ public class AttacherBuiltInEnchantments {
 
     public static void attach(final AttachCapabilitiesEvent<ItemStack> event) {
         final AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider provider = new AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider(event.getObject());
-        event.addCapability(AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider.IDENTIFIER, provider);
+        
+        if ( event.getObject().isEnchantable() && event.getObject().getMaxStackSize() == 1 ) {
+            event.addCapability(AttacherBuiltInEnchantments.BuiltInEnchantmentsProvider.IDENTIFIER, provider);
+        }
     }
 }
