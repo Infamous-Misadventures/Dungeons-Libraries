@@ -1,6 +1,8 @@
 package com.infamous.dungeons_libraries.mixin;
 
 import com.infamous.dungeons_libraries.utils.RangedAttackHelper;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -13,16 +15,15 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BowItem.class)
 public abstract class BowItemMixin {
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BowItem;getPowerForTime(I)F"),
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BowItem;getPowerForTime(I)F"),
             method = "releaseUsing")
-    private float libraries_releaseUsing_getPowerForTime(int useTime, ItemStack itemStack, Level level, LivingEntity livingEntity, int useTimeRemaining) {
+    private float libraries_releaseUsing_getPowerForTime(int useTime, Operation<Float> original, ItemStack itemStack, Level level, LivingEntity livingEntity, int useTimeRemaining) {
         return RangedAttackHelper.getBowArrowVelocity(livingEntity, itemStack, useTime);
     }
 
