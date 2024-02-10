@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
     public int floatTime = 20;
     private int health = 5;
     public float value;
+    @Nullable
     private Player followingPlayer;
     private int followingTime;
 
@@ -70,14 +72,14 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
         }
 
         double d0 = 8.0D;
-        if (this.followingPlayer == null || this.followingPlayer.isSpectator()) {
+        if (!this.level.isClientSide && (this.followingPlayer == null || this.followingPlayer.isSpectator())) {
             this.discard();
         }
 
         if (this.followingPlayer != null && this.floatTime == 0) {
             Vec3 vector3d = new Vec3(this.followingPlayer.getX() - this.getX(), this.followingPlayer.getY() + (double) this.followingPlayer.getEyeHeight() / 2.0D - this.getY(), this.followingPlayer.getZ() - this.getZ());
             double d1 = this.tickCount * 0.0075;
-           this.setDeltaMovement(this.getDeltaMovement().add(vector3d.normalize().scale(d1)));
+            this.setDeltaMovement(this.getDeltaMovement().add(vector3d.normalize().scale(d1)));
         }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
@@ -86,7 +88,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
 
         ++this.tickCount;
         ++this.age;
-        if (this.age >= 6000) {
+        if (!this.level.isClientSide && this.age >= 6000) {
             this.discard();
         }
 
@@ -115,23 +117,26 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
         }
     }
 
-    public void addAdditionalSaveData(CompoundTag p_213281_1_) {
-        p_213281_1_.putShort("Health", (short) this.health);
-        p_213281_1_.putShort("Age", (short) this.age);
-        p_213281_1_.putShort("Value", (short) this.value);
-        p_213281_1_.putShort("FloatTime", (short) this.floatTime);
-        p_213281_1_.putUUID("FollowingPlayer", this.followingPlayer.getUUID());
+    public void addAdditionalSaveData(CompoundTag tag) {
+        tag.putShort("Health", (short) this.health);
+        tag.putShort("Age", (short) this.age);
+        tag.putShort("Value", (short) this.value);
+        tag.putShort("FloatTime", (short) this.floatTime);
+        if(this.followingPlayer != null)
+            tag.putUUID("FollowingPlayer", this.followingPlayer.getUUID());
     }
 
-    public void readAdditionalSaveData(CompoundTag p_70037_1_) {
-        this.health = p_70037_1_.getShort("Health");
-        this.age = p_70037_1_.getShort("Age");
-        this.value = p_70037_1_.getShort("Value");
-        this.floatTime = p_70037_1_.getShort("FloatTime");
-        UUID followingPlayerUUID = p_70037_1_.getUUID("FollowingPlayer");
-        Player playerByUUID = this.level.getPlayerByUUID(followingPlayerUUID);
-        if (playerByUUID != null) {
-            this.followingPlayer = playerByUUID;
+    public void readAdditionalSaveData(CompoundTag tag) {
+        this.health = tag.getShort("Health");
+        this.age = tag.getShort("Age");
+        this.value = tag.getShort("Value");
+        this.floatTime = tag.getShort("FloatTime");
+        if(tag.hasUUID("FollowingPlayer")){
+            UUID followingPlayerUUID = tag.getUUID("FollowingPlayer");
+            Player playerByUUID = this.level.getPlayerByUUID(followingPlayerUUID);
+            if (playerByUUID != null) {
+                this.followingPlayer = playerByUUID;
+            }
         }
     }
 
@@ -180,7 +185,7 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
         buffer.writeInt(this.health);
         buffer.writeInt(this.age);
         buffer.writeFloat(this.value);
-        buffer.writeUUID(this.followingPlayer.getUUID());
+        buffer.writeNullable(this.followingPlayer != null ? this.followingPlayer.getUUID() : null, FriendlyByteBuf::writeUUID);
     }
 
     @Override
@@ -188,9 +193,12 @@ public class SoulOrbEntity extends Entity implements IEntityAdditionalSpawnData 
         this.health = additionalData.readInt();
         this.age = additionalData.readInt();
         this.value = additionalData.readFloat();
-        Player playerByUUID = this.level.getPlayerByUUID(additionalData.readUUID());
-        if (playerByUUID != null) {
-            this.followingPlayer = playerByUUID;
+        UUID uuid = additionalData.readNullable(FriendlyByteBuf::readUUID);
+        if(uuid != null){
+            Player playerByUUID = this.level.getPlayerByUUID(uuid);
+            if (playerByUUID != null) {
+                this.followingPlayer = playerByUUID;
+            }
         }
     }
 }
