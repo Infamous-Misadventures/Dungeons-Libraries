@@ -103,8 +103,9 @@ public class CrossbowGear extends CrossbowItem implements IRangedWeapon, IReload
     public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity livingEntity, int timeLeft) {
         float chargeTime = getCrossbowChargeTime(livingEntity, stack) + 3 - timeLeft;
         float getCharge = this.getCrossbowCharge(livingEntity, chargeTime, stack);
-        boolean loadedProjectiles = CrossbowItemInvoker.callTryLoadProjectiles(livingEntity, stack);
-        if (getCharge >= 1.0F && !isCharged(stack) && loadedProjectiles) {
+        // Call to CrossbowItem.tryLoadProjectiles must be in-line as it modifies NBT without the previous checks
+        // Do not refactor as a variable preceding this if statement
+        if (getCharge >= 1.0F && !isCharged(stack) && CrossbowItemInvoker.callTryLoadProjectiles(livingEntity, stack)) {
             setCharged(stack, true);
             SoundSource soundSource = livingEntity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
             worldIn.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundSource, 1.0F, 1.0F / (livingEntity.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
