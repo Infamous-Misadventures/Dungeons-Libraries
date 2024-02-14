@@ -54,6 +54,7 @@ public class FollowerEvents {
         }
     }
 
+    /*
     @SubscribeEvent
     public static void onLivingDropsEvent(LivingDropsEvent event) {
         Follower cap = getFollowerCapability(event.getEntity());
@@ -61,6 +62,7 @@ public class FollowerEvents {
             event.setCanceled(true);
         }
     }
+     */
 
     @SubscribeEvent
     public static void onLivingEntityTick(LivingEvent.LivingTickEvent event) {

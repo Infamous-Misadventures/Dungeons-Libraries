@@ -17,6 +17,7 @@
     "CrossbowItemMixin",
     "EnchantmentHelperMixin",
     "ItemAccessor",
+    "LivingEntityMixin",
     "MobInvoker",
     "MobMixin",
     "NearestAttackableTargetGoalAccessor",
