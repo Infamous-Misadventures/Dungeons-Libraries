@@ -61,7 +61,11 @@ public class AbilityHelper {
                 || origin.isAlliedTo(target)
                 || isBothPlayerAndNoPvP(origin, target)
                 || isEntityBlacklisted(origin, target)
-                || (origin.getClassification(false).equals(MobCategory.MONSTER) && target.getClassification(false).equals(MobCategory.MONSTER) && !matchesAITargets(origin, target));
+                || (isDefaultEnemy(origin) && isDefaultEnemy(target) && !matchesAITargets(origin, target));
+    }
+
+    public static boolean isDefaultEnemy(LivingEntity origin) {
+        return origin.getClassification(false).equals(MobCategory.MONSTER);
     }
 
     private static boolean matchesAITargets(LivingEntity origin, LivingEntity target) {
@@ -91,7 +95,7 @@ public class AbilityHelper {
     private static boolean isEntityBlacklisted(LivingEntity origin, LivingEntity target) {
         if (target.getType().equals(ARMOR_STAND)) return true;
         return origin instanceof Player
-                && !target.getClassification(false).equals(MobCategory.MONSTER)
+                && !isDefaultEnemy(target)
                 && (!DungeonsLibrariesConfig.ENEMY_WHITELIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString())
                 || (DungeonsLibrariesConfig.ENEMY_BLACKLIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString())));
     }

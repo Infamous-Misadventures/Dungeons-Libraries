@@ -2,15 +2,15 @@ package com.infamous.dungeons_libraries.capabilities.minionmaster;
 
 import com.infamous.dungeons_libraries.DungeonsLibraries;
 import com.infamous.dungeons_libraries.capabilities.ModCapabilities;
+import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.FollowerFollowLeaderGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.LeaderHurtByTargetGoal;
 import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.LeaderHurtTargetGoal;
-import com.infamous.dungeons_libraries.capabilities.minionmaster.goals.FollowerFollowLeaderGoal;
 import com.infamous.dungeons_libraries.mixin.MobInvoker;
 import com.infamous.dungeons_libraries.summon.SummonHelper;
+import com.infamous.dungeons_libraries.utils.AbilityHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -110,7 +110,7 @@ public class FollowerLeaderHelper {
             mobEntity.targetSelector.addGoal(1, new LeaderHurtByTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(2, new LeaderHurtTargetGoal(mobEntity));
             mobEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mobEntity, LivingEntity.class, 5, false, false,
-                    (entityIterator) -> entityIterator.getClassification(false).equals(MobCategory.MONSTER) && canPetAttackEntity(mobEntity, entityIterator)));
+                    (entityIterator) -> AbilityHelper.isDefaultEnemy(entityIterator) && canPetAttackEntity(mobEntity, entityIterator)));
 
             minionCap.getLeader().getCapability(ModCapabilities.LEADER_CAPABILITY).ifPresent(leader -> {
                 leader.addFollower(mobEntity);
